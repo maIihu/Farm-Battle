@@ -10,14 +10,19 @@ public class PlayerController : MonoBehaviour
     
     private Vector2 _moveInput;
     private Rigidbody2D _rb;
-    public int score = 0;
+    public int Score { get; set; }
     public bool isHit;
     
     private void Awake()
     {
         _rb = GetComponent<Rigidbody2D>();
     }
-    
+
+    private void Start()
+    {
+        Score = 0;
+    }
+
     private void Update()
     {
         InputHandle();

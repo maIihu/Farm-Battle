@@ -17,13 +17,14 @@ public class UIController : MonoBehaviour
     
     private void Awake()
     {
-        _timerText = GetComponentText(_timerText, "Time");
-        _player1Score = GetComponentText(_player1Score, "Player 1 Score");
-        _player2Score = GetComponentText(_player2Score, "Player 2 Score");
+        _timerText = GetComponentText("Time");
+        _player1Score = GetComponentText("Player 1 Score");
+        _player2Score = GetComponentText("Player 2 Score");
     }
 
-    private TextMeshProUGUI GetComponentText(TextMeshProUGUI text, string name)
+    private TextMeshProUGUI GetComponentText(string name)
     {
+        TextMeshProUGUI text = null;
         Transform child = GetComponentsInChildren<Transform>().FirstOrDefault(t => t.name == name);
         if (child != null)
             text = child.gameObject.GetComponentInChildren<TextMeshProUGUI>();
@@ -33,10 +34,10 @@ public class UIController : MonoBehaviour
     private void Update()
     {
         GameTimer();
-        _player1Score.text = player1.GetComponentInChildren<PlayerController>().score.ToString();
-        _player2Score.text = player2.GetComponentInChildren<PlayerController2>().score.ToString();
+        _player1Score.text = player1.GetComponentInChildren<PlayerController>().Score.ToString();
+        _player2Score.text = player2.GetComponentInChildren<PlayerController2>().Score.ToString();
     }
-
+    
     private void GameTimer()
     {
         if (_remainingTime <= 0)

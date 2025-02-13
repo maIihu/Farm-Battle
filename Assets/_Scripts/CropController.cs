@@ -52,7 +52,7 @@ public class CropController : MonoBehaviour
                 if (crop.isReadyToHarvest && pos.ToString() == child.name)
                 {
                     crop.Harvest();
-                    player1C.score++;
+                    player1C.Score++;
                 }
             }
         }
@@ -81,7 +81,7 @@ public class CropController : MonoBehaviour
                 if (crop.isReadyToHarvest && pos.ToString() == child.name)
                 {
                     crop.Harvest();
-                    player2C.score++;
+                    player2C.Score++;
                 }
             }
             

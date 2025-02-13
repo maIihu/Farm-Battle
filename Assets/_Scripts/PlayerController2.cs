@@ -10,18 +10,23 @@ public class PlayerController2 : MonoBehaviour
     
     private Vector2 _moveInput;
     private Rigidbody2D _rb;
-    public int score = 0;
+    public int Score { get; set; }
     public bool isHit;
     private void Awake()
     {
         _rb = GetComponent<Rigidbody2D>();
     }
-    
+
+    private void Start()
+    {
+        Score = 0;
+    }
+
     private void Update()
     {
         InputHandle();
         isHit = Input.GetKeyDown(KeyCode.P);
-        pickCell.transform.position = new Vector3((int)(this.transform.position.x) +0.5f, (int)(this.transform.position.y) - 0.5f, this.transform.position.z);
+        pickCell.transform.position = new Vector3((int)(this.transform.position.x) + 0.5f, (int)(this.transform.position.y) - 0.5f, this.transform.position.z);
     }
 
     private void FixedUpdate()
