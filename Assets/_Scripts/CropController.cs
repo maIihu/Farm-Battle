@@ -31,7 +31,6 @@ public class CropController : MonoBehaviour
         
         if (player1C.isHit)
         {
-            Debug.Log("Nhân vật 1 chọn");
             Vector3 pos = player1Pick.transform.position;
             Vector3Int cellPos = tilemap.WorldToCell(pos);
             TileBase currentTile = tilemap.GetTile(cellPos);
@@ -53,13 +52,13 @@ public class CropController : MonoBehaviour
                 {
                     crop.Harvest();
                     player1C.Score++;
+                    Destroy(crop.gameObject);
                 }
             }
         }
 
         if (player2C.isHit)
         {
-            Debug.Log("Nhân vật 2 chọn");
             Vector3 pos = player2Pick.transform.position;
             Vector3Int cellPos = tilemap2.WorldToCell(pos);
             TileBase currentTile = tilemap2.GetTile(cellPos);
@@ -82,6 +81,7 @@ public class CropController : MonoBehaviour
                 {
                     crop.Harvest();
                     player2C.Score++;
+                    Destroy(crop.gameObject);
                 }
             }
             

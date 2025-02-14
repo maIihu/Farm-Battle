@@ -41,3 +41,12 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: Background
+    uniqueID: 302857805
+    locked: 0
+  - name: Fence
+    uniqueID: 2538418661
+    locked: 0
+  - name: Garden
+    uniqueID: 2851261683
+    locked: 0
