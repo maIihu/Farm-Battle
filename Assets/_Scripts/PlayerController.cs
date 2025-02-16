@@ -7,7 +7,10 @@ public class PlayerController : MonoBehaviour
 {
     [SerializeField] private float moveSpeed = 5f;
     [SerializeField] private GameObject pickCell;
-    
+    private SpriteRenderer _spriteRenderer;
+    private Animator _animator;
+
+
     private Vector2 _moveInput;
     private Rigidbody2D _rb;
     public int Score { get; set; }
@@ -15,6 +18,8 @@ public class PlayerController : MonoBehaviour
     
     private void Awake()
     {
+        _animator = GetComponent<Animator>();
+        _spriteRenderer = GetComponent<SpriteRenderer>();
         _rb = GetComponent<Rigidbody2D>();
     }
 
@@ -47,9 +52,24 @@ public class PlayerController : MonoBehaviour
             _moveInput.y = 1f;
         if (Input.GetKey(KeyCode.S))
             _moveInput.y = -1f;
-        
+
+
+        // animation of player
+        _animator.SetFloat("Horizontal", _moveInput.x);
+        _animator.SetFloat("Vertical", _moveInput.y);
+        _animator.SetFloat("Speed", _moveInput.magnitude);
+        if (_moveInput.x > 0)
+        {
+            _spriteRenderer.flipX = false;
+        }
+        else if (_moveInput.x < 0)
+        {
+            _spriteRenderer.flipX = true;
+        }
+
+
         _moveInput.Normalize();
 
-        
+
     }
 }
