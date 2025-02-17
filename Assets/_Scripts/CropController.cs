@@ -17,6 +17,8 @@ public class CropController : MonoBehaviour
 
     private GameObject player1Pick;
     private GameObject player2Pick;
+
+    private Dictionary<Vector3Int, bool> hasCop = new Dictionary<Vector3Int, bool>();
     
     private void Start()
     {
@@ -38,11 +40,12 @@ public class CropController : MonoBehaviour
             {
                 if(currentTile.name is "Tile2" or "Cliff_Tile_4") 
                     tilemap.SetTile(cellPos, dat);
-                else if (tilemap.GetTile(cellPos) == dat)
+                else if (tilemap.GetTile(cellPos) == dat && !hasCop.ContainsKey(cellPos))
                 {
                     GameObject tree = Instantiate(treePrefab, player1Pick.transform.position, 
                         Quaternion.identity, this.tilemap.transform);
                     tree.name = pos.ToString();
+                    hasCop[cellPos] = true;
                 }
             }
             foreach (Transform child in tilemap.transform)
@@ -52,7 +55,7 @@ public class CropController : MonoBehaviour
                 {
                     crop.Harvest();
                     player1C.Score++;
-                    Destroy(crop.gameObject);
+                    
                 }
             }
         }
@@ -67,11 +70,12 @@ public class CropController : MonoBehaviour
             {
                 if(currentTile.name is "Tile2" or "Cliff_Tile_4") 
                     tilemap2.SetTile(cellPos, dat);
-                else if (tilemap2.GetTile(cellPos) == dat)
+                else if (tilemap2.GetTile(cellPos) == dat || !hasCop[cellPos])
                 {
                     GameObject tree = Instantiate(treePrefab, player2Pick.transform.position, Quaternion.identity,
                         this.tilemap2.transform);
                     tree.name = pos.ToString();
+                    hasCop[cellPos] = true;
                 }
             }
             foreach (Transform child in tilemap2.transform)
@@ -81,7 +85,6 @@ public class CropController : MonoBehaviour
                 {
                     crop.Harvest();
                     player2C.Score++;
-                    Destroy(crop.gameObject);
                 }
             }
             
