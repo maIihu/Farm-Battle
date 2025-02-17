@@ -36,7 +36,7 @@ public class CropController : MonoBehaviour
             TileBase currentTile = tilemap.GetTile(cellPos);
             if (currentTile != null) 
             {
-                if(currentTile.name is "Tile1" or "Tile2") 
+                if(currentTile.name is "Tile2" or "Cliff_Tile_4") 
                     tilemap.SetTile(cellPos, dat);
                 else if (tilemap.GetTile(cellPos) == dat)
                 {
@@ -65,7 +65,7 @@ public class CropController : MonoBehaviour
             
             if (currentTile != null) 
             {
-                if(currentTile.name is "Tile1" or "Tile2") 
+                if(currentTile.name is "Tile2" or "Cliff_Tile_4") 
                     tilemap2.SetTile(cellPos, dat);
                 else if (tilemap2.GetTile(cellPos) == dat)
                 {

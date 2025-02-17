@@ -38,15 +38,21 @@ TagManager:
   - 
   - 
   m_SortingLayers:
-  - name: Default
-    uniqueID: 0
-    locked: 0
   - name: Background
     uniqueID: 302857805
+    locked: 0
+  - name: Decor
+    uniqueID: 4044645621
+    locked: 0
+  - name: House
+    uniqueID: 1953507275
     locked: 0
   - name: Fence
     uniqueID: 2538418661
     locked: 0
   - name: Garden
     uniqueID: 2851261683
+    locked: 0
+  - name: Default
+    uniqueID: 0
     locked: 0
