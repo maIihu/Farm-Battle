@@ -34,8 +34,8 @@ public class UIController : MonoBehaviour
     private void Update()
     {
         GameTimer();
-        _player1Score.text = player1.GetComponentInChildren<PlayerController>().Score.ToString();
-        _player2Score.text = player2.GetComponentInChildren<PlayerController2>().Score.ToString();
+        _player1Score.text = player1.GetComponent<PlayerController>().Score.ToString();
+        _player2Score.text = player2.GetComponent<PlayerController2>().Score.ToString();
     }
     
     private void GameTimer()

@@ -22,8 +22,8 @@ public class CropController : MonoBehaviour
     
     private void Start()
     {
-        player1Pick = player1.transform.GetChild(1).gameObject;
-        player2Pick = player2.transform.GetChild(1).gameObject;
+        player1Pick = player1.transform.gameObject;
+        player2Pick = player2.transform.gameObject;
     }
 
     private void Update()
