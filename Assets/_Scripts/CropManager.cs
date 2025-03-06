@@ -5,15 +5,16 @@ using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.Tilemaps;
 
-public class CropController : MonoBehaviour
+public class CropManager : MonoBehaviour
 {
     [SerializeField] private GameObject treePrefab;
     [SerializeField] private TileBase dat;
     
-    private Dictionary<Vector3Int, bool> hasCop = new Dictionary<Vector3Int, bool>();
+    private Dictionary<Vector3Int, bool> _hasCrop;
     
     private void Start()
     {
+        _hasCrop = new Dictionary<Vector3Int, bool>();
     }
 
     // private void Update()
@@ -40,20 +41,22 @@ public class CropController : MonoBehaviour
         {
             if(currentTile.name is "Tile2" or "Cliff_Tile_4") 
                 tile.SetTile(cellPos, dat);
-            else if (tile.GetTile(cellPos) == dat && !hasCop.ContainsKey(cellPos))
+            else if (tile.GetTile(cellPos) == dat && !_hasCrop.ContainsKey(cellPos))
             {
-                GameObject tree = Instantiate(treePrefab, pos, 
-                    Quaternion.identity, tile.transform);
+                GameObject tree = Instantiate(treePrefab, pos, Quaternion.identity, tile.transform);
+                
                 tree.name = pos.ToString();
-                hasCop[cellPos] = true;
+                tree.GetComponent<Plant>().gridLocation = pos;
+                
+                _hasCrop[cellPos] = true;
             }
         }
         foreach (Transform child in tile.transform)
         {
-            Crop crop = child.gameObject.GetComponent<Crop>();
-            if (crop.isReadyToHarvest && pos.ToString() == child.name)
+            Plant plant = child.gameObject.GetComponent<Plant>();
+            if (plant.isReadyToHarvest && pos.ToString() == child.name)
             {
-                crop.Harvest();
+                plant.Harvest();
                 //player1C.Score++;
             }
         }

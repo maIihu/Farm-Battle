@@ -14766,7 +14766,7 @@ MonoBehaviour:
   moveSpeed: 5
   pickCell: {fileID: 195513546}
   crop: {fileID: 1556773522}
-  tilemap: {fileID: 1381698292}
+  tileMap: {fileID: 1381698292}
   isHit: 0
 --- !u!95 &1360360584
 Animator:
@@ -17869,7 +17869,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveSpeed: 5
   crop: {fileID: 1556773522}
-  tilemap: {fileID: 1979060384}
+  tileMap: {fileID: 1979060384}
   time: 0.1
 --- !u!58 &1818420746
 CircleCollider2D:
