@@ -2,15 +2,19 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
+using UnityEngine.Tilemaps;
 
 public class PlayerController : MonoBehaviour
 {
     [SerializeField] private float moveSpeed = 5f;
     [SerializeField] private GameObject pickCell;
+    [SerializeField] private CropManager crop;
+    [SerializeField] private Tilemap tileMap;
     private SpriteRenderer _spriteRenderer;
     private Animator _animator;
 
-
+    
     private Vector2 _moveInput;
     private Rigidbody2D _rb;
     public int Score { get; set; }
@@ -31,7 +35,10 @@ public class PlayerController : MonoBehaviour
     private void Update()
     {
         InputHandle();
-        isHit = Input.GetKeyDown(KeyCode.Space);
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            crop.Crop(this.transform.GetChild(0).transform.position, tileMap);
+        }
         pickCell.transform.position = new Vector3((int)(this.transform.position.x) + 0.5f, 
             (int)(this.transform.position.y) - 0.5f, this.transform.position.z);
     }
