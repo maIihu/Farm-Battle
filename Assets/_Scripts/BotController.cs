@@ -13,13 +13,15 @@ public class BotController : MonoBehaviour
     [SerializeField] private Tilemap tileMap;
     [SerializeField] private float time;
     
-    private int _currentI = 0;
-    private int _currentJ = 0;
+    private int _stepCount = 0;
     private int _moveDir = 1;
+    
     private bool _isMoving = true;
     private bool _move3 = true;
     private bool _hasEndedMove = false; 
     private bool _hasPlanted = false;
+    
+    private Plant _targetPlant;
 
     private List<Plant> _plants;
     
@@ -41,9 +43,9 @@ public class BotController : MonoBehaviour
             _isMoving = false;
             this.transform.position = new Vector3(23.5f, -0.5f);
             crop.Crop(this.transform.GetChild(0).transform.position, tileMap);
-            _currentI = _currentJ = 0;
+            _stepCount = 0;
             _moveDir = 1;
-            StartCoroutine(Move3Routine());
+            StartCoroutine(MoveToSeedRoutine());
         }
 
         if (!_hasPlanted && !_move3)
@@ -72,16 +74,16 @@ public class BotController : MonoBehaviour
     {
         Vector3 currentPosition = transform.position;
         
-        if (_currentJ < 11)
+        if (_stepCount < 11)
         {
             transform.position = new Vector3(currentPosition.x, currentPosition.y - 1f * _moveDir, currentPosition.z);
-            _currentJ++;
+            _stepCount++;
         }
         else
         {
             transform.position = new Vector3(currentPosition.x + 1f, currentPosition.y , currentPosition.z);
             _moveDir *= -1;
-            _currentJ = 0;
+            _stepCount = 0;
         }
         crop.Crop(this.transform.GetChild(0).transform.position, tileMap);
     }
@@ -95,7 +97,7 @@ public class BotController : MonoBehaviour
         }
     }
     
-    private void Move3()
+    private void MoveToSeed()
     {
         Vector3 currentPosition = transform.position;
         if(currentPosition.x == 24.5f && currentPosition.y == -1.5f) _move3 = false;
@@ -107,26 +109,26 @@ public class BotController : MonoBehaviour
         }
         else
         {
-            if (_currentJ < 10)
+            if (_stepCount < 10)
             {
                 transform.position = new Vector3(currentPosition.x, currentPosition.y - 1f * _moveDir, currentPosition.z);
-                _currentJ++;
+                _stepCount++;
             }
             else
             {
                 transform.position = new Vector3(currentPosition.x + 1f, currentPosition.y , currentPosition.z);
                 _moveDir *= -1;
-                _currentJ = 0;
+                _stepCount = 0;
             }
         }
         crop.Crop(this.transform.GetChild(0).transform.position, tileMap);
     }
     
-    private IEnumerator Move3Routine()
+    private IEnumerator MoveToSeedRoutine()
     {
         while (_move3) 
         {
-            Move3();
+            MoveToSeed();
             
             yield return new WaitForSeconds(time); 
         }
@@ -145,15 +147,13 @@ public class BotController : MonoBehaviour
         }
     }
 
-    private Plant targetPlant;
-
     private void MoveToPlant()
     {
-        if (_plants.Count == 0 || targetPlant != null)
+        if (_plants.Count == 0 || _targetPlant != null)
             return;
 
-        targetPlant = _plants.OrderBy(p => Vector3.Distance(transform.position, p.gridLocation)).First();
-        StartCoroutine(MoveToTarget(targetPlant));
+        _targetPlant = _plants.OrderBy(p => Vector3.Distance(transform.position, p.gridLocation)).First();
+        StartCoroutine(MoveToTarget(_targetPlant));
     }
 
     private IEnumerator MoveToTarget(Plant target)
@@ -170,7 +170,7 @@ public class BotController : MonoBehaviour
             _plants.Remove(target);
         }
 
-        targetPlant = null; 
+        _targetPlant = null; 
     }
 
     
