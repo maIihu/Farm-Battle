@@ -18,7 +18,8 @@ public class PlayerController : MonoBehaviour
     private Vector2 _moveInput;
     private Rigidbody2D _rb;
     public int Score { get; set; }
-    public bool isHit;
+    
+    private bool _isHit;
     
     private void Awake()
     {
@@ -37,10 +38,18 @@ public class PlayerController : MonoBehaviour
         InputHandle();
         pickCell.transform.position = new Vector3((int)(this.transform.position.x) + 0.5f, 
             (int)(this.transform.position.y) - 0.5f, this.transform.position.z);
-        if (Input.GetKey(KeyCode.Space))
+        
+        if (Input.GetKeyDown(KeyCode.Space))
         {
             map.Crop(this.transform.GetChild(0).transform.position, tileMap);
+            _isHit = true;
         }
+        
+        if (Input.GetKeyUp(KeyCode.Space)) 
+        {
+            _isHit = false;
+        }
+        
     }
 
     private void FixedUpdate()
@@ -59,12 +68,22 @@ public class PlayerController : MonoBehaviour
             _moveInput.y = 1f;
         if (Input.GetKey(KeyCode.S))
             _moveInput.y = -1f;
+        
+        SetAnimation();
+        FlipCharacter();
+        
+        _moveInput.Normalize();
+    }
 
-
-        // animation of player
+    private void SetAnimation()
+    {
         _animator.SetFloat("Horizontal", _moveInput.x);
         _animator.SetFloat("Vertical", _moveInput.y);
         _animator.SetFloat("Speed", _moveInput.magnitude);
+    }
+
+    private void FlipCharacter()
+    {
         if (_moveInput.x > 0)
         {
             _spriteRenderer.flipX = false;
@@ -73,10 +92,13 @@ public class PlayerController : MonoBehaviour
         {
             _spriteRenderer.flipX = true;
         }
-
-
-        _moveInput.Normalize();
-
-
+    }
+    private void OnTriggerStay2D(Collider2D other)
+    {
+        if (other.CompareTag("Bomb") && _isHit)
+        {
+            Debug.Log("Va cham vao bomb");
+            other.gameObject.GetComponent<BombController>().ThrowingBomb(new Vector3(transform.position.x + 10, transform.position.y, 0));
+        }
     }
 }
