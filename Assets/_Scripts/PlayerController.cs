@@ -9,7 +9,7 @@ public class PlayerController : MonoBehaviour
 {
     [SerializeField] private float moveSpeed = 5f;
     [SerializeField] private GameObject pickCell;
-    [SerializeField] private CropManager crop;
+    [FormerlySerializedAs("crop")] [SerializeField] private MapManager map;
     [SerializeField] private Tilemap tileMap;
     private SpriteRenderer _spriteRenderer;
     private Animator _animator;
@@ -35,12 +35,12 @@ public class PlayerController : MonoBehaviour
     private void Update()
     {
         InputHandle();
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            crop.Crop(this.transform.GetChild(0).transform.position, tileMap);
-        }
         pickCell.transform.position = new Vector3((int)(this.transform.position.x) + 0.5f, 
             (int)(this.transform.position.y) - 0.5f, this.transform.position.z);
+        if (Input.GetKey(KeyCode.Space))
+        {
+            map.Crop(this.transform.GetChild(0).transform.position, tileMap);
+        }
     }
 
     private void FixedUpdate()

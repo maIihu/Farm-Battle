@@ -9,15 +9,16 @@ using UnityEngine.Tilemaps;
 public class BotController : MonoBehaviour
 {
     [SerializeField] private float moveSpeed = 5f;
-    [SerializeField] private CropManager crop;
+    [FormerlySerializedAs("crop")] [SerializeField] private MapManager map;
     [SerializeField] private Tilemap tileMap;
     [SerializeField] private float time;
     
-    private int _stepCount = 0;
+    private int _stepCount;
     private int _moveDir = 1;
     
     private bool _isMoving = true;
     private bool _move3 = true;
+    
     private bool _hasEndedMove = false; 
     private bool _hasPlanted = false;
     
@@ -42,7 +43,7 @@ public class BotController : MonoBehaviour
             _hasEndedMove = true; 
             _isMoving = false;
             this.transform.position = new Vector3(23.5f, -0.5f);
-            crop.Crop(this.transform.GetChild(0).transform.position, tileMap);
+            map.Crop(this.transform.GetChild(0).transform.position, tileMap);
             _stepCount = 0;
             _moveDir = 1;
             StartCoroutine(MoveToSeedRoutine());
@@ -52,7 +53,7 @@ public class BotController : MonoBehaviour
         {
             _hasPlanted = true; 
             this.transform.position = new Vector3(24.5f, -0.5f);
-            crop.Crop(this.transform.GetChild(0).transform.position, tileMap);
+            map.Crop(this.transform.GetChild(0).transform.position, tileMap);
         }
 
         if (!_move3)
@@ -66,10 +67,9 @@ public class BotController : MonoBehaviour
     private void MoveToStartPoint()
     {
         this.transform.position = new Vector3(13.5f, -0.5f, 0f);
-        crop.Crop(this.transform.GetChild(0).transform.position, tileMap);
+        map.Crop(this.transform.GetChild(0).transform.position, tileMap);
     }
     
-
     private void MoveToDig()
     {
         Vector3 currentPosition = transform.position;
@@ -85,7 +85,7 @@ public class BotController : MonoBehaviour
             _moveDir *= -1;
             _stepCount = 0;
         }
-        crop.Crop(this.transform.GetChild(0).transform.position, tileMap);
+        map.Crop(this.transform.GetChild(0).transform.position, tileMap);
     }
 
     private IEnumerator MoveToDigRoutine()
@@ -121,7 +121,7 @@ public class BotController : MonoBehaviour
                 _stepCount = 0;
             }
         }
-        crop.Crop(this.transform.GetChild(0).transform.position, tileMap);
+        map.Crop(this.transform.GetChild(0).transform.position, tileMap);
     }
     
     private IEnumerator MoveToSeedRoutine()
@@ -138,8 +138,8 @@ public class BotController : MonoBehaviour
     {
         for (int i = 0; i < tileMap.transform.childCount; i++)
         {
-            Transform plantChild = tileMap.transform.GetChild(i);
-            Plant plant = plantChild.gameObject.GetComponent<Plant>();
+            Transform child = tileMap.transform.GetChild(i);
+            Plant plant = child.GetChild(0).gameObject.GetComponent<Plant>();
             if (plant.isReadyToHarvest && !_plants.Contains(plant))
             {
                 _plants.Add(plant);
