@@ -1047,8 +1047,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1096977f983dc864faf79a2cbcd77a04, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player1: {fileID: 1360360578}
-  player2: {fileID: 1456895201}
 --- !u!1 &811013332
 GameObject:
   m_ObjectHideFlags: 0
@@ -16439,7 +16437,7 @@ Transform:
   m_GameObject: {fileID: 1360360578}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 1.17, y: -0.89, z: 0}
+  m_LocalPosition: {x: 1.28, y: -0.78, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -16524,7 +16522,7 @@ MonoBehaviour:
   pickCell: {fileID: 195513546}
   map: {fileID: 1556773522}
   tileMap: {fileID: 1381698292}
-  isHit: 0
+  score: 0
 --- !u!95 &1360360584
 Animator:
   serializedVersion: 5
@@ -19650,6 +19648,7 @@ MonoBehaviour:
   map: {fileID: 1556773522}
   tileMap: {fileID: 1979060384}
   time: 0.1
+  score: 0
 --- !u!58 &1818420746
 CircleCollider2D:
   m_ObjectHideFlags: 0

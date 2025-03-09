@@ -5,27 +5,33 @@ using System.Linq;
 using TMPro;
 using UnityEngine;
 
-public class UIController : MonoBehaviour
+public class UIManager : MonoBehaviour
 {
-    [SerializeField] private GameObject player1;
-    [SerializeField] private GameObject player2;
     private TextMeshProUGUI _timerText;
-    private TextMeshProUGUI _player1Score;
-    private TextMeshProUGUI _player2Score;
+    private TextMeshProUGUI _player1TextScore;
+    private TextMeshProUGUI _player2TextScore;
     
     private float _remainingTime = 180f;
+
+    private int _player1Score;
+    private int _player2Score;
     
     private void Awake()
     {
         _timerText = GetComponentText("Time");
-        _player1Score = GetComponentText("Player 1 Score");
-        _player2Score = GetComponentText("Player 2 Score");
+        _player1TextScore = GetComponentText("Player 1 Score");
+        _player2TextScore = GetComponentText("Player 2 Score");
     }
 
-    private TextMeshProUGUI GetComponentText(string name)
+    private void Start()
+    {
+        
+    }
+
+    private TextMeshProUGUI GetComponentText(string nameGameObject)
     {
         TextMeshProUGUI text = null;
-        Transform child = GetComponentsInChildren<Transform>().FirstOrDefault(t => t.name == name);
+        Transform child = GetComponentsInChildren<Transform>().FirstOrDefault(t => t.name == nameGameObject);
         if (child != null)
             text = child.gameObject.GetComponentInChildren<TextMeshProUGUI>();
         return text;
@@ -34,8 +40,14 @@ public class UIController : MonoBehaviour
     private void Update()
     {
         GameTimer();
-        _player1Score.text = player1.GetComponent<PlayerController>().Score.ToString();
-        _player2Score.text = player2.GetComponent<PlayerController2>().Score.ToString();
+        // Phan nay phai toi uu hon
+        _player1Score = PlayerController.Instance.score;
+        if (BotController.Instance.gameObject.activeSelf)
+        {
+            _player2Score = BotController.Instance.score;
+        }
+        _player1TextScore.text = _player1Score.ToString();
+        _player2TextScore.text = _player2Score.ToString();
     }
     
     private void GameTimer()

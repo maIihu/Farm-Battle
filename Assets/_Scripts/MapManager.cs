@@ -38,7 +38,7 @@ public class MapManager : MonoBehaviour
         map = new Dictionary<Vector3, GameObject>();
     }
     
-    public void Crop(Vector3 location, Tilemap tileMap)
+    public void Crop(Vector3 location, Tilemap tileMap, ref int score1)
     {
         Vector3Int cellPos = tileMap.WorldToCell(location);
         TileBase currentTile = tileMap.GetTile(cellPos);
@@ -61,7 +61,7 @@ public class MapManager : MonoBehaviour
                 hasCrop[location] = true;
             }
         }
-
+        
         for (int i = 0; i < tileMap.transform.childCount; i++)
         {
             Transform child = tileMap.transform.GetChild(i);
@@ -71,11 +71,10 @@ public class MapManager : MonoBehaviour
                 if (plant != null && plant.isReadyToHarvest && location.ToString() == child.name)
                 {
                     plant.Harvest();
-                    //player1C.Score++;
+                    score1++;
                 }
             }
         }
-        
     }
     
 }

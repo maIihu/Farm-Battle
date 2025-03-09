@@ -161,4 +161,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1c3cfabce6b5c1940b2ed9b540c1edcd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  timeToExplode: 100
+  timeToExplode: 16
+  onTheLeft: 0

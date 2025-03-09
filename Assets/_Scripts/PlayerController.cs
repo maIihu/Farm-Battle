@@ -4,34 +4,42 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.Tilemaps;
+using Random = UnityEngine.Random;
 
 public class PlayerController : MonoBehaviour
 {
+    public static PlayerController Instance { get; private set; } 
+
     [SerializeField] private float moveSpeed = 5f;
     [SerializeField] private GameObject pickCell;
-    [FormerlySerializedAs("crop")] [SerializeField] private MapManager map;
+    [SerializeField] private MapManager map;
     [SerializeField] private Tilemap tileMap;
+    
     private SpriteRenderer _spriteRenderer;
     private Animator _animator;
-
-    
     private Vector2 _moveInput;
     private Rigidbody2D _rb;
-    public int Score { get; set; }
     
+    public int score;
     private bool _isHit;
+
+    public static event Action<Vector3> OnBombThrown;
     
     private void Awake()
     {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject); 
+            return;
+        }
+
+        Instance = this;
+
         _animator = GetComponent<Animator>();
         _spriteRenderer = GetComponent<SpriteRenderer>();
         _rb = GetComponent<Rigidbody2D>();
     }
 
-    private void Start()
-    {
-        Score = 0;
-    }
 
     private void Update()
     {
@@ -41,7 +49,7 @@ public class PlayerController : MonoBehaviour
         
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            map.Crop(this.transform.GetChild(0).transform.position, tileMap);
+            map.Crop(this.transform.GetChild(0).transform.position, tileMap, ref score);
             _isHit = true;
         }
         
@@ -60,6 +68,7 @@ public class PlayerController : MonoBehaviour
     private void InputHandle()
     {
         _moveInput = Vector2.zero;
+        
         if (Input.GetKey(KeyCode.A))
             _moveInput.x = -1f;
         if (Input.GetKey(KeyCode.D))
@@ -95,10 +104,13 @@ public class PlayerController : MonoBehaviour
     }
     private void OnTriggerStay2D(Collider2D other)
     {
-        if (other.CompareTag("Bomb") && _isHit)
+        if (other.CompareTag("Bomb") && Input.GetKeyDown(KeyCode.Space))
         {
-            Debug.Log("Va cham vao bomb");
-            other.gameObject.GetComponent<BombController>().ThrowingBomb(new Vector3(transform.position.x + 10, transform.position.y, 0));
+            BombController bombClone = other.gameObject.GetComponent<BombController>();
+            Vector3 des = new Vector3(Random.Range(14, 24), -11 - transform.position.y, 0);
+            bombClone.ThrowingBomb(des);
+            
+            OnBombThrown?.Invoke(des);
         }
     }
 }
