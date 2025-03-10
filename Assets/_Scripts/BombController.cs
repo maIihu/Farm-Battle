@@ -17,7 +17,7 @@ public class BombController : MonoBehaviour
     private void Explode()
     {
         OnBombExploded?.Invoke();
-        Destroy(this.gameObject);
+        Destroy(gameObject);
     }
     
     public void ThrowingBomb(Vector3 end, float duration = 0.4f)

@@ -12,7 +12,6 @@ public class BotController : MonoBehaviour
     public static BotController Instance { get; private set; } 
     
     [SerializeField] private float moveSpeed = 5f;
-    [SerializeField] private MapManager map;
     [SerializeField] private Tilemap tileMap;
     [SerializeField] private float time;
     
@@ -63,7 +62,7 @@ public class BotController : MonoBehaviour
     private void MoveToStartPoint()
     {
         transform.position = new Vector3(13.5f, -0.5f, 0f);
-        map.Crop(transform.GetChild(0).transform.position, tileMap, ref score);
+        MapManager.Instance.Dig(transform.GetChild(0).transform.position, tileMap);
     }
     
     private void OnDestroy()
@@ -93,7 +92,8 @@ public class BotController : MonoBehaviour
                 yield return null;
             }
 
-            map.Crop(transform.GetChild(0).transform.position, tileMap, ref score);
+            MapManager.Instance.Dig(transform.GetChild(0).transform.position, tileMap);
+            MapManager.Instance.Sow(transform.GetChild(0).transform.position);
         }
     }
 
@@ -115,7 +115,7 @@ public class BotController : MonoBehaviour
             _hasDug = true; 
             
             transform.position = new Vector3(23.5f, -0.5f);
-            map.Crop(transform.GetChild(0).transform.position, tileMap, ref score);
+            MapManager.Instance.Sow(transform.GetChild(0).transform.position);
             
             _stepCount = 0;
             _moveDir = 1;
@@ -214,7 +214,7 @@ public class BotController : MonoBehaviour
             _moveDir *= -1;
             _stepCount = 0;
         }
-        map.Crop(this.transform.GetChild(0).transform.position, tileMap, ref score);
+        MapManager.Instance.Dig(transform.GetChild(0).transform.position, tileMap);
     }
     
     private IEnumerator MoveToSowRoutine()
@@ -233,7 +233,7 @@ public class BotController : MonoBehaviour
         {
             _hasSowed = true;
             transform.position = new Vector3(24.5f, -0.5f);
-            map.Crop(transform.GetChild(0).transform.position, tileMap, ref score);
+            MapManager.Instance.Sow(transform.GetChild(0).transform.position);
             _isHarvesting = true;
             return;
         }
@@ -257,7 +257,7 @@ public class BotController : MonoBehaviour
                 _stepCount = 0;
             }
         }
-        map.Crop(this.transform.GetChild(0).transform.position, tileMap, ref score);
+        MapManager.Instance.Sow(transform.GetChild(0).transform.position);
     }
     
     private void CanHarvestPlant()
