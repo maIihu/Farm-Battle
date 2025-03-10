@@ -42,7 +42,6 @@ public class BombManager : MonoBehaviour
     {
         if (_bombClone != null)
         {
-            Debug.Log(_bombClone.GetComponent<BombController>().onTheLeft);
             bool bombOnTheLeft = _bombClone.GetComponent<BombController>().onTheLeft;
             if (bombOnTheLeft)
                 _targetTileMap = tileMap1.transform;

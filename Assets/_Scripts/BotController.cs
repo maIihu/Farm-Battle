@@ -19,11 +19,13 @@ public class BotController : MonoBehaviour
     private int _stepCount;
     private int _moveDir = 1;
     
-    private bool _isDigging = true;
-    private bool _isSowing = true;
+    // private bool _isDigging = true;
+    // private bool _isSowing = true;
     
-    private bool _hasEndedMove = false; 
-    private bool _hasPlanted = false;
+    private bool _hasDug;
+    private bool _hasSowed;
+    private bool _isHarvesting;
+    private bool _isMovingToPlant;
     
     private Plant _targetPlant;
 
@@ -32,7 +34,7 @@ public class BotController : MonoBehaviour
     public int score;
 
     private Vector3 _bombPosition;
-    private bool _hasBomb;
+    private bool _isChasingBomb;
     
     private bool _replanting;
     private List<Vector3> destroyedAreas;
@@ -53,8 +55,15 @@ public class BotController : MonoBehaviour
         
         MoveToStartPoint();
         StartCoroutine(MoveToDigRoutine());
+        
         PlayerController.OnBombThrown += MoveToBomb;
         BombManager.OnBombExploded += HandleDestroyedAreas;
+    }
+    
+    private void MoveToStartPoint()
+    {
+        transform.position = new Vector3(13.5f, -0.5f, 0f);
+        map.Crop(transform.GetChild(0).transform.position, tileMap, ref score);
     }
     
     private void OnDestroy()
@@ -92,69 +101,102 @@ public class BotController : MonoBehaviour
     private void MoveToBomb(Vector3 bombPos)
     {
         _bombPosition = bombPos;
-        _hasBomb = true;
+        _isChasingBomb = true;
+        _isHarvesting = false;
+        _targetPlant = null;
     }
     
     private void Update()
     {
         Vector2 currentPos = new Vector2(transform.position.x, transform.position.y);
         
-        if (!_hasEndedMove && currentPos == new Vector2(24.5f, -0.5f))
+        if (!_hasDug && currentPos == new Vector2(24.5f, -0.5f))
         {
-            _hasEndedMove = true; 
-            _isDigging = false;
+            _hasDug = true; 
             
             transform.position = new Vector3(23.5f, -0.5f);
             map.Crop(transform.GetChild(0).transform.position, tileMap, ref score);
             
             _stepCount = 0;
             _moveDir = 1;
-            //StartCoroutine(MoveToSowRoutine());
+            StartCoroutine(MoveToSowRoutine());
         }
-
-        // if (!_hasPlanted && !_isSowing)
+        
+        if (_isChasingBomb)
+        {
+            transform.position = Vector3.MoveTowards(transform.position, _bombPosition, moveSpeed * Time.deltaTime);
+            
+            if (Vector3.Distance(transform.position, _bombPosition) < 0.5f)
+            {
+                KickBomb();
+            }
+            
+        }
+        
+        CanHarvestPlant();
+        
+        // if (_isHarvesting && !_isMovingToPlant)
         // {
-        //     _hasPlanted = true; 
-        //     transform.position = new Vector3(24.5f, -0.5f);
-        //     map.Crop(transform.GetChild(0).transform.position, tileMap, ref score);
+        //     FindNearestPlant();
+        // }
+        // if (_isHarvesting && _isMovingToPlant) 
+        // {
+        //     MoveToTargetPlant();
         // }
 
-        // if (!_isSowing)
-        // {
-        //     CanHarvestPlant();
-        //     MoveToPlant();
-        // }
-        //
-        // if (_hasBomb)
-        // {
-        //     
-        // }
-        // if (_isChasingBomb)
-        // {
-        //     transform.position = Vector3.MoveTowards(transform.position, _bombPosition, moveSpeed * Time.deltaTime);
-        //     
-        //     if (Vector3.Distance(transform.position, _bombPosition) < 0.5f)
-        //     {
-        //         KickBomb();
-        //     }
-        // }
+        if (_isHarvesting)
+        {
+            FindNearestPlant();
+            MoveToTargetPlant();
+        }
     }
 
-    // private void KickBomb()
-    // {
-    //     GameObject bomb = GameObject.FindGameObjectWithTag("Bomb");
-    //     if (bomb)
-    //     {
-    //         Vector3 des = new Vector3(Random.Range(1, 11), - 11 - transform.position.y, 0);
-    //         bomb.GetComponent<BombController>().ThrowingBomb(des);
-    //     }
-    //     _hasBomb = false;
-    // }
-    
-    private void MoveToStartPoint()
+    private void FindNearestPlant()
     {
-        transform.position = new Vector3(13.5f, -0.5f, 0f);
-        map.Crop(transform.GetChild(0).transform.position, tileMap, ref score);
+        if (_plants.Count == 0) return;
+
+        _targetPlant = _plants.OrderBy(p => Vector3.Distance(transform.position, p.gridLocation)).FirstOrDefault();
+        if (_targetPlant != null)
+        {
+            _isMovingToPlant = true; 
+        }
+    }
+
+    private void KickBomb()
+    {
+        GameObject bomb = GameObject.FindGameObjectWithTag("Bomb");
+        if (bomb)
+        {
+            Vector3 des = new Vector3(Random.Range(1, 11), - 11 - transform.position.y, 0);
+            bomb.GetComponent<BombController>().ThrowingBomb(des);
+        }
+        _isChasingBomb = false;
+        _isHarvesting = true;
+    }
+    
+    private void MoveToTargetPlant()
+    {
+        if (_targetPlant == null) return;
+
+        transform.position = Vector3.MoveTowards(transform.position, _targetPlant.gridLocation, moveSpeed * Time.deltaTime);
+
+        if (Vector3.Distance(transform.position, _targetPlant.gridLocation) < 0.1f) 
+        {
+            _targetPlant.Harvest();
+            score++;
+            _plants.Remove(_targetPlant);
+            _targetPlant = null;
+            _isMovingToPlant = false; 
+        }
+    }
+
+    private IEnumerator MoveToDigRoutine()
+    {
+        while (!_hasDug)
+        {
+            MoveToDig();
+            yield return new WaitForSeconds(time);
+        }
     }
     
     private void MoveToDig()
@@ -174,20 +216,27 @@ public class BotController : MonoBehaviour
         }
         map.Crop(this.transform.GetChild(0).transform.position, tileMap, ref score);
     }
-
-    private IEnumerator MoveToDigRoutine()
+    
+    private IEnumerator MoveToSowRoutine()
     {
-        while (_isDigging)
+        while (!_hasSowed)
         {
-            MoveToDig();
-            yield return new WaitForSeconds(time);
+            MoveToSow();
+            yield return new WaitForSeconds(time); 
         }
     }
     
     private void MoveToSow()
     {
         Vector3 currentPosition = transform.position;
-        if(currentPosition.x == 24.5f && currentPosition.y == -1.5f) _isSowing = false;
+        if(currentPosition.x == 24.5f && currentPosition.y == -1.5f)
+        {
+            _hasSowed = true;
+            transform.position = new Vector3(24.5f, -0.5f);
+            map.Crop(transform.GetChild(0).transform.position, tileMap, ref score);
+            _isHarvesting = true;
+            return;
+        }
         if (currentPosition.y == -0.5f)
         {
             transform.position = new Vector3(currentPosition.x - 1f, currentPosition.y, currentPosition.z);
@@ -211,55 +260,22 @@ public class BotController : MonoBehaviour
         map.Crop(this.transform.GetChild(0).transform.position, tileMap, ref score);
     }
     
-    private IEnumerator MoveToSowRoutine()
-    {
-        while (_isSowing) 
-        {
-            MoveToSow();
-            
-            yield return new WaitForSeconds(time); 
-        }
-    }
-
     private void CanHarvestPlant()
     {
         for (int i = 0; i < tileMap.transform.childCount; i++)
         {
             Transform child = tileMap.transform.GetChild(i);
-            Plant plant = child.GetChild(0).gameObject.GetComponent<Plant>();
-            if (plant != null && plant.isReadyToHarvest && !_plants.Contains(plant))
+            if (child.childCount > 0)
             {
-                _plants.Add(plant);
+                Plant plant = child.GetChild(0).gameObject.GetComponent<Plant>();
+                if (plant != null && plant.isReadyToHarvest && !_plants.Contains(plant))
+                {
+                    _plants.Add(plant);
+                }
             }
         }
     }
 
-    private void MoveToPlant()
-    {
-        if (_plants.Count == 0 || _targetPlant != null)
-            return;
-
-        _targetPlant = _plants.OrderBy(p => Vector3.Distance(transform.position, p.gridLocation)).First();
-        StartCoroutine(MoveToTarget(_targetPlant));
-    }
-
-    private IEnumerator MoveToTarget(Plant target)
-    {
-        while (Vector3.Distance(transform.position, target.gridLocation) > 0.1f)
-        {
-            transform.position = Vector3.MoveTowards(transform.position, target.gridLocation, moveSpeed * Time.deltaTime);
-            yield return null;
-        }
-
-        if (target.isReadyToHarvest)
-        {
-            target.Harvest();
-            score++;
-            _plants.Remove(target);
-        }
-
-        _targetPlant = null; 
-    }
 
     
 }

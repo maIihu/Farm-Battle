@@ -19647,7 +19647,7 @@ MonoBehaviour:
   moveSpeed: 5
   map: {fileID: 1556773522}
   tileMap: {fileID: 1979060384}
-  time: 0.1
+  time: 0.05
   score: 0
 --- !u!58 &1818420746
 CircleCollider2D:
