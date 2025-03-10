@@ -11,18 +11,19 @@ public class PlayerController : MonoBehaviour
     public static PlayerController Instance { get; private set; } 
 
     [SerializeField] private float moveSpeed = 5f;
-    [SerializeField] private GameObject pickCell;
-    [SerializeField] private MapManager map;
     [SerializeField] private Tilemap tileMap;
     
     private SpriteRenderer _spriteRenderer;
     private Animator _animator;
     private Vector2 _moveInput;
     private Rigidbody2D _rb;
+    private Transform _pickCell;
+
+    private float _actionCooldown = 0.2f;
+    private float _lastActionTime = 0f;
     
     public int score;
-    private bool _isHit;
-
+    
     public static event Action<Vector3> OnBombThrown;
     
     private void Awake()
@@ -40,26 +41,37 @@ public class PlayerController : MonoBehaviour
         _rb = GetComponent<Rigidbody2D>();
     }
 
+    private void Start()
+    {
+        _pickCell = transform.GetChild(0);
+    }
 
     private void Update()
     {
         InputHandle();
-        pickCell.transform.position = new Vector3((int)(this.transform.position.x) + 0.5f, 
-            (int)(this.transform.position.y) - 0.5f, this.transform.position.z);
-        
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            map.Crop(this.transform.GetChild(0).transform.position, tileMap, ref score);
-            _isHit = true;
-        }
-        
-        if (Input.GetKeyUp(KeyCode.Space)) 
-        {
-            _isHit = false;
-        }
-        
+        _pickCell.position = new Vector3((int)(transform.position.x) + 0.5f, (int)(transform.position.y) - 0.5f, transform.position.z);
     }
 
+    private void LateUpdate()
+    {
+        if (Input.GetKey(KeyCode.Space) && Time.time - _lastActionTime >= _actionCooldown)
+        {
+            DigOrSow();
+            MapManager.Instance.Harvest(_pickCell.position, tileMap, ref score);
+            _lastActionTime = Time.time;
+        }
+    }
+
+    private void DigOrSow()
+    {
+        bool hasDug = MapManager.Instance.Dig(_pickCell.position, tileMap);
+        if (!hasDug) 
+        {
+            MapManager.Instance.Sow(_pickCell.position);
+        }
+    }
+
+    
     private void FixedUpdate()
     {
         _rb.velocity = _moveInput * moveSpeed;
@@ -104,7 +116,7 @@ public class PlayerController : MonoBehaviour
     }
     private void OnTriggerStay2D(Collider2D other)
     {
-        if (other.CompareTag("Bomb") && Input.GetKeyDown(KeyCode.Space))
+        if (other.CompareTag("Bomb") && Input.GetKey(KeyCode.Space))
         {
             BombController bombClone = other.gameObject.GetComponent<BombController>();
             Vector3 des = new Vector3(Random.Range(14, 24), -11 - transform.position.y, 0);
