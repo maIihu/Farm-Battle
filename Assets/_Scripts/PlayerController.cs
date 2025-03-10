@@ -18,9 +18,7 @@ public class PlayerController : MonoBehaviour
     private Vector2 _moveInput;
     private Rigidbody2D _rb;
     private Transform _pickCell;
-
-    private float _actionCooldown = 0.2f;
-    private float _lastActionTime = 0f;
+    
     
     public int score;
     
@@ -46,6 +44,9 @@ public class PlayerController : MonoBehaviour
         _pickCell = transform.GetChild(0);
     }
 
+    private float _sowDelay = 0.24f;
+    private float _lastDigTime = -1f; 
+    
     private void Update()
     {
         InputHandle();
@@ -54,22 +55,22 @@ public class PlayerController : MonoBehaviour
 
     private void LateUpdate()
     {
-        if (Input.GetKey(KeyCode.Space) && Time.time - _lastActionTime >= _actionCooldown)
+        if (Input.GetKey(KeyCode.Space))
         {
-            DigOrSow();
-            MapManager.Instance.Harvest(_pickCell.position, tileMap, ref score);
-            _lastActionTime = Time.time;
+            bool hasDug = MapManager.Instance.Dig(_pickCell.position, tileMap);
+            if (hasDug)
+            {
+                _lastDigTime = Time.time;
+            }
+            else if (Time.time - _lastDigTime >= _sowDelay) 
+            {
+                MapManager.Instance.Sow(_pickCell.position);
+            }
+
+            MapManager.Instance.Harvest(_pickCell.position, tileMap, ref score); 
         }
     }
 
-    private void DigOrSow()
-    {
-        bool hasDug = MapManager.Instance.Dig(_pickCell.position, tileMap);
-        if (!hasDug) 
-        {
-            MapManager.Instance.Sow(_pickCell.position);
-        }
-    }
 
     
     private void FixedUpdate()

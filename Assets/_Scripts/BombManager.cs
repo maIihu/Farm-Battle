@@ -34,10 +34,8 @@ public class BombManager : MonoBehaviour
     
     private void Start()
     {
-        SpawnBomb();
-        
+        Invoke(nameof(SpawnBomb), 30f); 
     }
-
     private void Update()
     {
         if (_bombClone != null)
@@ -62,7 +60,7 @@ public class BombManager : MonoBehaviour
         float locationY = Random.Range(Y, Y + 10);
         float locationX = 0;
         _bombClone = Instantiate(bombPrefab);
-        if (player1Score >= player2Score)
+        if (player1Score > player2Score)
         {
             locationX = Random.Range(X1, X1 + 10);
             _bombClone.GetComponent<BombController>().onTheLeft = true;
@@ -105,7 +103,7 @@ public class BombManager : MonoBehaviour
             for (int j = -1; j <= 1; j++)
             {
                 Vector3 location = new Vector3(x + i, y + j, 0); 
-                destroyedPositions .Add(location);
+                destroyedPositions.Add(location);
             }
         }
         
