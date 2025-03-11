@@ -53,6 +53,7 @@ public class BotController : MonoBehaviour
         
         PlayerController.OnBombThrown += MoveToBomb;
         BombManager.OnBombExploded += HandleDestroyedAreas;
+        BombManager.OnTheRight += MoveToBomb;
     }
     
     private void MoveToStartPoint()
@@ -65,6 +66,7 @@ public class BotController : MonoBehaviour
     {
         PlayerController.OnBombThrown -= MoveToBomb; 
         BombManager.OnBombExploded -= HandleDestroyedAreas;
+        BombManager.OnTheRight -= MoveToBomb;
     }
     
     private void HandleDestroyedAreas(List<Vector3> destroyedPositions)
@@ -149,7 +151,7 @@ public class BotController : MonoBehaviour
         GameObject bomb = GameObject.FindGameObjectWithTag("Bomb");
         if (bomb)
         {
-            Vector3 des = new Vector3(Random.Range(1, 11), - 11 - transform.position.y, 0);
+            Vector3 des = new Vector3(Random.Range(2, 10), Random.Range(-10, -2), 0);
             bomb.GetComponent<BombController>().ThrowingBomb(des);
         }
         _isChasingBomb = false;

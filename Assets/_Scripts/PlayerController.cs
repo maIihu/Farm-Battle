@@ -120,7 +120,7 @@ public class PlayerController : MonoBehaviour
         if (other.CompareTag("Bomb") && Input.GetKey(KeyCode.Space))
         {
             BombController bombClone = other.gameObject.GetComponent<BombController>();
-            Vector3 des = new Vector3(Random.Range(14, 24), -11 - transform.position.y, 0);
+            Vector3 des = new Vector3(Random.Range(15, 23), Random.Range(-10, -2), 0);
             bombClone.ThrowingBomb(des);
             
             OnBombThrown?.Invoke(des);

@@ -8,6 +8,7 @@ using Random = UnityEngine.Random;
 public class BombManager : MonoBehaviour
 {
     public static event Action<List<Vector3>> OnBombExploded;
+    public static event Action<Vector3> OnTheRight;
     
     public static BombManager Instance { get; private set; } 
     
@@ -15,9 +16,9 @@ public class BombManager : MonoBehaviour
     [SerializeField] private Tilemap tileMap1;
     [SerializeField] private Tilemap tileMap2;
     
-    private const float X1 = 1;
-    private const float X2 = 14;
-    private const float Y = -11;
+    private const float X1 = 2;
+    private const float X2 = 15;
+    private const float Y = -10;
     private Transform _targetTileMap;
     private GameObject _bombClone;
     
@@ -71,6 +72,7 @@ public class BombManager : MonoBehaviour
             locationX = Random.Range(X2, X2 + 10);
             _bombClone.GetComponent<BombController>().onTheLeft = false;
             _targetTileMap = tileMap2.transform;
+            OnTheRight?.Invoke(new Vector3(locationX, locationY, 0));
         }
 
         _bombClone.transform.position = new Vector3(locationX, locationY, this.transform.position.z);
