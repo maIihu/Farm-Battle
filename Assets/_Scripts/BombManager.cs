@@ -15,6 +15,7 @@ public class BombManager : MonoBehaviour
     [SerializeField] private GameObject bombPrefab;
     [SerializeField] private Tilemap tileMap1;
     [SerializeField] private Tilemap tileMap2;
+    [SerializeField] private float timeToSpawn = 65f;
     
     private const float X1 = 2;
     private const float X2 = 15;
@@ -35,7 +36,7 @@ public class BombManager : MonoBehaviour
     
     private void Start()
     {
-        Invoke(nameof(SpawnBomb), 30f); 
+        Invoke(nameof(SpawnBomb), timeToSpawn); 
     }
     private void Update()
     {

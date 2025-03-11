@@ -1215,6 +1215,7 @@ MonoBehaviour:
   bombPrefab: {fileID: 6060902322118099575, guid: dbfc6a2d415115544b30d06f47586fa8, type: 3}
   tileMap1: {fileID: 1381698292}
   tileMap2: {fileID: 1979060384}
+  timeToSpawn: 65
 --- !u!4 &1065073468
 Transform:
   m_ObjectHideFlags: 0
@@ -16437,7 +16438,7 @@ Transform:
   m_GameObject: {fileID: 1360360578}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 1.28, y: -0.78, z: 0}
+  m_LocalPosition: {x: 9.77, y: -1.15, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -19623,7 +19624,7 @@ Transform:
   m_GameObject: {fileID: 1818420743}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 23.5, y: -0.5, z: 0}
+  m_LocalPosition: {x: 15.07, y: -1.37, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -19642,9 +19643,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3a67391a72043dd4fb6fd20d57cf1f0b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 5
   tileMap: {fileID: 1979060384}
-  time: 0.01
+  moveSpeed: 5
   score: 0
 --- !u!58 &1818420746
 CircleCollider2D:
