@@ -11,27 +11,25 @@ public class BotController : MonoBehaviour
 {
     public static BotController Instance { get; private set; } 
     
-    [SerializeField] private float moveSpeed = 5f;
     [SerializeField] private Tilemap tileMap;
-    [SerializeField] private float time;
+    [SerializeField] private float moveSpeed = 5f;
     
     private int _stepCount;
     private int _moveDir = 1;
-    
-    // private bool _isDigging = true;
-    // private bool _isSowing = true;
     
     private bool _hasDug;
     private bool _hasSowed;
     private bool _isHarvesting;
     private bool _isChasingBomb;
     
+    private Vector3 _bombPosition;
+    private Transform _pickCell;
     private KeyValuePair<Vector3, Plant>? _targetPlant;
     private Dictionary<Vector3, Plant> _plants;
     private List<Vector3> _destroyedAreas;
     
     public int score;
-    private Vector3 _bombPosition;
+    
     
     private void Awake()
     {
@@ -47,6 +45,7 @@ public class BotController : MonoBehaviour
     {
         _plants = new Dictionary<Vector3, Plant>();
         _targetPlant = new KeyValuePair<Vector3, Plant>();
+        _pickCell = transform.GetChild(0);
         
         MoveToStartPoint();
         StartCoroutine(MoveToDigRoutine());
@@ -59,7 +58,7 @@ public class BotController : MonoBehaviour
     private void MoveToStartPoint()
     {
         transform.position = new Vector3(13.5f, -0.5f, 0f);
-        MapManager.Instance.Dig(transform.GetChild(0).transform.position, tileMap);
+        MapManager.Instance.Dig(_pickCell.position, tileMap);
     }
     
     private void OnDestroy()
@@ -97,9 +96,8 @@ public class BotController : MonoBehaviour
                 transform.position = Vector3.MoveTowards(transform.position, targetPosition, moveSpeed * Time.deltaTime);
                 yield return null;
             }
-
-            MapManager.Instance.Dig(transform.GetChild(0).transform.position, tileMap);
-            MapManager.Instance.Sow(transform.GetChild(0).transform.position);
+            MapManager.Instance.Dig(_pickCell.position, tileMap);
+            MapManager.Instance.Sow(_pickCell.position);
         }
         _isHarvesting = true;
     }
@@ -121,7 +119,7 @@ public class BotController : MonoBehaviour
             _hasDug = true; 
             
             transform.position = new Vector3(23.5f, -0.5f);
-            MapManager.Instance.Sow(transform.GetChild(0).transform.position);
+            MapManager.Instance.Sow(_pickCell.position);
             
             _stepCount = 0;
             _moveDir = 1;
@@ -180,70 +178,96 @@ public class BotController : MonoBehaviour
     {
         while (!_hasDug)
         {
-            MoveToDig();
-            yield return new WaitForSeconds(time);
+            yield return StartCoroutine(MoveToDig());
         }
     }
     
-    private void MoveToDig()
+    private IEnumerator MoveToDig()
     {
         Vector3 currentPosition = transform.position;
+        Vector3 targetPosition;
         
         if (_stepCount < 11)
         {
-            transform.position = new Vector3(currentPosition.x, currentPosition.y - 1f * _moveDir, currentPosition.z);
+            targetPosition = new Vector3(currentPosition.x, currentPosition.y - 1f * _moveDir, currentPosition.z);
             _stepCount++;
         }
         else
         {
-            transform.position = new Vector3(currentPosition.x + 1f, currentPosition.y , currentPosition.z);
+            targetPosition = new Vector3(currentPosition.x + 1f, currentPosition.y , currentPosition.z);
             _moveDir *= -1;
             _stepCount = 0;
         }
-        MapManager.Instance.Dig(transform.GetChild(0).transform.position, tileMap);
+
+        yield return MoveToPositionLerp(targetPosition);
+        MapManager.Instance.Dig(_pickCell.position, tileMap);
+        
     }
-    
+
+    private IEnumerator MoveToPositionLerp(Vector3 targetPosition)
+    {
+        Vector3 startPosition = transform.position;
+        float distance = Vector3.Distance(targetPosition, startPosition);
+        float elapsedTime = 0f;
+        while (elapsedTime * moveSpeed < distance)
+        {
+            transform.position = Vector3.Lerp(startPosition, targetPosition, (elapsedTime * moveSpeed) / distance);
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+        transform.position = targetPosition;
+    }
+
     private IEnumerator MoveToSowRoutine()
     {
         while (!_hasSowed)
         {
-            MoveToSow();
-            yield return new WaitForSeconds(time); 
+            yield return StartCoroutine(MoveToSow());
         }
     }
     
-    private void MoveToSow()
+    private IEnumerator MoveToSow()
     {
         Vector3 currentPosition = transform.position;
+        Vector3 targetPosition;
+        
         if(currentPosition.x == 24.5f && currentPosition.y == -1.5f)
         {
             _hasSowed = true;
-            transform.position = new Vector3(24.5f, -0.5f);
-            MapManager.Instance.Sow(transform.GetChild(0).transform.position);
+            targetPosition = new Vector3(24.5f, -0.5f);
+            yield return MoveToPositionLerp(targetPosition);
+            
+            MapManager.Instance.Sow(_pickCell.position);
             _isHarvesting = true;
-            return;
+            yield break;
         }
         if (currentPosition.y == -0.5f)
         {
-            transform.position = new Vector3(currentPosition.x - 1f, currentPosition.y, currentPosition.z);
+            targetPosition = new Vector3(currentPosition.x - 1f, currentPosition.y, currentPosition.z);
+            yield return MoveToPositionLerp(targetPosition);
+            
             if (currentPosition.x == 13.5f)
-                transform.position = new Vector3(currentPosition.x, currentPosition.y - 1f, currentPosition.z);
+            {
+                targetPosition = new Vector3(currentPosition.x, currentPosition.y - 1f, currentPosition.z);
+                yield return MoveToPositionLerp(targetPosition);
+            }
         }
         else
         {
             if (_stepCount < 10)
             {
-                transform.position = new Vector3(currentPosition.x, currentPosition.y - 1f * _moveDir, currentPosition.z);
+                targetPosition = new Vector3(currentPosition.x, currentPosition.y - 1f * _moveDir, currentPosition.z);
                 _stepCount++;
             }
             else
             {
-                transform.position = new Vector3(currentPosition.x + 1f, currentPosition.y , currentPosition.z);
+                targetPosition = new Vector3(currentPosition.x + 1f, currentPosition.y , currentPosition.z);
                 _moveDir *= -1;
                 _stepCount = 0;
             }
+            yield return MoveToPositionLerp(targetPosition);
         }
-        MapManager.Instance.Sow(transform.GetChild(0).transform.position);
+        MapManager.Instance.Sow(_pickCell.position);
     }
     
     private void CanHarvestPlant()
