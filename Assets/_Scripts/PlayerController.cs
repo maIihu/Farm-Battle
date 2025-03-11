@@ -18,7 +18,9 @@ public class PlayerController : MonoBehaviour
     private Vector2 _moveInput;
     private Rigidbody2D _rb;
     private Transform _pickCell;
+    private Collider2D _currentBomb;
     
+    private bool _isTouchingBomb;
     
     public int score;
     
@@ -51,6 +53,15 @@ public class PlayerController : MonoBehaviour
     {
         InputHandle();
         _pickCell.position = new Vector3((int)(transform.position.x) + 0.5f, (int)(transform.position.y) - 0.5f, transform.position.z);
+        if (_isTouchingBomb && Input.GetKeyDown(KeyCode.Space))
+        {
+            Debug.Log("Hello");
+            // BombController bombClone = currentBomb.GetComponent<BombController>();
+            // Vector3 des = new Vector3(Random.Range(15, 23), Random.Range(-10, -2), 0);
+            // bombClone.ThrowingBomb(des);
+            //
+            // OnBombThrown?.Invoke(des);
+        }
     }
 
     private void LateUpdate()
@@ -70,8 +81,6 @@ public class PlayerController : MonoBehaviour
             MapManager.Instance.Harvest(_pickCell.position, tileMap, ref score); 
         }
     }
-
-
     
     private void FixedUpdate()
     {
@@ -115,15 +124,25 @@ public class PlayerController : MonoBehaviour
             _spriteRenderer.flipX = true;
         }
     }
+
+
     private void OnTriggerStay2D(Collider2D other)
     {
-        if (other.CompareTag("Bomb") && Input.GetKey(KeyCode.Space))
+        if (other.CompareTag("Bomb"))
         {
-            BombController bombClone = other.gameObject.GetComponent<BombController>();
-            Vector3 des = new Vector3(Random.Range(15, 23), Random.Range(-10, -2), 0);
-            bombClone.ThrowingBomb(des);
-            
-            OnBombThrown?.Invoke(des);
+            _isTouchingBomb = true;
+            _currentBomb = other;
         }
     }
+
+    private void OnTriggerExit2D(Collider2D other)
+    {
+        if (other.CompareTag("Bomb"))
+        {
+            _isTouchingBomb = false;
+            _currentBomb = null;
+        }
+    }
+    
+
 }

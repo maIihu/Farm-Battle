@@ -70,6 +70,7 @@ public class BotController : MonoBehaviour
     
     private void HandleDestroyedAreas(List<Vector3> destroyedPositions)
     {
+        _isChasingBomb = false;
         _destroyedAreas = new List<Vector3>();
         _destroyedAreas.AddRange(destroyedPositions);
         foreach (var dir in _destroyedAreas)

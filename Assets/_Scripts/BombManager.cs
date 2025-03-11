@@ -62,7 +62,7 @@ public class BombManager : MonoBehaviour
         float locationY = Random.Range(Y, Y + 10);
         float locationX = 0;
         _bombClone = Instantiate(bombPrefab);
-        if (player1Score > player2Score)
+        if (player1Score >= player2Score)
         {
             locationX = Random.Range(X1, X1 + 10);
             _bombClone.GetComponent<BombController>().onTheLeft = true;
