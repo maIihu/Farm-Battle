@@ -8,31 +8,18 @@ using Random = UnityEngine.Random;
 public class BombManager : MonoBehaviour
 {
     public static event Action<List<Vector3>> OnBombExploded;
-    public static event Action<Vector3> OnTheRight;
-    
-    public static BombManager Instance { get; private set; } 
+    public static event Action SpawnBombOnTheRight;
     
     [SerializeField] private GameObject bombPrefab;
     [SerializeField] private Tilemap tileMap1;
     [SerializeField] private Tilemap tileMap2;
     [SerializeField] private float timeToSpawn = 65f;
     
-    private const float X1 = 2;
-    private const float X2 = 15;
-    private const float Y = -10;
+    private const float X1 = 4;
+    private const float X2 = 9;
+    private const float Y = -3;
     private Transform _targetTileMap;
     private GameObject _bombClone;
-    
-    // private void Awake()
-    // {
-    //     if (Instance != null && Instance != this)
-    //     {
-    //         Destroy(gameObject); 
-    //         return;
-    //     }
-    //
-    //     Instance = this;
-    // }
     
     private void Start()
     {
@@ -59,21 +46,21 @@ public class BombManager : MonoBehaviour
             player2Score = BotController.Instance.score;
         }
         
-        float locationY = Random.Range(Y, Y + 10);
-        float locationX = 0;
+        float locationY = Random.Range(-10, -3);
+        float locationX;
         _bombClone = Instantiate(bombPrefab);
         if (player1Score >= player2Score)
         {
-            locationX = Random.Range(X1, X1 + 10);
+            locationX = Random.Range(4, 9);
             _bombClone.GetComponent<BombController>().onTheLeft = true;
             _targetTileMap = tileMap1.transform;
         }
         else
         {
-            locationX = Random.Range(X2, X2 + 10);
+            locationX = Random.Range(17, 22);
             _bombClone.GetComponent<BombController>().onTheLeft = false;
             _targetTileMap = tileMap2.transform;
-            OnTheRight?.Invoke(new Vector3(locationX, locationY, 0));
+            SpawnBombOnTheRight?.Invoke();
         }
 
         _bombClone.transform.position = new Vector3(locationX, locationY, this.transform.position.z);
@@ -81,23 +68,23 @@ public class BombManager : MonoBehaviour
     
     private void OnEnable()
     {
-        BombController.OnBombExploded += HandleBombExplosion;
+        BombController.PositionBombExploded += HandleBombExplosion;
     }
 
     private void OnDisable()
     {
-        BombController.OnBombExploded -= HandleBombExplosion;
+        BombController.PositionBombExploded -= HandleBombExplosion;
     }
 
-    private void HandleBombExplosion()
+    private void HandleBombExplosion(Vector3 pos)
     {
-        DestroyMap();
+        DestroyMap(pos);
     }
 
-    private void DestroyMap()
+    private void DestroyMap(Vector3 pos)
     {
-        float x = Mathf.FloorToInt(_bombClone.transform.position.x) + 0.5f;
-        float y = Mathf.FloorToInt(_bombClone.transform.position.y) + 0.5f;
+        float x = Mathf.FloorToInt(pos.x) + 0.5f;
+        float y = Mathf.FloorToInt(pos.y) + 0.5f;
         
         List<Vector3>destroyedPositions = new List<Vector3>();
         

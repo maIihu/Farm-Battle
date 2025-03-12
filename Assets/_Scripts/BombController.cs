@@ -1,44 +1,51 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class BombController : MonoBehaviour
 {
-    [SerializeField] private float timeToExplode = 6f;
-    public static event Action OnBombExploded;
-    public bool onTheLeft;
+    public static event Action<Vector3> PositionBombExploded;
+    public static event Action BombOnTheRight;
     
+    [SerializeField] private float timeToExplode = 6f;
+    [SerializeField] private float throwForce = 5f;
+    [SerializeField] private float stopTime = 1.5f;
+
+    private Vector3 _lastPosition;
+    private Rigidbody2D _rb;
+    private bool _isThrown = false; 
+
+    public bool onTheLeft;
+
+    private void Awake()
+    {
+        _rb = GetComponent<Rigidbody2D>();
+    }
+
     private void Start()
     {
         Invoke(nameof(Explode), timeToExplode);
     }
 
+    public void ThrowingBomb(Vector3 direction)
+    { 
+        onTheLeft = !onTheLeft;
+        _rb.velocity = direction.normalized * throwForce;
+
+        Invoke(nameof(StopMoving), stopTime);
+    }
+
+    private void StopMoving()
+    {
+        _rb.velocity = Vector2.zero; 
+        _rb.angularVelocity = 0f; 
+        if(!onTheLeft)
+            BombOnTheRight?.Invoke();
+    }
+
     private void Explode()
     {
-        OnBombExploded?.Invoke();
+        _lastPosition = transform.position;
+        PositionBombExploded?.Invoke(_lastPosition);
         Destroy(gameObject);
     }
-    
-    public void ThrowingBomb(Vector3 end, float duration = 0.4f)
-    {
-        StartCoroutine(MoveBomb(end, duration));
-        onTheLeft = !onTheLeft;
-    }
-
-    private IEnumerator MoveBomb(Vector3 end, float duration)
-    {
-        Vector3 start = transform.position;
-        float elapsedTime = 0;
-
-        while (elapsedTime < duration)
-        {
-            transform.position = Vector3.Lerp(start, end, elapsedTime / duration);
-            elapsedTime += Time.deltaTime;
-            yield return null;
-        }
-        transform.position = end; 
-    }
-
-
 }

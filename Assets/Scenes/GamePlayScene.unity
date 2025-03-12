@@ -16438,7 +16438,7 @@ Transform:
   m_GameObject: {fileID: 1360360578}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 9.77, y: -1.15, z: 0}
+  m_LocalPosition: {x: 3.52, y: -5.94, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -19644,7 +19644,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tileMap: {fileID: 1979060384}
-  moveSpeed: 5
+  moveSpeed: 30
   score: 0
 --- !u!58 &1818420746
 CircleCollider2D:

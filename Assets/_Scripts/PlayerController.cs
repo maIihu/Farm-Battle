@@ -21,10 +21,10 @@ public class PlayerController : MonoBehaviour
     private Collider2D _currentBomb;
     
     private bool _isTouchingBomb;
+    private float _sowDelay = 0.24f;
+    private float _lastDigTime = -1f; 
     
     public int score;
-    
-    public static event Action<Vector3> OnBombThrown;
     
     private void Awake()
     {
@@ -45,24 +45,23 @@ public class PlayerController : MonoBehaviour
     {
         _pickCell = transform.GetChild(0);
     }
-
-    private float _sowDelay = 0.24f;
-    private float _lastDigTime = -1f; 
     
     private void Update()
     {
         InputHandle();
         _pickCell.position = new Vector3((int)(transform.position.x) + 0.5f, (int)(transform.position.y) - 0.5f, transform.position.z);
+    
         if (_isTouchingBomb && Input.GetKeyDown(KeyCode.Space))
         {
-            Debug.Log("Hello");
-            // BombController bombClone = currentBomb.GetComponent<BombController>();
-            // Vector3 des = new Vector3(Random.Range(15, 23), Random.Range(-10, -2), 0);
-            // bombClone.ThrowingBomb(des);
-            //
-            // OnBombThrown?.Invoke(des);
+            BombController bombClone = _currentBomb.GetComponent<BombController>();
+            
+            float randomAngle = Random.Range(-30f, 30f);
+            
+            Quaternion rotation = Quaternion.Euler(0, 0, randomAngle);
+            bombClone.ThrowingBomb(Vector3.right);
         }
     }
+
 
     private void LateUpdate()
     {

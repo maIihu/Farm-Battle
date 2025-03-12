@@ -50,9 +50,9 @@ public class BotController : MonoBehaviour
         MoveToStartPoint();
         StartCoroutine(MoveToDigRoutine());
         
-        PlayerController.OnBombThrown += MoveToBomb;
         BombManager.OnBombExploded += HandleDestroyedAreas;
-        BombManager.OnTheRight += MoveToBomb;
+        BombManager.SpawnBombOnTheRight += MoveToBomb;
+        BombController.BombOnTheRight += MoveToBomb;
     }
     
     private void MoveToStartPoint()
@@ -63,9 +63,9 @@ public class BotController : MonoBehaviour
     
     private void OnDestroy()
     {
-        PlayerController.OnBombThrown -= MoveToBomb; 
         BombManager.OnBombExploded -= HandleDestroyedAreas;
-        BombManager.OnTheRight -= MoveToBomb;
+        BombManager.SpawnBombOnTheRight -= MoveToBomb;
+        BombController.BombOnTheRight -= MoveToBomb;
     }
     
     private void HandleDestroyedAreas(List<Vector3> destroyedPositions)
@@ -103,9 +103,14 @@ public class BotController : MonoBehaviour
         _isHarvesting = true;
     }
     
-    private void MoveToBomb(Vector3 bombPos)
+    private void MoveToBomb()
     {
-        _bombPosition = bombPos;
+        GameObject bomb = GameObject.FindGameObjectWithTag("Bomb");
+        if (bomb)
+        {
+            _bombPosition = bomb.transform.position;
+        }
+        
         _isChasingBomb = true;
         _isHarvesting = false;
         _targetPlant = null;
@@ -150,8 +155,15 @@ public class BotController : MonoBehaviour
         GameObject bomb = GameObject.FindGameObjectWithTag("Bomb");
         if (bomb)
         {
-            Vector3 des = new Vector3(Random.Range(2, 10), Random.Range(-10, -2), 0);
-            bomb.GetComponent<BombController>().ThrowingBomb(des);
+            float randomAngle;
+            if (bomb.transform.position.y < -6)
+                randomAngle = Random.Range(-30f, 0f);
+            else
+                randomAngle = Random.Range(0f, 30f);
+                
+            
+            Quaternion rotation = Quaternion.Euler(0, 0, randomAngle);
+            bomb.GetComponent<BombController>().ThrowingBomb(rotation * Vector3.left);
         }
         _isChasingBomb = false;
         _isHarvesting = true;
