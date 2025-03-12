@@ -124,7 +124,7 @@ public class BotController : MonoBehaviour
         {
             _hasDug = true; 
             
-            transform.position = new Vector3(23.5f, -0.5f);
+            StartCoroutine(MoveToPositionLerp(new Vector3(23.5f, -0.5f)));
             MapManager.Instance.Sow(_pickCell.position);
             
             _stepCount = 0;

@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Bomb
   - Map
+  - Fence
   layers:
   - Default
   - TransparentFX

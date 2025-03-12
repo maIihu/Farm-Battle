@@ -48,4 +48,16 @@ public class BombController : MonoBehaviour
         PositionBombExploded?.Invoke(_lastPosition);
         Destroy(gameObject);
     }
+
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.CompareTag("Fence"))
+        {
+            Debug.Log("Va cham voi Fence");
+            gameObject.GetComponent<CircleCollider2D>().isTrigger = false;
+        }
+    }
+
+
+
 }
