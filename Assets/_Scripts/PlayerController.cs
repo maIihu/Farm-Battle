@@ -4,24 +4,38 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.Tilemaps;
+using Random = UnityEngine.Random;
 
 public class PlayerController : MonoBehaviour
 {
+    public static PlayerController Instance { get; private set; } 
+
     [SerializeField] private float moveSpeed = 5f;
-    [SerializeField] private GameObject pickCell;
-    [SerializeField] private CropManager crop;
     [SerializeField] private Tilemap tileMap;
+    
     private SpriteRenderer _spriteRenderer;
     private Animator _animator;
-
-    
     private Vector2 _moveInput;
     private Rigidbody2D _rb;
-    public int Score { get; set; }
-    public bool isHit;
+    private Transform _pickCell;
+    private Collider2D _currentBomb;
+    
+    private bool _isTouchingBomb;
+    private float _sowDelay = 0.24f;
+    private float _lastDigTime = -1f; 
+    
+    public int score;
     
     private void Awake()
     {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject); 
+            return;
+        }
+
+        Instance = this;
+
         _animator = GetComponent<Animator>();
         _spriteRenderer = GetComponent<SpriteRenderer>();
         _rb = GetComponent<Rigidbody2D>();
@@ -29,20 +43,44 @@ public class PlayerController : MonoBehaviour
 
     private void Start()
     {
-        Score = 0;
+        _pickCell = transform.GetChild(0);
     }
-
+    
     private void Update()
     {
         InputHandle();
-        if (Input.GetKeyDown(KeyCode.Space))
+        _pickCell.position = new Vector3((int)(transform.position.x) + 0.5f, (int)(transform.position.y) - 0.5f, transform.position.z);
+    
+        if (_isTouchingBomb && Input.GetKeyDown(KeyCode.Space))
         {
-            crop.Crop(this.transform.GetChild(0).transform.position, tileMap);
+            BombController bombClone = _currentBomb.GetComponent<BombController>();
+            
+            float randomAngle = Random.Range(-30f, 30f);
+            
+            Quaternion rotation = Quaternion.Euler(0, 0, randomAngle);
+            bombClone.ThrowingBomb(Vector3.right);
         }
-        pickCell.transform.position = new Vector3((int)(this.transform.position.x) + 0.5f, 
-            (int)(this.transform.position.y) - 0.5f, this.transform.position.z);
     }
 
+
+    private void LateUpdate()
+    {
+        if (Input.GetKey(KeyCode.Space))
+        {
+            bool hasDug = MapManager.Instance.Dig(_pickCell.position, tileMap);
+            if (hasDug)
+            {
+                _lastDigTime = Time.time;
+            }
+            else if (Time.time - _lastDigTime >= _sowDelay) 
+            {
+                MapManager.Instance.Sow(_pickCell.position);
+            }
+
+            MapManager.Instance.Harvest(_pickCell.position, tileMap, ref score); 
+        }
+    }
+    
     private void FixedUpdate()
     {
         _rb.velocity = _moveInput * moveSpeed;
@@ -51,6 +89,7 @@ public class PlayerController : MonoBehaviour
     private void InputHandle()
     {
         _moveInput = Vector2.zero;
+        
         if (Input.GetKey(KeyCode.A))
             _moveInput.x = -1f;
         if (Input.GetKey(KeyCode.D))
@@ -59,12 +98,22 @@ public class PlayerController : MonoBehaviour
             _moveInput.y = 1f;
         if (Input.GetKey(KeyCode.S))
             _moveInput.y = -1f;
+        
+        SetAnimation();
+        FlipCharacter();
+        
+        _moveInput.Normalize();
+    }
 
-
-        // animation of player
+    private void SetAnimation()
+    {
         _animator.SetFloat("Horizontal", _moveInput.x);
         _animator.SetFloat("Vertical", _moveInput.y);
         _animator.SetFloat("Speed", _moveInput.magnitude);
+    }
+
+    private void FlipCharacter()
+    {
         if (_moveInput.x > 0)
         {
             _spriteRenderer.flipX = false;
@@ -73,10 +122,26 @@ public class PlayerController : MonoBehaviour
         {
             _spriteRenderer.flipX = true;
         }
-
-
-        _moveInput.Normalize();
-
-
     }
+
+
+    private void OnTriggerStay2D(Collider2D other)
+    {
+        if (other.CompareTag("Bomb"))
+        {
+            _isTouchingBomb = true;
+            _currentBomb = other;
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D other)
+    {
+        if (other.CompareTag("Bomb"))
+        {
+            _isTouchingBomb = false;
+            _currentBomb = null;
+        }
+    }
+    
+
 }
