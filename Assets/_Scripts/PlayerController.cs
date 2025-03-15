@@ -53,12 +53,9 @@ public class PlayerController : MonoBehaviour
     
         if (_isTouchingBomb && Input.GetKeyDown(KeyCode.Space))
         {
-            BombController bombClone = _currentBomb.GetComponent<BombController>();
-            
-            float randomAngle = Random.Range(-30f, 30f);
-            
-            Quaternion rotation = Quaternion.Euler(0, 0, randomAngle);
-            bombClone.ThrowingBomb(Vector3.right);
+            float x = Random.Range(2, 10);
+            float y = Random.Range(-10, -2);
+            _currentBomb.GetComponent<BombController>().ThrowingBomb(new Vector3(x, y, 0));
         }
     }
 
