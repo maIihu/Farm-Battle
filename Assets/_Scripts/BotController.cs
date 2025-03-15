@@ -156,14 +156,9 @@ public class BotController : MonoBehaviour
         GameObject bomb = GameObject.FindGameObjectWithTag("Bomb");
         if (bomb)
         {
-            float randomAngle;
-            if (bomb.transform.position.y < -6)
-                randomAngle = Random.Range(-30f, 0f);
-            else
-                randomAngle = Random.Range(0f, 30f);
-            
-            Quaternion rotation = Quaternion.Euler(0, 0, randomAngle);
-            bomb.GetComponent<BombController>().ThrowingBomb(new Vector3(10f, -4f, 0));
+            float x = Random.Range(15, 23);
+            float y = Random.Range(-10, -2);
+            bomb.GetComponent<BombController>().ThrowingBomb(new Vector3(x, -y, 0));
         }
         _isChasingBomb = false;
         _isHarvesting = true;
