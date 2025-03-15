@@ -21,8 +21,6 @@ public class BotController : MonoBehaviour
     private bool _hasSowed;
     private bool _isHarvesting;
     private bool _isChasingBomb;
-
-    private bool _startSow;
     
     private Vector3 _bombPosition;
     private Transform _pickCell;
@@ -31,6 +29,7 @@ public class BotController : MonoBehaviour
     private List<Vector3> _destroyedAreas;
     
     public int score;
+    
     
     private void Awake()
     {
@@ -121,9 +120,9 @@ public class BotController : MonoBehaviour
     {
         Vector2 currentPos = new Vector2(transform.position.x, transform.position.y);
         
-        //if (!_hasDug && currentPos == new Vector2(24.5f, -0.5f))
-        if(_hasDug && !_startSow){
-            _startSow = true; 
+        if (!_hasDug && currentPos == new Vector2(24.5f, -0.5f))
+        {
+            _hasDug = true; 
             
             StartCoroutine(MoveToPositionLerp(new Vector3(23.5f, -0.5f)));
             MapManager.Instance.Sow(_pickCell.position);
@@ -137,7 +136,7 @@ public class BotController : MonoBehaviour
         {
             transform.position = Vector3.MoveTowards(transform.position, _bombPosition, moveSpeed * Time.deltaTime);
             
-            if (Vector3.Distance(transform.position, _bombPosition) < 0.1f)
+            if (Vector3.Distance(transform.position, _bombPosition) < 0.5f)
             {
                 KickBomb();
             }
@@ -161,6 +160,7 @@ public class BotController : MonoBehaviour
                 randomAngle = Random.Range(-30f, 0f);
             else
                 randomAngle = Random.Range(0f, 30f);
+                
             
             Quaternion rotation = Quaternion.Euler(0, 0, randomAngle);
             bomb.GetComponent<BombController>().ThrowingBomb(new Vector3(10f, -4f, 0));
@@ -200,12 +200,6 @@ public class BotController : MonoBehaviour
         Vector3 currentPosition = transform.position;
         Vector3 targetPosition;
         
-        if (currentPosition == new Vector3(24.5f, -0.5f, 0))
-        {
-            _hasDug = true;
-            yield break;
-        }
-        
         if (_stepCount < 11)
         {
             targetPosition = new Vector3(currentPosition.x, currentPosition.y - 1f * _moveDir, currentPosition.z);
@@ -220,7 +214,6 @@ public class BotController : MonoBehaviour
 
         yield return MoveToPositionLerp(targetPosition);
         MapManager.Instance.Dig(_pickCell.position, tileMap);
-        
         
     }
 
@@ -251,7 +244,7 @@ public class BotController : MonoBehaviour
         Vector3 currentPosition = transform.position;
         Vector3 targetPosition;
         
-        if((Vector2)currentPosition == new Vector2(24.5f, -1.5f))
+        if(currentPosition.x == 24.5f && currentPosition.y == -1.5f)
         {
             _hasSowed = true;
             targetPosition = new Vector3(24.5f, -0.5f);
@@ -261,12 +254,12 @@ public class BotController : MonoBehaviour
             _isHarvesting = true;
             yield break;
         }
-        if (Mathf.Approximately(currentPosition.y, -0.5f))
+        if (currentPosition.y == -0.5f)
         {
             targetPosition = new Vector3(currentPosition.x - 1f, currentPosition.y, currentPosition.z);
             yield return MoveToPositionLerp(targetPosition);
             
-            if (Mathf.Approximately(currentPosition.x, 13.5f))
+            if (currentPosition.x == 13.5f)
             {
                 targetPosition = new Vector3(currentPosition.x, currentPosition.y - 1f, currentPosition.z);
                 yield return MoveToPositionLerp(targetPosition);

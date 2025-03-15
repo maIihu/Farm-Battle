@@ -41,7 +41,12 @@ public class BombController : MonoBehaviour
 
     private void StopMoving()
     {
+<<<<<<< HEAD
         _isMoving = false;
+=======
+        _rb.velocity = Vector2.zero; 
+        _rb.angularVelocity = 0f; 
+>>>>>>> parent of 38be943 (Update Bot)
         if(!onTheLeft)
             BombOnTheRight?.Invoke();
     }
@@ -57,13 +62,11 @@ public class BombController : MonoBehaviour
     {
         if (other.CompareTag("Fence"))
         {
+            Debug.Log("Va cham voi Fence");
             gameObject.GetComponent<CircleCollider2D>().isTrigger = false;
-            Invoke(nameof(EnableTrigger), 0.2f);
         }
     }
 
-    private void EnableTrigger()
-    {
-        gameObject.GetComponent<CircleCollider2D>().isTrigger = true;
-    }
+
+
 }
