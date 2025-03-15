@@ -11,6 +11,7 @@ public class UIManager : MonoBehaviour
     private TextMeshProUGUI _player1TextScore;
     private TextMeshProUGUI _player2TextScore;
     
+    
     private float _remainingTime = 180f;
 
     private int _player1Score;
@@ -25,8 +26,12 @@ public class UIManager : MonoBehaviour
 
     private void Start()
     {
-        
     }
+
+    private void OnDestroy()
+    {
+    }
+
 
     private TextMeshProUGUI GetComponentText(string nameGameObject)
     {
