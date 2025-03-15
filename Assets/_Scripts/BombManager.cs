@@ -15,6 +15,9 @@ public class BombManager : MonoBehaviour
     [SerializeField] private Tilemap tileMap2;
     [SerializeField] private float timeToSpawn = 65f;
     
+    private const float X1 = 4;
+    private const float X2 = 9;
+    private const float Y = -3;
     private Transform _targetTileMap;
     private GameObject _bombClone;
     

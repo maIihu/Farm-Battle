@@ -37,6 +37,45 @@ public class MapManager : MonoBehaviour
         map = new Dictionary<Vector3, GameObject>();
     }
     
+    // public void Crop(Vector3 location, Tilemap tileMap, ref int score1)
+    // {
+    //     Vector3Int cellPos = tileMap.WorldToCell(location);
+    //     TileBase currentTile = tileMap.GetTile(cellPos);
+    //     
+    //     if (currentTile != null) 
+    //     {
+    //         if(currentTile.name is "Tile2" or "Cliff_Tile_4" && !map.ContainsKey(location))
+    //         {
+    //             GameObject dirtClone = Instantiate(dirtPrefab, location, Quaternion.identity, tileMap.transform);
+    //             dirtClone.name = location.ToString();
+    //             map[location] = dirtClone;
+    //         }
+    //         else if (map.ContainsKey(location) && !hasCrop.ContainsKey(location))
+    //         {
+    //             GameObject plantClone = Instantiate(plantPrefab, location, Quaternion.identity);
+    //             plantClone.transform.SetParent(map[location].transform);
+    //         
+    //             plantClone.GetComponent<Plant>().gridLocation = location;
+    //         
+    //             hasCrop[location] = true;
+    //         }
+    //     }
+    //     
+    //     for (int i = 0; i < tileMap.transform.childCount; i++)
+    //     {
+    //         Transform child = tileMap.transform.GetChild(i);
+    //         if (child.childCount > 0)
+    //         {
+    //             Plant plant = child.GetChild(0).gameObject.GetComponent<Plant>();
+    //             if (plant != null && plant.isReadyToHarvest && location.ToString() == child.name)
+    //             {
+    //                 plant.Harvest();
+    //                 score1++;
+    //             }
+    //         }
+    //     }
+    // }
+
     public bool Dig(Vector3 location, Tilemap tileMap)
     {
         Vector3Int cellPos = tileMap.WorldToCell(location);
