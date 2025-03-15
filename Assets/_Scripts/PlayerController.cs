@@ -58,7 +58,7 @@ public class PlayerController : MonoBehaviour
             float randomAngle = Random.Range(-30f, 30f);
             
             Quaternion rotation = Quaternion.Euler(0, 0, randomAngle);
-            bombClone.ThrowingBomb(Vector3.right);
+            bombClone.ThrowingBomb(new Vector3(17f, -5f, 0));
         }
     }
 

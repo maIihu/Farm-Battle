@@ -163,7 +163,7 @@ public class BotController : MonoBehaviour
                 randomAngle = Random.Range(0f, 30f);
             
             Quaternion rotation = Quaternion.Euler(0, 0, randomAngle);
-            bomb.GetComponent<BombController>().ThrowingBomb(rotation * Vector3.left);
+            bomb.GetComponent<BombController>().ThrowingBomb(new Vector3(10f, -4f, 0));
         }
         _isChasingBomb = false;
         _isHarvesting = true;
