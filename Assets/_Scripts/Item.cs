@@ -7,7 +7,7 @@ public class Item
     public enum ItemType
     {
         Shield,
-        Wave,
+        Tsunami,
         Rain,
         Thunder,
         Wind
@@ -18,7 +18,7 @@ public class Item
         switch (itemType)
         {
             case ItemType.Shield: return 50;
-            case ItemType.Wave: return 60;
+            case ItemType.Tsunami: return 60;
             case ItemType.Rain: return 70;
             case ItemType.Thunder: return 80;
             case ItemType.Wind: return 90;
@@ -31,7 +31,7 @@ public class Item
         switch (itemType)
         {
             case ItemType.Shield: return "Shield";
-            case ItemType.Wave: return "Wave";
+            case ItemType.Tsunami: return "Tsunami";
             case ItemType.Rain: return "Rain";
             case ItemType.Thunder: return "Thunder";
             case ItemType.Wind: return "Wind";

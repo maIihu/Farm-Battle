@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: b7651f071c806694b9685705ced5f3f6
+guid: dbf40b28a8ee3ea4a8d3f1dd30add2d4
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -93,137 +93,24 @@ TextureImporter:
     ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Water_Tile_0
-      rect:
-        serializedVersion: 2
-        x: 0
-        y: 80
-        width: 16
-        height: 16
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 0214dd480262b304086c9347db23b61d
-      internalID: -1467667779
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Water_Tile_1
-      rect:
-        serializedVersion: 2
-        x: 16
-        y: 80
-        width: 16
-        height: 16
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 71ab629221b4fde48b2f14e8acfbfb3d
-      internalID: 1737200115
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Water_Tile_2
-      rect:
-        serializedVersion: 2
-        x: 32
-        y: 80
-        width: 16
-        height: 16
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: e1c3909ff5408c54a92ed0e4f5e963c9
-      internalID: -1271059892
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Water_Tile_3
-      rect:
-        serializedVersion: 2
-        x: 0
-        y: 64
-        width: 16
-        height: 16
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: e91c419f57780d149af786f1b228cc5e
-      internalID: -1561991219
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Water_Tile_4
-      rect:
-        serializedVersion: 2
-        x: 16
-        y: 64
-        width: 16
-        height: 16
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 778cf024b491d3a41886b9f0b27cc98a
-      internalID: -1205103130
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Water_Tile_5
-      rect:
-        serializedVersion: 2
-        x: 32
-        y: 64
-        width: 16
-        height: 16
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 9d63c712ce106a341ab656e9c2e69c55
-      internalID: 80644040
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Water_Tile_6
+      name: Fences_0
       rect:
         serializedVersion: 2
         x: 0
@@ -237,14 +124,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: fe2eed085a80d8a4b9fade03d73887fb
-      internalID: -1535486164
+      spriteID: a059851c3fffa6a4188255dea94757ba
+      internalID: -1472483050
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Water_Tile_7
+      name: Fences_1
       rect:
         serializedVersion: 2
         x: 16
@@ -258,14 +145,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: c628f61863ecc2843bac544595ae8bd8
-      internalID: 1218103396
+      spriteID: afe28bc187b70624381040ea92774823
+      internalID: 999129700
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Water_Tile_8
+      name: Fences_2
       rect:
         serializedVersion: 2
         x: 32
@@ -279,14 +166,35 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 798b93fbec02f994fbfbf1639954c602
-      internalID: -1461900641
+      spriteID: 08e2a89efa888074fb5290ba4039f226
+      internalID: -1626836824
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Water_Tile_9
+      name: Fences_3
+      rect:
+        serializedVersion: 2
+        x: 48
+        y: 48
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5d288d4220c7a7f439c08bfb6559a4c4
+      internalID: -1537847678
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Fences_4
       rect:
         serializedVersion: 2
         x: 0
@@ -300,14 +208,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: a3ac5a6c435dab94fb819ac6b88dd8f0
-      internalID: 1055512566
+      spriteID: ff16f617f6b7ab246833eb4e1dcb3aaf
+      internalID: 2141940531
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Water_Tile_10
+      name: Fences_5
       rect:
         serializedVersion: 2
         x: 16
@@ -321,14 +229,56 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: fa78bb5374b03bc46bf23916aa360025
-      internalID: 360662352
+      spriteID: 1e5b851b7123e4f468032c8bad263e9a
+      internalID: -1466827650
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Water_Tile_11
+      name: Fences_6
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 32
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5051c688792adb941975716ea0f7c7cf
+      internalID: 654220809
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Fences_7
+      rect:
+        serializedVersion: 2
+        x: 48
+        y: 32
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1b18480b05ab05f4390a7ca195da4854
+      internalID: 1560474827
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Fences_8
       rect:
         serializedVersion: 2
         x: 0
@@ -342,14 +292,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 18ffad61397aee843afbf363566851f6
-      internalID: 975061892
+      spriteID: 29cc762695232fa4f8c3c46dfc43445d
+      internalID: 1342333559
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Water_Tile_12
+      name: Fences_9
       rect:
         serializedVersion: 2
         x: 16
@@ -363,14 +313,56 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: f3b77eb7b6e168c4fa67f84efe523601
-      internalID: 1641972996
+      spriteID: 2b73cf6c8e12905419364a53009ceceb
+      internalID: 1117892207
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Water_Tile_13
+      name: Fences_10
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 16
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 190bc700473a7a942842c0fab726fcf8
+      internalID: -2057376432
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Fences_11
+      rect:
+        serializedVersion: 2
+        x: 48
+        y: 16
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 470473e1eb2a8804492c4a18621606bd
+      internalID: -839742872
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Fences_12
       rect:
         serializedVersion: 2
         x: 0
@@ -384,14 +376,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 5e8aa8d88001512448e205342e9626e0
-      internalID: -2008202305
+      spriteID: 9a081dc2fab27ed4ebec4068d5d4af7f
+      internalID: -1374782975
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Water_Tile_14
+      name: Fences_13
       rect:
         serializedVersion: 2
         x: 16
@@ -405,14 +397,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: ef54cf3687550af4bac73764275f93dd
-      internalID: -1094924997
+      spriteID: 095c40c71ce84d24b8b64c646a87a866
+      internalID: -1414756616
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Water_Tile_15
+      name: Fences_14
       rect:
         serializedVersion: 2
         x: 32
@@ -426,8 +418,29 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: ada7d93086b3a5941adcdb5d1efd0961
-      internalID: -252992746
+      spriteID: 4b7c61e11b0f5c048ab475f4509badfc
+      internalID: 1944066528
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Fences_15
+      rect:
+        serializedVersion: 2
+        x: 48
+        y: 0
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 095532c1f755ff547b3762292ff387ff
+      internalID: -1188172874
       vertices: []
       indices: 
       edges: []
@@ -443,22 +456,22 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      Water_Tile_0: -1467667779
-      Water_Tile_1: 1737200115
-      Water_Tile_10: 360662352
-      Water_Tile_11: 975061892
-      Water_Tile_12: 1641972996
-      Water_Tile_13: -2008202305
-      Water_Tile_14: -1094924997
-      Water_Tile_15: -252992746
-      Water_Tile_2: -1271059892
-      Water_Tile_3: -1561991219
-      Water_Tile_4: -1205103130
-      Water_Tile_5: 80644040
-      Water_Tile_6: -1535486164
-      Water_Tile_7: 1218103396
-      Water_Tile_8: -1461900641
-      Water_Tile_9: 1055512566
+      Fences_0: -1472483050
+      Fences_1: 999129700
+      Fences_10: -2057376432
+      Fences_11: -839742872
+      Fences_12: -1374782975
+      Fences_13: -1414756616
+      Fences_14: 1944066528
+      Fences_15: -1188172874
+      Fences_2: -1626836824
+      Fences_3: -1537847678
+      Fences_4: 2141940531
+      Fences_5: -1466827650
+      Fences_6: 654220809
+      Fences_7: 1560474827
+      Fences_8: 1342333559
+      Fences_9: 1117892207
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

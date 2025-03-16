@@ -9,33 +9,26 @@ public class UIShop : MonoBehaviour
 {
     [SerializeField] private GameObject shop1;
     [SerializeField] private GameObject shopItemTemplate;
+    [SerializeField] private ItemEffectManager itemEffectManager;
+    
     private List<GameObject> _items;
     private int _currentIndex;
-    private int _itemCount;
+    
     private void Start()
     {
         shop1.SetActive(false);
         _items = new List<GameObject>();
         CreateShop();
-        _itemCount = _items.Count;
     }
 
     private void CreateShop()
     {
-        // for (int i = 0; i < 2; i++)
-        // {
-        //     for (int j = 0; j < 3; j++)
-        //     {
-        //         CreateItemShop(i, j);
-        //     }
-        // }
         CreateItemShop(Item.GetDescribe(Item.ItemType.Shield),0, 0);
         CreateItemShop(Item.GetDescribe(Item.ItemType.Rain),0, 1);
         CreateItemShop(Item.GetDescribe(Item.ItemType.Thunder),0, 2);
-        CreateItemShop(Item.GetDescribe(Item.ItemType.Wave),1, 0);
+        CreateItemShop(Item.GetDescribe(Item.ItemType.Tsunami),1, 0);
         CreateItemShop(Item.GetDescribe(Item.ItemType.Wind),1, 1);
         CreateItemShop("Hello1",1, 2);
-        
     }
     
     private void CreateItemShop(string text, int x, int y)
@@ -61,7 +54,8 @@ public class UIShop : MonoBehaviour
 
             if (Input.GetKeyDown(KeyCode.Space))
             {
-                Debug.Log(_items[_currentIndex]);
+                itemEffectManager.GetEffect(_items[_currentIndex].name);
+               // Debug.Log(_items[_currentIndex]);
             }
             
         }

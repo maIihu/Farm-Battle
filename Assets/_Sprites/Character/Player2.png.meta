@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: dbf40b28a8ee3ea4a8d3f1dd30add2d4
+guid: a962b58af78829a4db7c80ca17581cf4
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -93,17 +93,30 @@ TextureImporter:
     ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Fences_0
+      name: Player2_0
       rect:
         serializedVersion: 2
         x: 0
         y: 48
-        width: 16
-        height: 16
+        width: 24
+        height: 24
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -111,20 +124,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: a059851c3fffa6a4188255dea94757ba
-      internalID: -1472483050
+      spriteID: cd84acdb92fb6b74d9632138ecf57ea0
+      internalID: -578279838
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Fences_1
+      name: Player2_1
       rect:
         serializedVersion: 2
-        x: 16
+        x: 24
         y: 48
-        width: 16
-        height: 16
+        width: 24
+        height: 24
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -132,41 +145,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: afe28bc187b70624381040ea92774823
-      internalID: 999129700
+      spriteID: 331f67ee7fadaa5468ce40dfcdbe10e0
+      internalID: 1920425586
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Fences_2
-      rect:
-        serializedVersion: 2
-        x: 32
-        y: 48
-        width: 16
-        height: 16
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 08e2a89efa888074fb5290ba4039f226
-      internalID: -1626836824
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Fences_3
+      name: Player2_2
       rect:
         serializedVersion: 2
         x: 48
         y: 48
-        width: 16
-        height: 16
+        width: 24
+        height: 24
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -174,20 +166,41 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 5d288d4220c7a7f439c08bfb6559a4c4
-      internalID: -1537847678
+      spriteID: 7a1e6084319237648a7fb4bd6c109c85
+      internalID: -1689506010
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Fences_4
+      name: Player2_3
+      rect:
+        serializedVersion: 2
+        x: 72
+        y: 48
+        width: 24
+        height: 24
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d4c1ce162b914e848b8aa9cbdb74c580
+      internalID: -2108243258
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Player2_4
       rect:
         serializedVersion: 2
         x: 0
-        y: 32
-        width: 16
-        height: 16
+        y: 24
+        width: 24
+        height: 24
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -195,20 +208,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: ff16f617f6b7ab246833eb4e1dcb3aaf
-      internalID: 2141940531
+      spriteID: 2765914ebc10d17408f67f17fb1a839b
+      internalID: -790338922
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Fences_5
+      name: Player2_5
       rect:
         serializedVersion: 2
-        x: 16
-        y: 32
-        width: 16
-        height: 16
+        x: 24
+        y: 24
+        width: 24
+        height: 24
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -216,41 +229,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 1e5b851b7123e4f468032c8bad263e9a
-      internalID: -1466827650
+      spriteID: 06facda71e00fc8439d424562558389b
+      internalID: 2039643860
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Fences_6
-      rect:
-        serializedVersion: 2
-        x: 32
-        y: 32
-        width: 16
-        height: 16
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 5051c688792adb941975716ea0f7c7cf
-      internalID: 654220809
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Fences_7
+      name: Player2_6
       rect:
         serializedVersion: 2
         x: 48
-        y: 32
-        width: 16
-        height: 16
+        y: 24
+        width: 24
+        height: 24
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -258,104 +250,125 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 1b18480b05ab05f4390a7ca195da4854
-      internalID: 1560474827
+      spriteID: 657361a376e41d44991c2cfc8d63f4d5
+      internalID: -1966199020
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Fences_8
+      name: Player2_7
+      rect:
+        serializedVersion: 2
+        x: 72
+        y: 24
+        width: 24
+        height: 24
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 693b2b33111660d469023d27797e16da
+      internalID: -54555322
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Player2_8
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 24
+        width: 24
+        height: 24
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 641c772d62c02da4abed7ee1e1417c2e
+      internalID: -30463852
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Player2_9
+      rect:
+        serializedVersion: 2
+        x: 120
+        y: 24
+        width: 24
+        height: 24
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4ad2b688a9798b546a50f669d30eae41
+      internalID: 1766057133
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Player2_10
+      rect:
+        serializedVersion: 2
+        x: 144
+        y: 24
+        width: 24
+        height: 24
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 177a2dd417489ff42b81107093b76de2
+      internalID: -694183249
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Player2_11
+      rect:
+        serializedVersion: 2
+        x: 168
+        y: 24
+        width: 24
+        height: 24
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c8e9947b8af7acc4982a47e5dd36a172
+      internalID: -961839468
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Player2_12
       rect:
         serializedVersion: 2
         x: 0
-        y: 16
-        width: 16
-        height: 16
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 29cc762695232fa4f8c3c46dfc43445d
-      internalID: 1342333559
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Fences_9
-      rect:
-        serializedVersion: 2
-        x: 16
-        y: 16
-        width: 16
-        height: 16
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 2b73cf6c8e12905419364a53009ceceb
-      internalID: 1117892207
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Fences_10
-      rect:
-        serializedVersion: 2
-        x: 32
-        y: 16
-        width: 16
-        height: 16
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 190bc700473a7a942842c0fab726fcf8
-      internalID: -2057376432
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Fences_11
-      rect:
-        serializedVersion: 2
-        x: 48
-        y: 16
-        width: 16
-        height: 16
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 470473e1eb2a8804492c4a18621606bd
-      internalID: -839742872
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Fences_12
-      rect:
-        serializedVersion: 2
-        x: 0
         y: 0
-        width: 16
-        height: 16
+        width: 24
+        height: 24
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -363,20 +376,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 9a081dc2fab27ed4ebec4068d5d4af7f
-      internalID: -1374782975
+      spriteID: 1dc20528d336e7d4e9027ca5c289c6ff
+      internalID: 1679884298
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Fences_13
+      name: Player2_13
       rect:
         serializedVersion: 2
-        x: 16
+        x: 24
         y: 0
-        width: 16
-        height: 16
+        width: 24
+        height: 24
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -384,41 +397,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 095c40c71ce84d24b8b64c646a87a866
-      internalID: -1414756616
+      spriteID: d36b20792a1b8564ea97d3f21ea42e71
+      internalID: 1424373756
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Fences_14
-      rect:
-        serializedVersion: 2
-        x: 32
-        y: 0
-        width: 16
-        height: 16
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 4b7c61e11b0f5c048ab475f4509badfc
-      internalID: 1944066528
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Fences_15
+      name: Player2_14
       rect:
         serializedVersion: 2
         x: 48
         y: 0
-        width: 16
-        height: 16
+        width: 24
+        height: 24
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -426,8 +418,113 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 095532c1f755ff547b3762292ff387ff
-      internalID: -1188172874
+      spriteID: ec38ee80513bdbd49a25e9bf88b244f8
+      internalID: -2088717090
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Player2_15
+      rect:
+        serializedVersion: 2
+        x: 72
+        y: 0
+        width: 24
+        height: 24
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 80bf1448d0b32a440806b60a0a04ff55
+      internalID: -1089851507
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Player2_16
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 0
+        width: 24
+        height: 24
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 433cc560d86a9c84baab820af7098a86
+      internalID: 1032379993
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Player2_17
+      rect:
+        serializedVersion: 2
+        x: 120
+        y: 0
+        width: 24
+        height: 24
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d3f7fd8e585d4eb4a8eb93b1cba95223
+      internalID: -287225070
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Player2_18
+      rect:
+        serializedVersion: 2
+        x: 144
+        y: 0
+        width: 24
+        height: 24
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ec9915066cc16154599cb4300c3f2370
+      internalID: -798303647
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Player2_19
+      rect:
+        serializedVersion: 2
+        x: 168
+        y: 0
+        width: 24
+        height: 24
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a2e130a7722caf845a98b2baeacf8f3a
+      internalID: 1330287802
       vertices: []
       indices: 
       edges: []
@@ -443,22 +540,26 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      Fences_0: -1472483050
-      Fences_1: 999129700
-      Fences_10: -2057376432
-      Fences_11: -839742872
-      Fences_12: -1374782975
-      Fences_13: -1414756616
-      Fences_14: 1944066528
-      Fences_15: -1188172874
-      Fences_2: -1626836824
-      Fences_3: -1537847678
-      Fences_4: 2141940531
-      Fences_5: -1466827650
-      Fences_6: 654220809
-      Fences_7: 1560474827
-      Fences_8: 1342333559
-      Fences_9: 1117892207
+      Player2_0: -578279838
+      Player2_1: 1920425586
+      Player2_10: -694183249
+      Player2_11: -961839468
+      Player2_12: 1679884298
+      Player2_13: 1424373756
+      Player2_14: -2088717090
+      Player2_15: -1089851507
+      Player2_16: 1032379993
+      Player2_17: -287225070
+      Player2_18: -798303647
+      Player2_19: 1330287802
+      Player2_2: -1689506010
+      Player2_3: -2108243258
+      Player2_4: -790338922
+      Player2_5: 2039643860
+      Player2_6: -1966199020
+      Player2_7: -54555322
+      Player2_8: -30463852
+      Player2_9: 1766057133
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
