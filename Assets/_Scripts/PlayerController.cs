@@ -22,8 +22,9 @@ public class PlayerController : MonoBehaviour
     
     private bool _isTouchingBomb;
     private float _sowDelay = 0.24f;
-    private float _lastDigTime = -1f; 
-    
+    private float _lastDigTime = -1f;
+
+    [FormerlySerializedAs("_isShopping")] public bool isShopping;
     public int score;
     
     private void Awake()
@@ -48,35 +49,59 @@ public class PlayerController : MonoBehaviour
     
     private void Update()
     {
-        InputHandle();
-        _pickCell.position = new Vector3((int)(transform.position.x) + 0.5f, (int)(transform.position.y) - 0.5f, transform.position.z);
+        if (!isShopping)
+        {
+            if (!_pickCell.gameObject.activeSelf)
+                Invoke(nameof(ActivePickCell), 0.2f);
+            
+            InputHandle();
+            _pickCell.position = new Vector3((int)(transform.position.x) + 0.5f, (int)(transform.position.y) - 0.5f, transform.position.z);
     
-        if (_isTouchingBomb && Input.GetKeyDown(KeyCode.Space))
+            if (_isTouchingBomb && Input.GetKeyDown(KeyCode.Space))
+                ThrowBomb();
+            
+            if (Input.GetKey(KeyCode.Space) && _pickCell.gameObject.activeSelf)
+                Plant();
+            
+        }
+        else
         {
-            float x = Random.Range(2, 10);
-            float y = Random.Range(-10, -2);
-            _currentBomb.GetComponent<BombController>().ThrowingBomb(new Vector3(x, y, 0));
+            if (_pickCell.gameObject.activeSelf)
+                _pickCell.gameObject.SetActive(false);
+            
+            _animator.SetTrigger("Shopping");
+            _moveInput = Vector2.zero;
+            _animator.SetFloat("Speed", 0);
         }
     }
 
-
-    private void LateUpdate()
+    private void ActivePickCell()
     {
-        if (Input.GetKey(KeyCode.Space))
-        {
-            bool hasDug = MapManager.Instance.Dig(_pickCell.position, tileMap);
-            if (hasDug)
-            {
-                _lastDigTime = Time.time;
-            }
-            else if (Time.time - _lastDigTime >= _sowDelay) 
-            {
-                MapManager.Instance.Sow(_pickCell.position);
-            }
-
-            MapManager.Instance.Harvest(_pickCell.position, tileMap, ref score); 
-        }
+        _pickCell.gameObject.SetActive(true);
     }
+    
+    private void Plant()
+    {
+        bool hasDug = MapManager.Instance.Dig(_pickCell.position, tileMap);
+        if (hasDug)
+        {
+            _lastDigTime = Time.time;
+        }
+        else if (Time.time - _lastDigTime >= _sowDelay) 
+        {
+            MapManager.Instance.Sow(_pickCell.position);
+        }
+
+        MapManager.Instance.Harvest(_pickCell.position, tileMap, ref score); 
+    }
+    
+    private void ThrowBomb()
+    {
+        float x = Random.Range(2, 10);
+        float y = Random.Range(-10, -2);
+        _currentBomb.GetComponent<BombController>().ThrowingBomb(new Vector3(x, y, 0));
+    }
+    
     
     private void FixedUpdate()
     {
