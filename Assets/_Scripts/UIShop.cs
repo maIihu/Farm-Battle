@@ -30,7 +30,7 @@ public class UIShop : MonoBehaviour
         CreateItemShop(Item.GetName(Item.ItemType.Exit),0, 2);
 
         CreateItemShop(Item.GetName(Item.ItemType.Tsunami),1, 0);
-        CreateItemShop(Item.GetName(Item.ItemType.Mouse),1, 1);
+        CreateItemShop(Item.GetName(Item.ItemType.Nutty),1, 1);
         CreateItemShop(Item.GetName(Item.ItemType.Thunder),1, 2);
     }
     

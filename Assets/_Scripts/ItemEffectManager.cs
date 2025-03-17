@@ -9,27 +9,42 @@ public class ItemEffectManager : MonoBehaviour
     [SerializeField] private GameObject thunderPrefab;
     [SerializeField] private GameObject tsunamiPrefab;
     [SerializeField] private GameObject shieldPrefab;
+    [SerializeField] private GameObject nuttyPrefab;
 
     public void GetEffect(string itemName)
     {
         switch (itemName)
         {
             case "Thunder":
-                Thunder();
+                ThunderStart();
                 break;
             case "Rain":
-                Rain();
+                RainStart();
                 break;
             case "Tsunami":
-                Tsunami();
+                TsunamiStart();
                 break;
             case "Shield":
-                Shield();
+                ShieldStart();
+                break;
+            case "Nutty":
+                NuttyStart();
                 break;
         }
     }
 
-    private void Shield()
+    private void NuttyStart() // 5.5, -5.5
+    {
+        Instantiate(nuttyPrefab, new Vector3(18.5f, -5.5f, 0f), Quaternion.identity, transform.GetChild(5));
+        Invoke(nameof(NuttyEnd), 10);
+    }
+
+    private void NuttyEnd()
+    {
+        Destroy(transform.GetChild(5).GetChild(0).gameObject);
+    }
+    
+    private void ShieldStart()
     {
         Instantiate(shieldPrefab, new Vector3(6, -6, 0), Quaternion.identity, transform.GetChild(2));
         Invoke(nameof(ShieldEnd), 5f);
@@ -40,7 +55,7 @@ public class ItemEffectManager : MonoBehaviour
         Destroy(transform.GetChild(2).GetChild(0).gameObject);
     }
 
-    private void Thunder()
+    private void ThunderStart()
     {
         for (int i = 0; i < 14; i++)
         {
@@ -63,7 +78,7 @@ public class ItemEffectManager : MonoBehaviour
         
     }
     
-    private void Rain()
+    private void RainStart()
     {
         GameObject rain = transform.GetChild(1).gameObject;
         rain.GetComponent<ParticleSystem>().Play();
@@ -76,7 +91,7 @@ public class ItemEffectManager : MonoBehaviour
         rain.GetComponent<ParticleSystem>().Stop();
     }
 
-    private void Tsunami()
+    private void TsunamiStart()
     {
         GameObject tsunami = Instantiate(tsunamiPrefab, new Vector3(19, -30, 0), Quaternion.identity, transform.GetChild(2));
         StartCoroutine(MoveTsunami(tsunami));
