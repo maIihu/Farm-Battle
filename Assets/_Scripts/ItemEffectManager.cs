@@ -48,16 +48,19 @@ public class ItemEffectManager : MonoBehaviour
             int y = Random.Range(-12, -1);
             Instantiate(thunderPrefab, new Vector3(x, y, 0), Quaternion.identity, transform.GetChild(0));
         }
-        Invoke(nameof(ThunderEnd), 5f);
+        transform.GetChild(4).gameObject.SetActive(true);
+        Invoke(nameof(ThunderEnd), 1f);
     }
 
     private void ThunderEnd()
     {
+        transform.GetChild(4).gameObject.SetActive(false);
         Transform thunder = transform.GetChild(0);
         for (int i = thunder.childCount - 1; i >= 0; i--)
         {
             Destroy(thunder.GetChild(i).gameObject);
         }
+        
     }
     
     private void Rain()
