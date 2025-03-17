@@ -8,6 +8,7 @@ public class ItemEffectManager : MonoBehaviour
 {
     [SerializeField] private GameObject thunderPrefab;
     [SerializeField] private GameObject tsunamiPrefab;
+    [SerializeField] private GameObject shieldPrefab;
 
     public void GetEffect(string itemName)
     {
@@ -22,9 +23,23 @@ public class ItemEffectManager : MonoBehaviour
             case "Tsunami":
                 Tsunami();
                 break;
+            case "Shield":
+                Shield();
+                break;
         }
     }
-    
+
+    private void Shield()
+    {
+        Instantiate(shieldPrefab, new Vector3(6, -6, 0), Quaternion.identity, transform.GetChild(2));
+        Invoke(nameof(ShieldEnd), 5f);
+    }
+
+    private void ShieldEnd()
+    {
+        Destroy(transform.GetChild(2).GetChild(0).gameObject);
+    }
+
     private void Thunder()
     {
         for (int i = 0; i < 14; i++)
@@ -77,4 +92,5 @@ public class ItemEffectManager : MonoBehaviour
         tsunami.transform.position = targetPosition;
         Destroy(tsunami);
     }
+    
 }

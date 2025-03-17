@@ -10,7 +10,8 @@ public class Item
         Tsunami,
         Rain,
         Thunder,
-        Wind
+        Mouse,
+        Exit
     }
 
     public static int GetCost(ItemType itemType)
@@ -21,12 +22,12 @@ public class Item
             case ItemType.Tsunami: return 60;
             case ItemType.Rain: return 70;
             case ItemType.Thunder: return 80;
-            case ItemType.Wind: return 90;
+            case ItemType.Mouse: return 90;
         }
         return 0;
     }
 
-    public static string GetDescribe(ItemType itemType)
+    public static string GetName(ItemType itemType)
     {
         switch (itemType)
         {
@@ -34,9 +35,9 @@ public class Item
             case ItemType.Tsunami: return "Tsunami";
             case ItemType.Rain: return "Rain";
             case ItemType.Thunder: return "Thunder";
-            case ItemType.Wind: return "Wind";
+            case ItemType.Mouse: return "Mouse";
+            case ItemType.Exit: return "Exit";
         }
-
         return null;
     }
     

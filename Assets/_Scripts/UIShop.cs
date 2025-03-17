@@ -13,6 +13,8 @@ public class UIShop : MonoBehaviour
     
     private List<GameObject> _items;
     private int _currentIndex;
+
+    private GameObject _characterInShop;
     
     private void Start()
     {
@@ -23,12 +25,13 @@ public class UIShop : MonoBehaviour
 
     private void CreateShop()
     {
-        CreateItemShop(Item.GetDescribe(Item.ItemType.Shield),0, 0);
-        CreateItemShop(Item.GetDescribe(Item.ItemType.Rain),0, 1);
-        CreateItemShop(Item.GetDescribe(Item.ItemType.Thunder),0, 2);
-        CreateItemShop(Item.GetDescribe(Item.ItemType.Tsunami),1, 0);
-        CreateItemShop(Item.GetDescribe(Item.ItemType.Wind),1, 1);
-        CreateItemShop("Hello1",1, 2);
+        CreateItemShop(Item.GetName(Item.ItemType.Shield),0, 0);
+        CreateItemShop(Item.GetName(Item.ItemType.Rain),0, 1);
+        CreateItemShop(Item.GetName(Item.ItemType.Exit),0, 2);
+
+        CreateItemShop(Item.GetName(Item.ItemType.Tsunami),1, 0);
+        CreateItemShop(Item.GetName(Item.ItemType.Mouse),1, 1);
+        CreateItemShop(Item.GetName(Item.ItemType.Thunder),1, 2);
     }
     
     private void CreateItemShop(string text, int x, int y)
@@ -47,18 +50,38 @@ public class UIShop : MonoBehaviour
     {
         if (shop1.activeSelf)
         {
-            if (Input.GetKeyDown(KeyCode.UpArrow)) MoveSelection(-1); 
-            if (Input.GetKeyDown(KeyCode.DownArrow)) MoveSelection(1);  
-            if (Input.GetKeyDown(KeyCode.LeftArrow)) MoveSelection(-3); 
-            if (Input.GetKeyDown(KeyCode.RightArrow)) MoveSelection(3);
+            if (Input.GetKeyDown(KeyCode.W)) MoveSelection(-1); 
+            if (Input.GetKeyDown(KeyCode.S)) MoveSelection(1);  
+            if (Input.GetKeyDown(KeyCode.A)) MoveSelection(-3); 
+            if (Input.GetKeyDown(KeyCode.D)) MoveSelection(3);
 
             if (Input.GetKeyDown(KeyCode.Space))
             {
-                itemEffectManager.GetEffect(_items[_currentIndex].name);
-               // Debug.Log(_items[_currentIndex]);
+                ApplyItem();
             }
             
         }
+    }
+
+    private void ApplyItem()
+    {
+        if (_items[_currentIndex].name == "Exit")
+        {
+            Exit();
+            return;
+        }
+        itemEffectManager.GetEffect(_items[_currentIndex].name);
+    }
+
+    private void Exit()
+    {
+        _characterInShop.gameObject.GetComponent<PlayerController>().isShopping = false;
+        foreach (var item in _items)
+        {
+            item.GetComponentInChildren<Image>().color = Color.white;
+            item.transform.GetChild(1).gameObject.SetActive(false);
+        }
+        shop1.SetActive(false);
     }
 
     private void MoveSelection(int direction)
@@ -93,6 +116,9 @@ public class UIShop : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Player"))
         {
+            _characterInShop = other.gameObject;
+            
+            _characterInShop.GetComponent<PlayerController>().isShopping = true;
             shop1.SetActive(true);
             _currentIndex = 0;
             HighlightItem(0);
@@ -102,13 +128,7 @@ public class UIShop : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Player"))
         {
-            foreach (var item in _items)
-            {
-                item.GetComponentInChildren<Image>().color = Color.white;
-                item.transform.GetChild(1).gameObject.SetActive(false);
-            }
-            // The object of type 'GameObject' has been destroyed but you are still trying to access it.
-            shop1.SetActive(false);
+
         }
     }
 }
