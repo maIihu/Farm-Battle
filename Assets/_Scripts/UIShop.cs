@@ -15,6 +15,8 @@ public class UIShop : MonoBehaviour
     private int _currentIndex;
 
     private GameObject _characterInShop;
+
+    private int _playerBuying;
     
     private void Start()
     {
@@ -48,7 +50,7 @@ public class UIShop : MonoBehaviour
 
     private void Update()
     {
-        if (shop1.activeSelf)
+        if (shop1.activeSelf) // Player 1
         {
             if (Input.GetKeyDown(KeyCode.W)) MoveSelection(-1); 
             if (Input.GetKeyDown(KeyCode.S)) MoveSelection(1);  
@@ -59,8 +61,10 @@ public class UIShop : MonoBehaviour
             {
                 ApplyItem();
             }
-            
         }
+
+        if (Input.GetKeyDown(KeyCode.I))
+            _playerBuying = 2;
     }
 
     private void ApplyItem()
@@ -70,7 +74,7 @@ public class UIShop : MonoBehaviour
             Exit();
             return;
         }
-        itemEffectManager.GetEffect(_items[_currentIndex].name);
+        itemEffectManager.GetEffect(_items[_currentIndex].name, _playerBuying);
     }
 
     private void Exit()
@@ -117,18 +121,12 @@ public class UIShop : MonoBehaviour
         if (other.gameObject.CompareTag("Player"))
         {
             _characterInShop = other.gameObject;
-            
+            _playerBuying = 1;
             _characterInShop.GetComponent<PlayerController>().isShopping = true;
             shop1.SetActive(true);
             _currentIndex = 0;
             HighlightItem(0);
         }
     }
-    private void OnCollisionExit2D(Collision2D other)
-    {
-        if (other.gameObject.CompareTag("Player"))
-        {
 
-        }
-    }
 }

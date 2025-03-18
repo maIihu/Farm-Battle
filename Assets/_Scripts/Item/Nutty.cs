@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class Nutty : ItemBase
 {
-    private Dictionary<Vector3, Plant> _plants = new Dictionary<Vector3, Plant>();
+    private Dictionary<Vector3, Plant> _plants;
     private Plant _targetPlant;
     public float moveSpeed = 5f;
 
@@ -14,6 +14,7 @@ public class Nutty : ItemBase
 
     private void Start()
     {
+        _plants = new Dictionary<Vector3, Plant>();
         StartCoroutine(UpdatePlantList());
     }
 

@@ -7,108 +7,157 @@ using Random = UnityEngine.Random;
 public class ItemEffectManager : MonoBehaviour
 {
     [SerializeField] private GameObject thunderPrefab;
+    [SerializeField] private GameObject lightningPrefab;
     [SerializeField] private GameObject tsunamiPrefab;
     [SerializeField] private GameObject shieldPrefab;
     [SerializeField] private GameObject nuttyPrefab;
-
+    [SerializeField] private GameObject rainPrefab;
+    
     [SerializeField] private GameObject tileMap2;
 
     private bool _shieldEffect;
     
-    public void GetEffect(string itemName)
+    public void GetEffect(string itemName, int player)
     {
         switch (itemName)
         {
             case "Thunder":
-                ThunderStart();
+                ThunderStart(player);
                 break;
             case "Rain":
-                RainStart();
+                RainStart(player);
                 break;
             case "Tsunami":
-                TsunamiStart();
+                TsunamiStart(player);
                 break;
             case "Shield":
-                ShieldStart();
+                ShieldStart(player);
                 break;
             case "Nutty":
-                NuttyStart();
+                NuttyStart(player);
                 break;
         }
     }
 
-    private void NuttyStart() // 5.5, -5.5
+    private void NuttyStart(int player)
     {
-        GameObject nutty = Instantiate(nuttyPrefab, new Vector3(18.5f, -5.5f, 0f), Quaternion.identity, transform.GetChild(5));
+        Vector3 position;
+        if (player == 1)
+            position = new Vector3(18.5f, -5.5f, 0f);
+        else
+            position = new Vector3(5.5f, -5.5f, 0f);
+        
+        GameObject nutty = Instantiate(nuttyPrefab, position, Quaternion.identity, transform);
         nutty.GetComponent<Nutty>().ItemEffect(tileMap2);
-        Invoke(nameof(NuttyEnd), 100);
+        Invoke(nameof(NuttyEnd), 5);
     }
 
     private void NuttyEnd()
     {
-        Destroy(transform.GetChild(5).GetChild(0).gameObject);
+        Destroy(transform.GetChild(0).gameObject);
     }
     
-    private void ShieldStart()
+    private void ShieldStart(int player)
     {
-        Instantiate(shieldPrefab, new Vector3(6, -6, 0), Quaternion.identity, transform.GetChild(2));
+        Vector3 position;
+        
+        if (player == 1)
+            position = new Vector3(6, -6, 0);
+        else
+            position = new Vector3(19, -6, 0);
+        
+        Instantiate(shieldPrefab, position, Quaternion.identity, transform);
         _shieldEffect = true;
         Invoke(nameof(ShieldEnd), 10f);
     }
 
     private void ShieldEnd()
     {
-        Destroy(transform.GetChild(2).GetChild(0).gameObject);
+        Destroy(transform.GetChild(0).gameObject);
         _shieldEffect = false;
     }
 
-    private void ThunderStart()
+    private void ThunderStart(int player) 
     {
         for (int i = 0; i < 14; i++)
         {
-            float x = Random.Range(13, 25) + 0.5f;  
-            float y = Random.Range(-12, 0) + 0.5f; 
-            Instantiate(thunderPrefab, new Vector3(x, y, 0), Quaternion.identity, transform.GetChild(0));
+            float x;  
+            float y = Random.Range(-12, 0) + 0.5f;
+            
+            if (player == 1)
+                x = Random.Range(13, 25) + 0.5f;  
+            else
+                x = Random.Range(0, 12) + 0.5f;
+            
+            Instantiate(thunderPrefab, new Vector3(x, y, 0), Quaternion.identity, transform);
         }
-        transform.GetChild(4).gameObject.SetActive(true);
+        
+        if(player == 1)
+            Instantiate(lightningPrefab, new Vector3(19, 0, 0), Quaternion.identity, transform);
+        else
+            Instantiate(lightningPrefab, new Vector3(6, 0, 0), Quaternion.identity, transform);
+        
         Invoke(nameof(ThunderEnd), 1f);
     }
 
 
     private void ThunderEnd()
     {
-        transform.GetChild(4).gameObject.SetActive(false);
-        Transform thunder = transform.GetChild(0);
-        for (int i = thunder.childCount - 1; i >= 0; i--)
+        for (int i = transform.childCount - 1; i >= 0; i--)
         {
             if (!_shieldEffect)
-                thunder.GetChild(i).GetComponent<Thunder>().ItemEffect(tileMap2);
-            Destroy(thunder.GetChild(i).gameObject);
+                if(transform.GetChild(i).GetComponent<Thunder>() != null)
+                    transform.GetChild(i).GetComponent<Thunder>().ItemEffect(tileMap2);
+            
+            Destroy(transform.GetChild(i).gameObject);
         }
     }
     
-    private void RainStart()
+    private void RainStart(int player)
     {
-        GameObject rain = transform.GetChild(1).gameObject;
-        rain.GetComponent<ParticleSystem>().Play();
+        Vector3 position;
+        if(player == 1)
+            position = new Vector3(6, 4, 0);
+        else
+            position = new Vector3(19, 4, 0);
+
+        GameObject rain = Instantiate(rainPrefab, position, Quaternion.Euler(90, 0, 0), transform);
+
+        rain.gameObject.GetComponent<ParticleSystem>().Play();
+        
+        
         Invoke(nameof(RainEnd), 10f);
     }
     
     private void RainEnd()
     {
-        GameObject rain = transform.GetChild(1).gameObject;
-        rain.GetComponent<ParticleSystem>().Stop();
+        transform.GetChild(0).gameObject.GetComponent<ParticleSystem>().Stop();
+        Destroy(transform.GetChild(0).gameObject);
     }
 
-    private void TsunamiStart()
+    private void TsunamiStart(int player)
     {
-        GameObject tsunami = Instantiate(tsunamiPrefab, new Vector3(19, -30, 0), Quaternion.identity);
-        StartCoroutine(MoveTsunami(tsunami));
+        Vector3 position, targetPosition;
+        
+        if (player == 1)
+        {
+            position = new Vector3(19, -30, 0);
+            targetPosition = new Vector3(19, 4, 0);
+        }
+        else
+        {
+            position = new Vector3(6, -30, 0);
+            targetPosition = new Vector3(6, 4, 0);
+        }
+            
+        GameObject tsunami = Instantiate(tsunamiPrefab, position, Quaternion.identity, transform);
+        
+        StartCoroutine(MoveTsunami(tsunami, targetPosition));
     }
 
-    private IEnumerator MoveTsunami(GameObject tsunami)
+    private IEnumerator MoveTsunami(GameObject tsunami, Vector3 targetPosition)
     {
-        Vector3 targetPosition = new Vector3(19, 4, 0);
+          
         float speed = 18f;
         while (Vector3.Distance(tsunami.transform.position, targetPosition) > 0.1)
         {
