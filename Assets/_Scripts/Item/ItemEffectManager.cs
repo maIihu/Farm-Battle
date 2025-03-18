@@ -11,6 +11,10 @@ public class ItemEffectManager : MonoBehaviour
     [SerializeField] private GameObject shieldPrefab;
     [SerializeField] private GameObject nuttyPrefab;
 
+    [SerializeField] private GameObject tileMap2;
+
+    private bool _shieldEffect;
+    
     public void GetEffect(string itemName)
     {
         switch (itemName)
@@ -35,8 +39,9 @@ public class ItemEffectManager : MonoBehaviour
 
     private void NuttyStart() // 5.5, -5.5
     {
-        Instantiate(nuttyPrefab, new Vector3(18.5f, -5.5f, 0f), Quaternion.identity, transform.GetChild(5));
-        Invoke(nameof(NuttyEnd), 10);
+        GameObject nutty = Instantiate(nuttyPrefab, new Vector3(18.5f, -5.5f, 0f), Quaternion.identity, transform.GetChild(5));
+        nutty.GetComponent<Nutty>().ItemEffect(tileMap2);
+        Invoke(nameof(NuttyEnd), 100);
     }
 
     private void NuttyEnd()
@@ -47,25 +52,28 @@ public class ItemEffectManager : MonoBehaviour
     private void ShieldStart()
     {
         Instantiate(shieldPrefab, new Vector3(6, -6, 0), Quaternion.identity, transform.GetChild(2));
-        Invoke(nameof(ShieldEnd), 5f);
+        _shieldEffect = true;
+        Invoke(nameof(ShieldEnd), 10f);
     }
 
     private void ShieldEnd()
     {
         Destroy(transform.GetChild(2).GetChild(0).gameObject);
+        _shieldEffect = false;
     }
 
     private void ThunderStart()
     {
         for (int i = 0; i < 14; i++)
         {
-            int x = Random.Range(13, 24);
-            int y = Random.Range(-12, -1);
+            float x = Random.Range(13, 25) + 0.5f;  
+            float y = Random.Range(-12, 0) + 0.5f; 
             Instantiate(thunderPrefab, new Vector3(x, y, 0), Quaternion.identity, transform.GetChild(0));
         }
         transform.GetChild(4).gameObject.SetActive(true);
         Invoke(nameof(ThunderEnd), 1f);
     }
+
 
     private void ThunderEnd()
     {
@@ -73,9 +81,10 @@ public class ItemEffectManager : MonoBehaviour
         Transform thunder = transform.GetChild(0);
         for (int i = thunder.childCount - 1; i >= 0; i--)
         {
+            if (!_shieldEffect)
+                thunder.GetChild(i).GetComponent<Thunder>().ItemEffect(tileMap2);
             Destroy(thunder.GetChild(i).gameObject);
         }
-        
     }
     
     private void RainStart()
@@ -93,7 +102,7 @@ public class ItemEffectManager : MonoBehaviour
 
     private void TsunamiStart()
     {
-        GameObject tsunami = Instantiate(tsunamiPrefab, new Vector3(19, -30, 0), Quaternion.identity, transform.GetChild(2));
+        GameObject tsunami = Instantiate(tsunamiPrefab, new Vector3(19, -30, 0), Quaternion.identity);
         StartCoroutine(MoveTsunami(tsunami));
     }
 
@@ -105,9 +114,14 @@ public class ItemEffectManager : MonoBehaviour
         {
             tsunami.transform.position =
                 Vector3.MoveTowards(tsunami.transform.position, targetPosition, speed * Time.deltaTime);
+            
+            if (!_shieldEffect)
+                tsunami.GetComponent<Tsunami>().ItemEffect(tileMap2);
+        
             yield return null;
         }
         tsunami.transform.position = targetPosition;
+
         Destroy(tsunami);
     }
     

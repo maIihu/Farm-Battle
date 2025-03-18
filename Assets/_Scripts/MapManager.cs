@@ -48,7 +48,7 @@ public class MapManager : MonoBehaviour
             if (currentTile.name is "Tile2" or "Cliff_Tile_4" && !map.ContainsKey(location))
             {
                 GameObject dirtClone = Instantiate(dirtPrefab, location, Quaternion.identity, tileMap.transform);
-                dirtClone.name = location.ToString();
+                dirtClone.name = $"{location.x}_{location.y}_{location.z}";
                 map[location] = dirtClone;
                 return true;
             }

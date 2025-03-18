@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 8839144095080485932}
   - component: {fileID: 3873452238835321312}
   - component: {fileID: 4875869681733668617}
+  - component: {fileID: 1203729735373698169}
   m_Layer: 0
   m_Name: Nutty
   m_TagString: Untagged
@@ -106,3 +107,18 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &1203729735373698169
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3297548328038640120}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b27726663ae8e3249bde978e94620ebd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cost: 0
+  effectTime: 0
+  moveSpeed: 5

@@ -129,6 +129,7 @@ public class BotController : MonoBehaviour
             
             _stepCount = 0;
             _moveDir = 1;
+            SortChildrenByName(tileMap.transform);
             StartCoroutine(MoveToSowRoutine());
         }
         
@@ -148,6 +149,29 @@ public class BotController : MonoBehaviour
         {
             MoveToNearestPlant();
         }
+    }
+
+    private void SortChildrenByName(Transform parent)
+    {
+        List<Transform> children = new List<Transform>();
+        foreach (Transform child in parent)
+        {
+            children.Add(child);
+        }
+        children.Sort((a, b) => 
+        {
+            if (a.position.x != b.position.x)
+                return a.position.x.CompareTo(b.position.x);
+            if (a.position.y != b.position.y)
+                return a.position.y.CompareTo(b.position.y);
+            return a.position.z.CompareTo(b.position.z);
+        });
+        
+        for (int i = 0; i < children.Count; i++)
+        {
+            children[i].SetSiblingIndex(i);
+        }
+
     }
     
     private void KickBomb()
@@ -171,11 +195,15 @@ public class BotController : MonoBehaviour
         if (_targetPlant == null) return;
 
         transform.position = Vector3.MoveTowards(transform.position, _targetPlant.Value.Key, moveSpeed * Time.deltaTime);
-
+        
         if (Vector3.Distance(transform.position, _targetPlant.Value.Key) < 0.01f) 
         {
-            _targetPlant.Value.Value.Harvest();
-            score++;
+            if (_targetPlant.Value.Value.isReadyToHarvest) 
+            {
+                _targetPlant.Value.Value.Harvest();
+                score++;
+            }
+
             _plants.Remove(_targetPlant.Value.Key);
             _targetPlant = null;
         }

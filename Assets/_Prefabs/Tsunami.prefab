@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2056761032287856630}
   - component: {fileID: 4858313146866474499}
+  - component: {fileID: 8092733373012997287}
   m_Layer: 0
   m_Name: Tsunami
   m_TagString: Untagged
@@ -72,7 +73,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 10
   m_Sprite: {fileID: 21300000, guid: e648737423d647048a36e4df0e565f72, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -84,3 +85,17 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &8092733373012997287
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2568092413787431804}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 033260dd2205d344d952c954e124ccca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cost: 0
+  effectTime: 0
