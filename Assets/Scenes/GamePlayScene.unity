@@ -20449,6 +20449,7 @@ MonoBehaviour:
   shieldPrefab: {fileID: 8298519337058139504, guid: b35794ba798d31d48b73d75ce8b826cc, type: 3}
   nuttyPrefab: {fileID: 3297548328038640120, guid: 4f854d3911763294798a2e75d638ca65, type: 3}
   rainPrefab: {fileID: 2439525356536531106, guid: 5deacdb0792c1634c92a43b08d6e459c, type: 3}
+  tileMap1: {fileID: 1381698289}
   tileMap2: {fileID: 1979060381}
 --- !u!4 &1612641744
 Transform:
@@ -21499,7 +21500,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tileMap: {fileID: 1979060384}
-  moveSpeed: 100
+  moveSpeed: 5
   score: 0
 --- !u!58 &1818420746
 CircleCollider2D:

@@ -13,6 +13,7 @@ public class ItemEffectManager : MonoBehaviour
     [SerializeField] private GameObject nuttyPrefab;
     [SerializeField] private GameObject rainPrefab;
     
+    [SerializeField] private GameObject tileMap1;
     [SerializeField] private GameObject tileMap2;
 
     private bool _shieldEffect;
@@ -96,18 +97,23 @@ public class ItemEffectManager : MonoBehaviour
             Instantiate(lightningPrefab, new Vector3(19, 0, 0), Quaternion.identity, transform);
         else
             Instantiate(lightningPrefab, new Vector3(6, 0, 0), Quaternion.identity, transform);
-        
-        Invoke(nameof(ThunderEnd), 1f);
+
+        StartCoroutine(ThunderEnd(player, 1));
     }
-
-
-    private void ThunderEnd()
+    
+    private IEnumerator ThunderEnd(int player, float time)
     {
+        yield return time;
         for (int i = transform.childCount - 1; i >= 0; i--)
         {
             if (!_shieldEffect)
                 if(transform.GetChild(i).GetComponent<Thunder>() != null)
-                    transform.GetChild(i).GetComponent<Thunder>().ItemEffect(tileMap2);
+                {
+                    if(player == 1)
+                        transform.GetChild(i).GetComponent<Thunder>().ItemEffect(tileMap2);
+                    else 
+                        transform.GetChild(i).GetComponent<Thunder>().ItemEffect(tileMap1);
+                }
             
             Destroy(transform.GetChild(i).gameObject);
         }
@@ -124,7 +130,6 @@ public class ItemEffectManager : MonoBehaviour
         GameObject rain = Instantiate(rainPrefab, position, Quaternion.Euler(90, 0, 0), transform);
 
         rain.gameObject.GetComponent<ParticleSystem>().Play();
-        
         
         Invoke(nameof(RainEnd), 10f);
     }
@@ -157,7 +162,6 @@ public class ItemEffectManager : MonoBehaviour
 
     private IEnumerator MoveTsunami(GameObject tsunami, Vector3 targetPosition)
     {
-          
         float speed = 18f;
         while (Vector3.Distance(tsunami.transform.position, targetPosition) > 0.1)
         {
