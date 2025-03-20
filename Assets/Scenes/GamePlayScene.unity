@@ -18380,7 +18380,7 @@ Transform:
   m_GameObject: {fileID: 1360360578}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 1.38, y: -1.66, z: 0}
+  m_LocalPosition: {x: 11.416, y: -11.36, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -21463,7 +21463,7 @@ GameObject:
   - component: {fileID: 1818420748}
   - component: {fileID: 1818420747}
   - component: {fileID: 1818420746}
-  - component: {fileID: 1818420745}
+  - component: {fileID: 1818420749}
   m_Layer: 11
   m_Name: Bot
   m_TagString: Untagged
@@ -21487,21 +21487,6 @@ Transform:
   - {fileID: 2047794034}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1818420745
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1818420743}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3a67391a72043dd4fb6fd20d57cf1f0b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  tileMap: {fileID: 1979060384}
-  moveSpeed: 5
-  score: 0
 --- !u!58 &1818420746
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -21616,6 +21601,21 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &1818420749
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1818420743}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2790e0e8d35dedc4c8eae3437469bce0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tileMap: {fileID: 1979060384}
+  moveSpeed: 20
+  score: 0
 --- !u!1 &1845684622
 GameObject:
   m_ObjectHideFlags: 0

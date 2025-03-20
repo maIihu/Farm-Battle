@@ -66,7 +66,6 @@ public class Nutty : ItemBase
             if (_targetPlant.isReadyToHarvest) 
             {
                 _targetPlant.Harvest();
-                Debug.Log("Nutty đã ăn một quả!");
             }
             _plants.Remove(_targetPlant.transform.position);
             _targetPlant = null;
