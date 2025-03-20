@@ -56,7 +56,8 @@ public class BotController : MonoBehaviour
     
     private void MoveToStartPoint()
     {
-        StartCoroutine(MoveToPositionLerp(new Vector3(13.5f, -0.5f, 0f)));
+        //StartCoroutine(MoveToPositionLerp(new Vector3(13.5f, -0.5f, 0f)));
+        transform.position = new Vector3(13.5f, -0.5f, 0f);
         MapManager.Instance.Dig(_pickCell.position, tileMap);
     }
     
@@ -121,7 +122,6 @@ public class BotController : MonoBehaviour
         
         if (!_hasDug && currentPos == new Vector2(24.5f, -0.5f))
         {
-            
             StartCoroutine(MoveToPositionLerp(new Vector3(23.5f, -0.5f)));
             MapManager.Instance.Sow(_pickCell.position);
             

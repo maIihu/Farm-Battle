@@ -16,7 +16,8 @@ public class ItemEffectManager : MonoBehaviour
     [SerializeField] private GameObject tileMap1;
     [SerializeField] private GameObject tileMap2;
 
-    private bool _shieldEffect;
+    private bool _shieldEffect1;
+    private bool _shieldEffect2;
     
     public void GetEffect(string itemName, int player)
     {
@@ -63,19 +64,26 @@ public class ItemEffectManager : MonoBehaviour
         Vector3 position;
         
         if (player == 1)
+        {
+            _shieldEffect1 = true;
             position = new Vector3(6, -6, 0);
+        }
         else
+        {
+            _shieldEffect2 = true;
             position = new Vector3(19, -6, 0);
+        }
         
         Instantiate(shieldPrefab, position, Quaternion.identity, transform);
-        _shieldEffect = true;
+        
         Invoke(nameof(ShieldEnd), 10f);
     }
 
     private void ShieldEnd()
     {
         Destroy(transform.GetChild(0).gameObject);
-        _shieldEffect = false;
+        _shieldEffect1 = false;
+        _shieldEffect2 = false;
     }
 
     private void ThunderStart(int player) 
@@ -106,14 +114,13 @@ public class ItemEffectManager : MonoBehaviour
         yield return time;
         for (int i = transform.childCount - 1; i >= 0; i--)
         {
-            if (!_shieldEffect)
+            if (!_shieldEffect1 && player == 2)
                 if(transform.GetChild(i).GetComponent<Thunder>() != null)
-                {
-                    if(player == 1)
-                        transform.GetChild(i).GetComponent<Thunder>().ItemEffect(tileMap2);
-                    else 
-                        transform.GetChild(i).GetComponent<Thunder>().ItemEffect(tileMap1);
-                }
+                    transform.GetChild(i).GetComponent<Thunder>().ItemEffect(tileMap1);
+            
+            if(!_shieldEffect2 && player == 1)
+                if(transform.GetChild(i).GetComponent<Thunder>() != null)
+                    transform.GetChild(i).GetComponent<Thunder>().ItemEffect(tileMap2);
             
             Destroy(transform.GetChild(i).gameObject);
         }
@@ -157,10 +164,10 @@ public class ItemEffectManager : MonoBehaviour
             
         GameObject tsunami = Instantiate(tsunamiPrefab, position, Quaternion.identity, transform);
         
-        StartCoroutine(MoveTsunami(tsunami, targetPosition));
+        StartCoroutine(MoveTsunami(tsunami, targetPosition, player));
     }
 
-    private IEnumerator MoveTsunami(GameObject tsunami, Vector3 targetPosition)
+    private IEnumerator MoveTsunami(GameObject tsunami, Vector3 targetPosition, int player)
     {
         float speed = 18f;
         while (Vector3.Distance(tsunami.transform.position, targetPosition) > 0.1)
@@ -168,8 +175,10 @@ public class ItemEffectManager : MonoBehaviour
             tsunami.transform.position =
                 Vector3.MoveTowards(tsunami.transform.position, targetPosition, speed * Time.deltaTime);
             
-            if (!_shieldEffect)
+            if (player == 1 && !_shieldEffect2)
                 tsunami.GetComponent<Tsunami>().ItemEffect(tileMap2);
+            if (player == 2 && !_shieldEffect1) 
+                tsunami.GetComponent<Tsunami>().ItemEffect(tileMap1);
         
             yield return null;
         }
