@@ -28,7 +28,7 @@ public class BotController : MonoBehaviour
     private Transform _pickCell;
     private Plant _targetPlant;
     
-    private Dictionary<Vector3, Plant> _plants;
+    private List<Plant> _plants;
     
     private List<Vector3> _destroyArea;
     private List<Vector3> _plantArea;
@@ -49,7 +49,7 @@ public class BotController : MonoBehaviour
     private void Start()
     {
         _pickCell = transform.GetChild(0);
-        _plants = new Dictionary<Vector3, Plant>();
+        _plants = new List<Plant>();
         _plantArea = new List<Vector3>();
         _destroyArea = new List<Vector3>();
         
@@ -119,10 +119,11 @@ public class BotController : MonoBehaviour
         if (_isHarvesting)
         {
             CanHarvestPlant();
+            if (_plants.Count > 0)
+            {
+                MoveToNearestPlant();
+            }
         }
-
-        if (_isHarvesting && _plants.Count > 0)
-            MoveToNearestPlant();
 
         // tam thoi ok
         if (_replant && !_movingToPlant)
@@ -226,9 +227,9 @@ public class BotController : MonoBehaviour
             if (child.childCount > 0)
             {
                 Plant plant = child.GetChild(0).gameObject.GetComponent<Plant>();
-                if (plant != null && plant.isReadyToHarvest && !_plants.ContainsKey(child.transform.position))
+                if (plant != null && plant.isReadyToHarvest && !_plants.Contains(plant))
                 {
-                    _plants.Add(child.transform.position, plant);
+                    _plants.Add(plant);
                 }
             }
         }
@@ -236,7 +237,7 @@ public class BotController : MonoBehaviour
 
     private void MoveToNearestPlant()
     {
-        _targetPlant = _plants.OrderBy(p => Vector3.Distance(transform.position, p.Key)).FirstOrDefault().Value;
+        _targetPlant = _plants.OrderBy(p => Vector3.Distance(transform.position, p.transform.position)).FirstOrDefault();
 
         if (_targetPlant == null)
             return;
@@ -251,7 +252,7 @@ public class BotController : MonoBehaviour
                 score++;
             }
 
-            _plants.Remove(_targetPlant.transform.position);
+            _plants.Remove(_targetPlant);
             _targetPlant = null;
         }
     }
