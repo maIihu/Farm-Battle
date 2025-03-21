@@ -19,6 +19,8 @@ public class ItemEffectManager : MonoBehaviour
     private bool _shieldEffect1;
     private bool _shieldEffect2;
     
+    public static event Action DestroyMap;
+    
     public void GetEffect(string itemName, int player)
     {
         switch (itemName)
@@ -111,7 +113,8 @@ public class ItemEffectManager : MonoBehaviour
     
     private IEnumerator ThunderEnd(int player, float time)
     {
-        yield return time;
+        yield return new WaitForSeconds(time);
+        
         for (int i = transform.childCount - 1; i >= 0; i--)
         {
             if (!_shieldEffect1 && player == 2)
@@ -124,6 +127,9 @@ public class ItemEffectManager : MonoBehaviour
             
             Destroy(transform.GetChild(i).gameObject);
         }
+        
+        if(player == 1)
+            DestroyMap?.Invoke();
     }
     
     private void RainStart(int player)

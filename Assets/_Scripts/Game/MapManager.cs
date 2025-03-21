@@ -57,7 +57,7 @@ public class MapManager : MonoBehaviour
         return false;
     }
 
-    public bool Sow(Vector3 location)
+    public void Sow(Vector3 location)
     {
         if (map.ContainsKey(location) && !hasCrop.ContainsKey(location))
         {
@@ -65,10 +65,7 @@ public class MapManager : MonoBehaviour
             plantClone.transform.SetParent(map[location].transform);
             plantClone.GetComponent<Plant>().gridLocation = location;
             hasCrop[location] = true;
-            return true;
         }
-
-        return false;
     }
 
     public void Harvest(Vector3 location, Tilemap tileMap,  ref int score)

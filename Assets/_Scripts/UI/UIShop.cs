@@ -17,6 +17,7 @@ public class UIShop : MonoBehaviour
     private GameObject _characterInShop;
 
     private int _playerBuying;
+
     
     private void Start()
     {
@@ -74,7 +75,9 @@ public class UIShop : MonoBehaviour
             Exit();
             return;
         }
+        
         itemEffectManager.GetEffect(_items[_currentIndex].name, _playerBuying);
+
     }
 
     private void Exit()

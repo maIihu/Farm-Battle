@@ -1,6 +1,8 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -18,12 +20,18 @@ public class BotController : MonoBehaviour
     private bool _startDig;
     private bool _startSow;
     private bool _moveToStart;
+
+    private bool _replant;
     
     private bool _isHarvesting;
-
+    
     private Transform _pickCell;
-    private Dictionary<Vector3, Plant> _plants;
     private Plant _targetPlant;
+    
+    private Dictionary<Vector3, Plant> _plants;
+    
+    private List<Vector3> _destroyArea;
+    private List<Vector3> _plantArea;
     
     public static BotController Instance { get; private set; }
     public int score;
@@ -42,10 +50,58 @@ public class BotController : MonoBehaviour
     {
         _pickCell = transform.GetChild(0);
         _plants = new Dictionary<Vector3, Plant>();
+        _plantArea = new List<Vector3>();
+        _destroyArea = new List<Vector3>();
         
         StartCoroutine(MoveToStartPoint());
     }
 
+    private void OnEnable()
+    {
+        ItemEffectManager.DestroyMap += StopHarvest;
+    }
+
+    private void OnDestroy()
+    {
+        ItemEffectManager.DestroyMap -= StopHarvest;
+    }
+    
+    private void StopHarvest()
+    {
+        StartCoroutine(StopHarvestCoroutine());
+    }
+    
+    private IEnumerator StopHarvestCoroutine()
+    {
+        yield return new WaitForEndOfFrame(); 
+
+        _isHarvesting = false;
+        _replant = true;
+        _targetPlant = null;
+
+        List<Vector3> currentPlantList = new List<Vector3>();
+        foreach (Transform child in tileMap.transform)
+        {
+            currentPlantList.Add(child.transform.position);
+        }
+
+        for (int i = 13; i <= 24; i++)
+        {
+            for (int j = -12; j <= -1; j++)
+            {
+                float xPos = i + 0.5f;
+                float yPos = j + 0.5f;
+                Vector3 pos = new Vector3(xPos, yPos, 0f);
+                if (!currentPlantList.Contains(pos))
+                {
+                    _destroyArea.Add(pos);
+                }
+            }
+        }
+
+    }
+
+    private bool _movingToPlant = false;
     private void Update()
     {
         if (_moveToStart && !_hasDug && !_startDig)
@@ -59,19 +115,43 @@ public class BotController : MonoBehaviour
             _startSow = true;
             StartCoroutine(MoveToSow(-1, new Vector3(13.5f, -0.5f, 0f)));
         }
-        
-        CanHarvestPlant();
+
+        if (_isHarvesting)
+        {
+            CanHarvestPlant();
+        }
 
         if (_isHarvesting && _plants.Count > 0)
             MoveToNearestPlant();
 
-    }
+        // tam thoi ok
+        if (_replant && !_movingToPlant)
+        {
+            if (Input.GetKeyDown(KeyCode.R))
+            {
+                if (_destroyArea.Count > 0)
+                {
+                    Vector3 plant = _destroyArea.OrderBy(p => Vector3.Distance(transform.position, p)).FirstOrDefault();
+                    transform.position = plant;
+                    _destroyArea.Remove(plant);
+                }
+                else
+                {
+                    _replant = false;
+                    _isHarvesting = true;
+                }
+            }
+        }
 
+    }
+    
+    
     private IEnumerator MoveToStartPoint()
     {
         Vector3 targetPosition = new Vector3(13.5f, -0.5f, 0f);
         yield return MoveSmooth(targetPosition);
         MapManager.Instance.Dig(_pickCell.position, tileMap);
+        _plantArea.Add(_pickCell.position);
         _moveToStart = true;
     }
 
@@ -89,6 +169,7 @@ public class BotController : MonoBehaviour
             }
             yield return Moving(direction);
             MapManager.Instance.Dig(_pickCell.position, tileMap);
+            _plantArea.Add(_pickCell.position);
         }
     }
 
@@ -103,7 +184,7 @@ public class BotController : MonoBehaviour
                 yield break;
             }
             yield return Moving(direction);
-            yield return new WaitForSeconds(0.01f);
+            
             MapManager.Instance.Sow(_pickCell.position);
         }
     }
