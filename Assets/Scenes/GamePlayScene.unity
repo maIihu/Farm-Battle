@@ -18380,7 +18380,7 @@ Transform:
   m_GameObject: {fileID: 1360360578}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 1.38, y: -1.66, z: 0}
+  m_LocalPosition: {x: 4.63, y: -1.07, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -20449,6 +20449,7 @@ MonoBehaviour:
   shieldPrefab: {fileID: 8298519337058139504, guid: b35794ba798d31d48b73d75ce8b826cc, type: 3}
   nuttyPrefab: {fileID: 3297548328038640120, guid: 4f854d3911763294798a2e75d638ca65, type: 3}
   rainPrefab: {fileID: 2439525356536531106, guid: 5deacdb0792c1634c92a43b08d6e459c, type: 3}
+  tileMap1: {fileID: 1381698289}
   tileMap2: {fileID: 1979060381}
 --- !u!4 &1612641744
 Transform:
@@ -21462,7 +21463,7 @@ GameObject:
   - component: {fileID: 1818420748}
   - component: {fileID: 1818420747}
   - component: {fileID: 1818420746}
-  - component: {fileID: 1818420745}
+  - component: {fileID: 1818420749}
   m_Layer: 11
   m_Name: Bot
   m_TagString: Untagged
@@ -21479,28 +21480,13 @@ Transform:
   m_GameObject: {fileID: 1818420743}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 15.07, y: -1.37, z: 0}
+  m_LocalPosition: {x: 24.32, y: -0.99, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2047794034}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1818420745
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1818420743}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3a67391a72043dd4fb6fd20d57cf1f0b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  tileMap: {fileID: 1979060384}
-  moveSpeed: 100
-  score: 0
 --- !u!58 &1818420746
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -21615,6 +21601,21 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &1818420749
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1818420743}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2790e0e8d35dedc4c8eae3437469bce0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tileMap: {fileID: 1979060384}
+  moveSpeed: 100
+  score: 0
 --- !u!1 &1845684622
 GameObject:
   m_ObjectHideFlags: 0

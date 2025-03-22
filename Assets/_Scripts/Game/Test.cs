@@ -7,9 +7,9 @@ using UnityEngine.Serialization;
 using UnityEngine.Tilemaps;
 using Random = UnityEngine.Random;
 
-public class BotController : MonoBehaviour
+public class Test : MonoBehaviour
 {
-    public static BotController Instance { get; private set; } 
+    public static Test Instance { get; private set; } 
     
     [SerializeField] private Tilemap tileMap;
     [SerializeField] private float moveSpeed = 5f;
@@ -29,7 +29,6 @@ public class BotController : MonoBehaviour
     private List<Vector3> _destroyedAreas;
     
     public int score;
-    
     
     private void Awake()
     {
@@ -57,6 +56,7 @@ public class BotController : MonoBehaviour
     
     private void MoveToStartPoint()
     {
+        //StartCoroutine(MoveToPositionLerp(new Vector3(13.5f, -0.5f, 0f)));
         transform.position = new Vector3(13.5f, -0.5f, 0f);
         MapManager.Instance.Dig(_pickCell.position, tileMap);
     }
@@ -122,14 +122,12 @@ public class BotController : MonoBehaviour
         
         if (!_hasDug && currentPos == new Vector2(24.5f, -0.5f))
         {
-            _hasDug = true; 
-            
             StartCoroutine(MoveToPositionLerp(new Vector3(23.5f, -0.5f)));
             MapManager.Instance.Sow(_pickCell.position);
             
             _stepCount = 0;
             _moveDir = 1;
-            SortChildrenByName(tileMap.transform);
+            SortGameObject.SortChildrenByName(tileMap.transform);
             StartCoroutine(MoveToSowRoutine());
         }
         
@@ -149,29 +147,6 @@ public class BotController : MonoBehaviour
         {
             MoveToNearestPlant();
         }
-    }
-
-    private void SortChildrenByName(Transform parent)
-    {
-        List<Transform> children = new List<Transform>();
-        foreach (Transform child in parent)
-        {
-            children.Add(child);
-        }
-        children.Sort((a, b) => 
-        {
-            if (a.position.x != b.position.x)
-                return a.position.x.CompareTo(b.position.x);
-            if (a.position.y != b.position.y)
-                return a.position.y.CompareTo(b.position.y);
-            return a.position.z.CompareTo(b.position.z);
-        });
-        
-        for (int i = 0; i < children.Count; i++)
-        {
-            children[i].SetSiblingIndex(i);
-        }
-
     }
     
     private void KickBomb()
@@ -221,6 +196,12 @@ public class BotController : MonoBehaviour
     {
         Vector3 currentPosition = transform.position;
         Vector3 targetPosition;
+
+        if (currentPosition == new Vector3(24.5f, -0.5f, 0f))
+        {
+            _hasDug = true; 
+            yield break;
+        }
         
         if (_stepCount < 11)
         {
@@ -266,7 +247,7 @@ public class BotController : MonoBehaviour
         Vector3 currentPosition = transform.position;
         Vector3 targetPosition;
         
-        if(currentPosition.x == 24.5f && currentPosition.y == -1.5f)
+        if(Mathf.Approximately(currentPosition.x, 24.5f) && Mathf.Approximately(currentPosition.y, -1.5f))
         {
             _hasSowed = true;
             targetPosition = new Vector3(24.5f, -0.5f);
@@ -276,12 +257,12 @@ public class BotController : MonoBehaviour
             _isHarvesting = true;
             yield break;
         }
-        if (currentPosition.y == -0.5f)
+        if (Mathf.Approximately(currentPosition.y, -0.5f))
         {
             targetPosition = new Vector3(currentPosition.x - 1f, currentPosition.y, currentPosition.z);
             yield return MoveToPositionLerp(targetPosition);
             
-            if (currentPosition.x == 13.5f)
+            if (Mathf.Approximately(currentPosition.x, 13.5f))
             {
                 targetPosition = new Vector3(currentPosition.x, currentPosition.y - 1f, currentPosition.z);
                 yield return MoveToPositionLerp(targetPosition);

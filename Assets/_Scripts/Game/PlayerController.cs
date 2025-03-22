@@ -24,7 +24,7 @@ public class PlayerController : MonoBehaviour
     private float _sowDelay = 0.24f;
     private float _lastDigTime = -1f;
 
-    [FormerlySerializedAs("_isShopping")] public bool isShopping;
+    public bool isShopping;
     public int score;
     
     private void Awake()
@@ -62,7 +62,6 @@ public class PlayerController : MonoBehaviour
             
             if (Input.GetKey(KeyCode.Space) && _pickCell.gameObject.activeSelf)
                 Plant();
-            
         }
         else
         {
@@ -73,6 +72,10 @@ public class PlayerController : MonoBehaviour
             _moveInput = Vector2.zero;
             _animator.SetFloat("Speed", 0);
         }
+
+        if (tileMap.transform.childCount == 144)
+            SortGameObject.SortChildrenByName(tileMap.transform);
+        
     }
 
     private void ActivePickCell()
