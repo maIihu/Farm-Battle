@@ -4,25 +4,24 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using Random = UnityEngine.Random;
 
 public class UIShop : MonoBehaviour
 {
     [SerializeField] private GameObject shop1;
+    [SerializeField] private GameObject shop2;
     [SerializeField] private GameObject shopItemTemplate;
     [SerializeField] private ItemEffectManager itemEffectManager;
     
-    private List<GameObject> _items;
-    private int _currentIndex;
+    private List<GameObject> _shopItem1;
+    private int _index1;
 
     private GameObject _characterInShop;
-
-    private int _playerBuying;
-
     
     private void Start()
     {
         shop1.SetActive(false);
-        _items = new List<GameObject>();
+        _shopItem1 = new List<GameObject>();
         CreateShop();
     }
 
@@ -46,7 +45,7 @@ public class UIShop : MonoBehaviour
         itemClone.GetComponentInChildren<TextMeshProUGUI>().text = text;
         itemClone.transform.GetChild(1).gameObject.SetActive(false);
         
-        _items.Add(itemClone);
+        _shopItem1.Add(itemClone);
     }
 
     private void Update()
@@ -57,33 +56,38 @@ public class UIShop : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.S)) MoveSelection(1);  
             if (Input.GetKeyDown(KeyCode.A)) MoveSelection(-3); 
             if (Input.GetKeyDown(KeyCode.D)) MoveSelection(3);
-
+            
+            HighlightItem(_index1, _shopItem1);
+            
             if (Input.GetKeyDown(KeyCode.Space))
             {
-                ApplyItem();
+                ApplyItem(1, _index1);
             }
         }
 
         if (Input.GetKeyDown(KeyCode.I))
-            _playerBuying = 2;
+        {
+            int item = Random.Range(0, 5);
+            ApplyItem(2, item);   
+        }
     }
 
-    private void ApplyItem()
+    private void ApplyItem(int player, int indexItem)
     {
-        if (_items[_currentIndex].name == "Exit")
+        if (_shopItem1[indexItem].name == "Exit")
         {
             Exit();
             return;
         }
         
-        itemEffectManager.GetEffect(_items[_currentIndex].name, _playerBuying);
+        itemEffectManager.GetEffect(_shopItem1[indexItem].name, player);
 
     }
 
     private void Exit()
     {
         _characterInShop.gameObject.GetComponent<PlayerController>().isShopping = false;
-        foreach (var item in _items)
+        foreach (var item in _shopItem1)
         {
             item.GetComponentInChildren<Image>().color = Color.white;
             item.transform.GetChild(1).gameObject.SetActive(false);
@@ -93,8 +97,8 @@ public class UIShop : MonoBehaviour
 
     private void MoveSelection(int direction)
     {
-        int row = _currentIndex % 3; // 0 1 2
-        int col = _currentIndex / 3; // 0 1
+        int row = _index1 % 3; // 0 1 2
+        int col = _index1 / 3; // 0 1
 
         int newRow = row;
         int newCol = col;
@@ -106,19 +110,19 @@ public class UIShop : MonoBehaviour
 
         int newIndex = newCol * 3 + newRow;
         
-        HighlightItem(newIndex);
-        _currentIndex = newIndex;
+        _index1 = newIndex;
     }
 
-    private void HighlightItem(int index)
+    private void HighlightItem(int index, List<GameObject> shopItem)
     {
-        _items[_currentIndex].GetComponentInChildren<Image>().color = Color.white;
-        //_items[_currentIndex].GetComponentInChildren<Image>().sprite = Resources.Load<Sprite>("Assets/_Sprites/Menu/Item.png");
-
-        _items[_currentIndex].transform.GetChild(1).gameObject.SetActive(false);
-
-        _items[index].GetComponentInChildren<Image>().color = Color.yellow;
-        _items[index].transform.GetChild(1).gameObject.SetActive(true);
+        foreach (var item in shopItem)
+        {
+            item.GetComponentInChildren<Image>().color = Color.white;
+            item.transform.GetChild(1).gameObject.SetActive(false);
+        }
+        
+        shopItem[index].GetComponentInChildren<Image>().color = Color.yellow;
+        shopItem[index].transform.GetChild(1).gameObject.SetActive(true);
     }
     
     private void OnCollisionEnter2D(Collision2D other)
@@ -126,11 +130,10 @@ public class UIShop : MonoBehaviour
         if (other.gameObject.CompareTag("Player"))
         {
             _characterInShop = other.gameObject;
-            _playerBuying = 1;
             _characterInShop.GetComponent<PlayerController>().isShopping = true;
             shop1.SetActive(true);
-            _currentIndex = 0;
-            HighlightItem(0);
+            _index1 = 0;
+            HighlightItem(0, _shopItem1);
         }
     }
 

@@ -393,6 +393,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   shop1: {fileID: 677533411}
+  shop2: {fileID: 0}
   shopItemTemplate: {fileID: 7794721481662055422, guid: f3d091e2dda73de44ae01045e86cb522, type: 3}
   itemEffectManager: {fileID: 1612641743}
 --- !u!1 &195513546
@@ -21614,7 +21615,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tileMap: {fileID: 1979060384}
-  moveSpeed: 100
+  moveSpeed: 5
   score: 0
 --- !u!1 &1845684622
 GameObject:
