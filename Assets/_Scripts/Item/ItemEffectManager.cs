@@ -19,7 +19,7 @@ public class ItemEffectManager : MonoBehaviour
     private bool _shieldEffect1;
     private bool _shieldEffect2;
     
-    public static event Action DestroyMap;
+    public static event Action<List<Vector3>> DestroyMap;
     
     public void GetEffect(string itemName, int player)
     {
@@ -114,6 +114,8 @@ public class ItemEffectManager : MonoBehaviour
     private IEnumerator ThunderEnd(int player, float time)
     {
         yield return new WaitForSeconds(time);
+
+        List<Vector3> plantsDestroyed = new List<Vector3>();
         
         for (int i = transform.childCount - 1; i >= 0; i--)
         {
@@ -125,11 +127,12 @@ public class ItemEffectManager : MonoBehaviour
                 if(transform.GetChild(i).GetComponent<Thunder>() != null)
                     transform.GetChild(i).GetComponent<Thunder>().ItemEffect(tileMap2);
             
+            plantsDestroyed.Add(transform.GetChild(i).position);
             Destroy(transform.GetChild(i).gameObject);
         }
         
         if(player == 1)
-            DestroyMap?.Invoke();
+            DestroyMap?.Invoke(plantsDestroyed);
     }
     
     private void RainStart(int player)

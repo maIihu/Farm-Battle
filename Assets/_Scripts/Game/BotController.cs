@@ -28,7 +28,7 @@ public class BotController : MonoBehaviour
     private Transform _pickCell;
     private Plant _targetPlant;
     
-    private List<Plant> _plants;
+    private Dictionary<Vector3, Plant> _plantsCanHarvest;
     
     private List<Vector3> _destroyArea;
     private List<Vector3> _plantArea;
@@ -49,7 +49,7 @@ public class BotController : MonoBehaviour
     private void Start()
     {
         _pickCell = transform.GetChild(0);
-        _plants = new List<Plant>();
+        _plantsCanHarvest = new Dictionary<Vector3, Plant>();
         _plantArea = new List<Vector3>();
         _destroyArea = new List<Vector3>();
         
@@ -66,42 +66,22 @@ public class BotController : MonoBehaviour
         ItemEffectManager.DestroyMap -= StopHarvest;
     }
     
-    private void StopHarvest()
+    private void StopHarvest(List<Vector3> plantsDestroyed)
     {
-        StartCoroutine(StopHarvestCoroutine());
-    }
-    
-    private IEnumerator StopHarvestCoroutine()
-    {
-        yield return new WaitForEndOfFrame(); 
-
         _isHarvesting = false;
         _replant = true;
         _targetPlant = null;
-
-        List<Vector3> currentPlantList = new List<Vector3>();
-        foreach (Transform child in tileMap.transform)
+        _destroyArea.AddRange(plantsDestroyed);
+        
+        foreach (var plantPos in plantsDestroyed)
         {
-            currentPlantList.Add(child.transform.position);
+            MapManager.Instance.map.Remove(plantPos);
+            MapManager.Instance.hasCrop.Remove(plantPos);
+            _plantsCanHarvest.Remove(plantPos);
         }
-
-        for (int i = 13; i <= 24; i++)
-        {
-            for (int j = -12; j <= -1; j++)
-            {
-                float xPos = i + 0.5f;
-                float yPos = j + 0.5f;
-                Vector3 pos = new Vector3(xPos, yPos, 0f);
-                if (!currentPlantList.Contains(pos))
-                {
-                    _destroyArea.Add(pos);
-                }
-            }
-        }
-
     }
-
-    private bool _movingToPlant = false;
+    
+    private bool _movingToPlant;
     private void Update()
     {
         if (_moveToStart && !_hasDug && !_startDig)
@@ -119,33 +99,47 @@ public class BotController : MonoBehaviour
         if (_isHarvesting)
         {
             CanHarvestPlant();
-            if (_plants.Count > 0)
+            if (_plantsCanHarvest.Count > 0)
             {
                 MoveToNearestPlant();
             }
         }
 
-        // tam thoi ok
-        if (_replant && !_movingToPlant)
+        if (_replant)
         {
-            if (Input.GetKeyDown(KeyCode.R))
+            if (!_movingToPlant)
             {
-                if (_destroyArea.Count > 0)
-                {
-                    Vector3 plant = _destroyArea.OrderBy(p => Vector3.Distance(transform.position, p)).FirstOrDefault();
-                    transform.position = plant;
-                    _destroyArea.Remove(plant);
-                }
-                else
-                {
-                    _replant = false;
-                    _isHarvesting = true;
-                }
+                StartCoroutine(MoveToRePlant());
+                _movingToPlant = true;
             }
         }
-
     }
-    
+
+    private IEnumerator MoveToRePlant()
+    {
+        List<Vector3> _plants = new List<Vector3>();
+        while (_destroyArea.Count > 0)
+        {
+            Vector3 targetPosition = _destroyArea.OrderBy(p => Vector3.Distance(transform.position, p)).FirstOrDefault();
+            _destroyArea.Remove(targetPosition);
+            _plants.Add(targetPosition);
+            
+            yield return MoveSmooth(targetPosition);
+            MapManager.Instance.Dig(_pickCell.position, tileMap);
+        }
+
+        while (_plants.Count > 0)
+        {
+            Vector3 targetPosition = _plants.OrderBy(p => Vector3.Distance(transform.position, p)).FirstOrDefault();
+            _plants.Remove(targetPosition);
+            
+            yield return MoveSmooth(targetPosition);
+            MapManager.Instance.Sow(_pickCell.position);
+        }
+        
+        _replant = false;
+        _isHarvesting = true;
+    }
     
     private IEnumerator MoveToStartPoint()
     {
@@ -227,9 +221,9 @@ public class BotController : MonoBehaviour
             if (child.childCount > 0)
             {
                 Plant plant = child.GetChild(0).gameObject.GetComponent<Plant>();
-                if (plant != null && plant.isReadyToHarvest && !_plants.Contains(plant))
+                if (plant != null && plant.isReadyToHarvest && !_plantsCanHarvest.ContainsKey(plant.transform.position))
                 {
-                    _plants.Add(plant);
+                    _plantsCanHarvest.Add(plant.transform.position, plant);
                 }
             }
         }
@@ -237,7 +231,7 @@ public class BotController : MonoBehaviour
 
     private void MoveToNearestPlant()
     {
-        _targetPlant = _plants.OrderBy(p => Vector3.Distance(transform.position, p.transform.position)).FirstOrDefault();
+        _targetPlant = _plantsCanHarvest.OrderBy(p => Vector3.Distance(transform.position, p.Key)).FirstOrDefault().Value;
 
         if (_targetPlant == null)
             return;
@@ -252,7 +246,7 @@ public class BotController : MonoBehaviour
                 score++;
             }
 
-            _plants.Remove(_targetPlant);
+            _plantsCanHarvest.Remove(_targetPlant.transform.position);
             _targetPlant = null;
         }
     }
