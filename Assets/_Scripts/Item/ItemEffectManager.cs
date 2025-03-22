@@ -125,13 +125,15 @@ public class ItemEffectManager : MonoBehaviour
             
             if(!_shieldEffect2 && player == 1)
                 if(transform.GetChild(i).GetComponent<Thunder>() != null)
+                {
                     transform.GetChild(i).GetComponent<Thunder>().ItemEffect(tileMap2);
+                    plantsDestroyed.Add(transform.GetChild(i).position);
+                }
             
-            plantsDestroyed.Add(transform.GetChild(i).position);
             Destroy(transform.GetChild(i).gameObject);
         }
         
-        if(player == 1)
+        if(plantsDestroyed.Count > 0)
             DestroyMap?.Invoke(plantsDestroyed);
     }
     
@@ -179,6 +181,14 @@ public class ItemEffectManager : MonoBehaviour
     private IEnumerator MoveTsunami(GameObject tsunami, Vector3 targetPosition, int player)
     {
         float speed = 18f;
+        
+        List<Vector3> plantsDestroyed = new List<Vector3>();
+        foreach (Transform child in tileMap2.transform)
+        {
+            plantsDestroyed.Add(child.position);
+        }
+        
+        
         while (Vector3.Distance(tsunami.transform.position, targetPosition) > 0.1)
         {
             tsunami.transform.position =
@@ -194,6 +204,12 @@ public class ItemEffectManager : MonoBehaviour
         tsunami.transform.position = targetPosition;
 
         Destroy(tsunami);
+        
+        if (player == 1 && !_shieldEffect2)
+        {
+            DestroyMap?.Invoke(plantsDestroyed);
+        }
+
     }
     
 }
