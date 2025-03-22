@@ -42,7 +42,7 @@ public class UIShop : MonoBehaviour
         GameObject itemClone = Instantiate(shopItemTemplate, shop1.transform);
         itemClone.name = text;
         RectTransform rectTransform = itemClone.GetComponent<RectTransform>();
-        rectTransform.anchoredPosition = new Vector2(-40 + 80 * x, 110 - 80 * y);
+        rectTransform.anchoredPosition = new Vector2(-40 + 75 * x, 100 - 75 * y);
         itemClone.GetComponentInChildren<TextMeshProUGUI>().text = text;
         itemClone.transform.GetChild(1).gameObject.SetActive(false);
         
@@ -113,8 +113,10 @@ public class UIShop : MonoBehaviour
     private void HighlightItem(int index)
     {
         _items[_currentIndex].GetComponentInChildren<Image>().color = Color.white;
+        //_items[_currentIndex].GetComponentInChildren<Image>().sprite = Resources.Load<Sprite>("Assets/_Sprites/Menu/Item.png");
+
         _items[_currentIndex].transform.GetChild(1).gameObject.SetActive(false);
-        
+
         _items[index].GetComponentInChildren<Image>().color = Color.yellow;
         _items[index].transform.GetChild(1).gameObject.SetActive(true);
     }
