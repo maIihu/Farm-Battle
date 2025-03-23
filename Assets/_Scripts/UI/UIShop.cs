@@ -27,40 +27,54 @@ public class UIShop : MonoBehaviour
 
     private void CreateShop()
     {
-        CreateItemShop(Item.GetName(Item.ItemType.Shield),0, 0);
-        CreateItemShop(Item.GetName(Item.ItemType.Rain),0, 1);
-        CreateItemShop(Item.GetName(Item.ItemType.Exit),0, 2);
-
-        CreateItemShop(Item.GetName(Item.ItemType.Tsunami),1, 0);
-        CreateItemShop(Item.GetName(Item.ItemType.Nutty),1, 1);
-        CreateItemShop(Item.GetName(Item.ItemType.Thunder),1, 2);
+        CreateItemShop(Item.GetName(Item.ItemType.Shield), Item.GetDescription(Item.ItemType.Shield), Item.GetCost(Item.ItemType.Shield),0, 0);
+        CreateItemShop(Item.GetName(Item.ItemType.Rain), Item.GetDescription(Item.ItemType.Rain), Item.GetCost(Item.ItemType.Rain),0, 1);
+        CreateItemShop(Item.GetName(Item.ItemType.Exit), Item.GetDescription(Item.ItemType.Exit), Item.GetCost(Item.ItemType.Exit),0, 2);
+        
+        CreateItemShop(Item.GetName(Item.ItemType.Tsunami), Item.GetDescription(Item.ItemType.Tsunami), Item.GetCost(Item.ItemType.Tsunami),1, 0);
+        CreateItemShop(Item.GetName(Item.ItemType.Nutty), Item.GetDescription(Item.ItemType.Nutty), Item.GetCost(Item.ItemType.Nutty),1, 1);
+        CreateItemShop(Item.GetName(Item.ItemType.Thunder), Item.GetDescription(Item.ItemType.Thunder), Item.GetCost(Item.ItemType.Thunder),1, 2);
     }
     
-    private void CreateItemShop(string text, int x, int y)
+    private void CreateItemShop(string itemName, string description, int cost, int x, int y)
     {
         GameObject itemClone = Instantiate(shopItemTemplate, shop1.transform);
-        itemClone.name = text;
+        itemClone.name = itemName;
         RectTransform rectTransform = itemClone.GetComponent<RectTransform>();
         rectTransform.anchoredPosition = new Vector2(-40 + 75 * x, 100 - 75 * y);
-        itemClone.GetComponentInChildren<TextMeshProUGUI>().text = text;
+        
+
+        Transform costTransform = itemClone.transform.GetChild(1).GetChild(0).transform;
+        Transform descriptionTransform = itemClone.transform.GetChild(1).GetChild(1).transform;
+
+        costTransform.GetComponentInChildren<TextMeshProUGUI>().text = cost.ToString();
+        descriptionTransform.GetComponentInChildren<TextMeshProUGUI>().text = description;
+        
         itemClone.transform.GetChild(1).gameObject.SetActive(false);
         
         _shopItem1.Add(itemClone);
+        itemClone.transform.SetAsFirstSibling();
+        
+        if(cost == 0)
+            costTransform.gameObject.SetActive(false);
     }
 
     private void Update()
     {
         if (shop1.activeSelf) // Player 1
         {
-            if (Input.GetKeyDown(KeyCode.W)) MoveSelection(-1); 
-            if (Input.GetKeyDown(KeyCode.S)) MoveSelection(1);  
-            if (Input.GetKeyDown(KeyCode.A)) MoveSelection(-3); 
+            if (Input.GetKeyDown(KeyCode.W)) MoveSelection(-1);
+            if (Input.GetKeyDown(KeyCode.S)) MoveSelection(1);
+            if (Input.GetKeyDown(KeyCode.A)) MoveSelection(-3);
             if (Input.GetKeyDown(KeyCode.D)) MoveSelection(3);
-            
+
             HighlightItem(_index1, _shopItem1);
             
-            if (Input.GetKeyDown(KeyCode.Space))
+            int itemCost = Item.GetCost((Item.ItemType)Enum.Parse(typeof(Item.ItemType), _shopItem1[_index1].name));
+            if (Input.GetKeyDown(KeyCode.Space) && PlayerController.Instance.score >= itemCost)
             {
+                PlayerController.Instance.score -= itemCost;
+            
                 ApplyItem(1, _index1);
             }
         }
@@ -68,9 +82,10 @@ public class UIShop : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.I))
         {
             int item = Random.Range(0, 5);
-            ApplyItem(2, item);   
+            ApplyItem(2, item);
         }
     }
+
 
     private void ApplyItem(int player, int indexItem)
     {
