@@ -25,6 +25,8 @@ public class BotController : MonoBehaviour
     
     private bool _isHarvesting;
     
+    private bool _movingToPlant;
+    
     private Transform _pickCell;
     private Plant _targetPlant;
     
@@ -81,7 +83,6 @@ public class BotController : MonoBehaviour
         }
     }
     
-    private bool _movingToPlant;
     private void Update()
     {
         if (_moveToStart && !_hasDug && !_startDig)
