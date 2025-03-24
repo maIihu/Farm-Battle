@@ -6,24 +6,23 @@ using UnityEngine.Serialization;
 
 public class Plant : MonoBehaviour
 {
-    public bool isReadyToHarvest = false;
-    public Vector3 gridLocation;
-    [SerializeField] private float growTimer = 5f;
     [SerializeField] private Sprite[] sprites;
+    
+    public bool isReadyToHarvest;
+    public int growTimer;
     
     private void Start()
     {
         StartCoroutine(Grow());
-        
     }
     
     private IEnumerator Grow()
     {
-        this.gameObject.GetComponent<SpriteRenderer>().sprite = sprites[0];
+        gameObject.GetComponent<SpriteRenderer>().sprite = sprites[0];
         for (int i = 1; i < sprites.Length; i++)
         {
             yield return new WaitForSeconds(growTimer);
-            this.gameObject.GetComponent<SpriteRenderer>().sprite = sprites[i];
+            gameObject.GetComponent<SpriteRenderer>().sprite = sprites[i];
         }
         
         isReadyToHarvest = true;
@@ -37,6 +36,5 @@ public class Plant : MonoBehaviour
         //Debug.Log("Đã thu hoạch");
         isReadyToHarvest = false;
         StartCoroutine(Grow()); 
-        
     }
 }

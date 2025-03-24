@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.Tilemaps;
+using Random = UnityEngine.Random;
 
 public class MapManager : MonoBehaviour
 {
@@ -23,7 +24,7 @@ public class MapManager : MonoBehaviour
     {
         if (_instance != null && _instance != this)
         {
-            Destroy(this.gameObject);
+            Destroy(gameObject);
         }
         else
         {
@@ -37,7 +38,6 @@ public class MapManager : MonoBehaviour
         map = new Dictionary<Vector3, GameObject>();
     }
     
-
     public bool Dig(Vector3 location, Tilemap tileMap)
     {
         Vector3Int cellPos = tileMap.WorldToCell(location);
@@ -53,7 +53,6 @@ public class MapManager : MonoBehaviour
                 return true;
             }
         }
-
         return false;
     }
 
@@ -62,8 +61,10 @@ public class MapManager : MonoBehaviour
         if (map.ContainsKey(location) && !hasCrop.ContainsKey(location))
         {
             GameObject plantClone = Instantiate(plantPrefab, location, Quaternion.identity);
+            
+            plantClone.GetComponent<Plant>().growTimer = Random.Range(40, 60) / 5;
+            
             plantClone.transform.SetParent(map[location].transform);
-            plantClone.GetComponent<Plant>().gridLocation = location;
             hasCrop[location] = true;
         }
     }
@@ -84,4 +85,5 @@ public class MapManager : MonoBehaviour
             }
         }
     }
+    
 }

@@ -71,7 +71,7 @@ public class UIShop : MonoBehaviour
             HighlightItem(_index1, _shopItem1);
             
             int itemCost = Item.GetCost((Item.ItemType)Enum.Parse(typeof(Item.ItemType), _shopItem1[_index1].name));
-            if (Input.GetKeyDown(KeyCode.Space) && PlayerController.Instance.score >= itemCost)
+            if (Input.GetKeyDown(KeyCode.Space) )
             {
                 PlayerController.Instance.score -= itemCost;
             
