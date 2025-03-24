@@ -31,8 +31,7 @@ public class ItemEffectManager : MonoBehaviour
             _effects[transform.GetChild(i).name] = transform.GetChild(i);
         }
     }
-
-
+    
     public void GetEffect(string itemName, int player)
     {
         switch (itemName)
@@ -153,21 +152,33 @@ public class ItemEffectManager : MonoBehaviour
     private void RainStart(int player)
     {
         Vector3 position;
+        GameObject tileMapTarget;
+        
         if(player == 1)
+        {
             position = new Vector3(6, 4, 0);
+            tileMapTarget = tileMap1;
+        }
         else
+        {
             position = new Vector3(19, 4, 0);
+            tileMapTarget = tileMap2;
+        }
 
         GameObject rain = Instantiate(_effectPrefabs["Rain"], position, Quaternion.Euler(90, 0, 0), _effects["RainEffect"]);
 
         rain.gameObject.GetComponent<ParticleSystem>().Play();
         
-        Invoke(nameof(RainEnd), 10f);
+        rain.gameObject.GetComponent<Rain>().ItemEffect(tileMapTarget);
+        
+        StartCoroutine(RainEnd(tileMapTarget, 10f));
     }
     
-    private void RainEnd()
+    private IEnumerator RainEnd(GameObject tileMapTarget, float time)
     {
+        yield return time;
         _effects["RainEffect"].GetChild(0).gameObject.GetComponent<ParticleSystem>().Stop();
+        _effects["RainEffect"].GetChild(0).gameObject.GetComponent<Rain>().RollBackTimeGrow(tileMapTarget);
         Destroy(_effects["RainEffect"].GetChild(0).gameObject);
     }
 
