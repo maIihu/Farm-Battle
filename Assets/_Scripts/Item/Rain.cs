@@ -14,17 +14,6 @@ public class Rain : ItemBase
             }
         }
     }
-
-    public void RollBackTimeGrow(GameObject objectToEffect)
-    {
-        foreach (Transform child in objectToEffect.transform)
-        {
-            Plant plant = child.GetComponentInChildren<Plant>();
-            if (plant != null)
-            {
-                plant.growTimer = Random.Range(40, 60) / 5;
-            }
-        }
-    }
+    
     
 }

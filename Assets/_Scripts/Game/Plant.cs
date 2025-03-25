@@ -9,6 +9,7 @@ public class Plant : MonoBehaviour
     [SerializeField] private Sprite[] sprites;
     
     public bool isReadyToHarvest;
+    public bool checkBuff;
     public int growTimer;
     
     private void Start()
