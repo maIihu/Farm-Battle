@@ -77,10 +77,45 @@ public class MapManager : MonoBehaviour
             if (child.childCount > 0)
             {
                 Plant plant = child.GetChild(0).gameObject.GetComponent<Plant>();
-                if (plant != null && plant.isReadyToHarvest && location.ToString() == child.name)
+                if (plant != null && plant.isReadyToHarvest && location == child.transform.position)
                 {
                     plant.Harvest();
                     score++;
+                }
+            }
+        }
+    }
+
+    public void BuffGrowTime(Tilemap tileMap)
+    {
+        for (int i = 0; i < tileMap.transform.childCount; i++)
+        {
+            Transform child = tileMap.transform.GetChild(i);
+            if (child.childCount > 0)
+            {
+                Plant plant = child.GetChild(0).gameObject.GetComponent<Plant>();
+                if (plant != null && !plant.checkBuff)
+                {
+                    plant.checkBuff = true;
+                    plant.growTimer /= 5;
+                }
+            }
+        }
+    }
+    
+    public void DeBuffGrowTime(Transform tileMap)
+    {
+        for (int i = 0; i < tileMap.childCount; i++)
+        {
+            Transform child = tileMap.transform.GetChild(i);
+            if (child.childCount > 0)
+            {
+                Plant plant = child.GetChild(0).gameObject.GetComponent<Plant>();
+                if (plant != null && plant.checkBuff)
+                {
+                    Debug.Log("Hello");
+                    plant.checkBuff = false;
+                    plant.growTimer *= 5;
                 }
             }
         }

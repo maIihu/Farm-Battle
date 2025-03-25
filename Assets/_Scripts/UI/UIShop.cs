@@ -74,7 +74,7 @@ public class UIShop : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.Space) )
             {
                 PlayerController.Instance.score -= itemCost;
-            
+                
                 ApplyItem(1, _index1);
             }
         }
@@ -82,7 +82,7 @@ public class UIShop : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.I))
         {
             int item = Random.Range(0, 5);
-            ApplyItem(2, item);
+            ApplyItem(2, 1);
         }
     }
 
@@ -94,9 +94,7 @@ public class UIShop : MonoBehaviour
             Exit();
             return;
         }
-        
         itemEffectManager.GetEffect(_shopItem1[indexItem].name, player);
-
     }
 
     private void Exit()

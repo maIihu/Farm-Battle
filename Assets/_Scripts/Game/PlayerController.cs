@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.PlayerLoop;
 using UnityEngine.Serialization;
 using UnityEngine.Tilemaps;
 using Random = UnityEngine.Random;
@@ -21,6 +22,9 @@ public class PlayerController : MonoBehaviour
     private Collider2D _currentBomb;
     
     private bool _isTouchingBomb;
+    private bool _isRaining;
+    private bool _isSorted;
+    
     private float _sowDelay = 0.24f;
     private float _lastDigTime = -1f;
 
@@ -42,45 +46,94 @@ public class PlayerController : MonoBehaviour
         _rb = GetComponent<Rigidbody2D>();
     }
 
+    private void OnEnable()
+    {
+        ItemEffectManager.isRaining += Rain;
+    }
+
+    private void OnDestroy()
+    {
+        ItemEffectManager.isRaining -= Rain;
+    }
+
+    private void Rain(int obj)
+    {
+        if (obj == 1)
+            _isRaining = !_isRaining;
+    }
+    
     private void Start()
     {
         _pickCell = transform.GetChild(0);
     }
-    
+
+    private bool _moveOut;
     private void Update()
     {
-        if (!isShopping)
+        MoveOutGarden();
+        
+        if (!_moveOut)
         {
-            if (!_pickCell.gameObject.activeSelf)
-                Invoke(nameof(ActivePickCell), 0.2f);
-            
-            InputHandle();
             _pickCell.position = new Vector3((int)(transform.position.x) + 0.5f, (int)(transform.position.y) - 0.5f, transform.position.z);
-    
             if (_isTouchingBomb && Input.GetKeyDown(KeyCode.Space))
                 ThrowBomb();
-            
-            if (Input.GetKey(KeyCode.Space) && _pickCell.gameObject.activeSelf)
+
+            if (Input.GetKey(KeyCode.Space))
                 Plant();
+        }
+        
+        InputHandle();
+        
+        if(isShopping)
+            PauseAnimation();
+
+        SortPlantWithPosition();
+        
+        if (_isRaining)
+            MapManager.Instance.BuffGrowTime(tileMap);
+    }
+
+    private void MoveOutGarden()
+    {
+        if (transform.position.y >= 0)
+        {
+            if (!_moveOut) 
+            {
+                _pickCell.gameObject.SetActive(false);
+                _moveOut = true;
+            }
         }
         else
         {
-            if (_pickCell.gameObject.activeSelf)
-                _pickCell.gameObject.SetActive(false);
-            
-            _animator.SetTrigger("Shopping");
-            _moveInput = Vector2.zero;
-            _animator.SetFloat("Speed", 0);
+            if (_moveOut) 
+            {
+                _pickCell.gameObject.SetActive(true);
+                _moveOut = false;
+            }
         }
-
-        if (tileMap.transform.childCount == 144)
-            SortGameObject.SortChildrenByName(tileMap.transform);
-        
     }
-
-    private void ActivePickCell()
+    
+    private void SortPlantWithPosition()
     {
-        _pickCell.gameObject.SetActive(true);
+        if (tileMap.transform.childCount == 144 && !_isSorted)
+        {
+            SortGameObject.SortChildrenByName(tileMap.transform);
+            _isSorted = true; 
+        }
+        else if (tileMap.transform.childCount != 144)
+            _isSorted = false; 
+    }
+    
+    private void FixedUpdate()
+    {
+        _rb.velocity = _moveInput * moveSpeed;
+    }
+    
+    private void PauseAnimation()
+    {
+        _animator.SetTrigger("Shopping");
+        _moveInput = Vector2.zero;
+        _animator.SetFloat("Speed", 0);
     }
     
     private void Plant()
@@ -105,12 +158,6 @@ public class PlayerController : MonoBehaviour
         _currentBomb.GetComponent<BombController>().ThrowingBomb(new Vector3(x, y, 0));
     }
     
-    
-    private void FixedUpdate()
-    {
-        _rb.velocity = _moveInput * moveSpeed;
-    }
-
     private void InputHandle()
     {
         _moveInput = Vector2.zero;
@@ -148,8 +195,7 @@ public class PlayerController : MonoBehaviour
             _spriteRenderer.flipX = true;
         }
     }
-
-
+    
     private void OnTriggerStay2D(Collider2D other)
     {
         if (other.CompareTag("Bomb"))
@@ -167,6 +213,5 @@ public class PlayerController : MonoBehaviour
             _currentBomb = null;
         }
     }
-    
 
 }

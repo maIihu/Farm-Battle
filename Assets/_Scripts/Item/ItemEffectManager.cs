@@ -11,16 +11,21 @@ public class ItemEffectManager : MonoBehaviour
 
     [SerializeField] private List<GameObject> effectPrefabs;
 
-    private Dictionary<string, Transform> _effects = new();
-    private Dictionary<string, GameObject> _effectPrefabs = new();
+    private Dictionary<string, Transform> _effects;
+    private Dictionary<string, GameObject> _effectPrefabs;
 
     private bool _shieldEffectActive1;
     private bool _shieldEffectActive2;
 
     public static event Action<List<Vector3>> DestroyMap;
-
+    public static event Action<int> isRaining;
+    
+    
     private void Start()
     {
+        _effects = new Dictionary<string, Transform>();
+        _effectPrefabs = new Dictionary<string, GameObject>();
+        
         foreach (var prefab in effectPrefabs)
         {
             _effectPrefabs[prefab.name] = prefab;
@@ -168,17 +173,20 @@ public class ItemEffectManager : MonoBehaviour
         GameObject rain = Instantiate(_effectPrefabs["Rain"], position, Quaternion.Euler(90, 0, 0), _effects["RainEffect"]);
 
         rain.gameObject.GetComponent<ParticleSystem>().Play();
-        
-        rain.gameObject.GetComponent<Rain>().ItemEffect(tileMapTarget);
-        
-        StartCoroutine(RainEnd(tileMapTarget, 10f));
+        //rain.gameObject.GetComponent<Rain>().ItemEffect(tileMapTarget);
+        isRaining?.Invoke(player);
+        StartCoroutine(RainEnd(tileMapTarget, player, 10f));
     }
     
-    private IEnumerator RainEnd(GameObject tileMapTarget, float time)
+    private IEnumerator RainEnd(GameObject tileMapTarget, int player, float time)
     {
-        yield return time;
+        yield return new WaitForSeconds(time);
         _effects["RainEffect"].GetChild(0).gameObject.GetComponent<ParticleSystem>().Stop();
-        _effects["RainEffect"].GetChild(0).gameObject.GetComponent<Rain>().RollBackTimeGrow(tileMapTarget);
+        
+        isRaining?.Invoke(player);
+        
+        MapManager.Instance.DeBuffGrowTime(tileMapTarget.transform);
+        
         Destroy(_effects["RainEffect"].GetChild(0).gameObject);
     }
 

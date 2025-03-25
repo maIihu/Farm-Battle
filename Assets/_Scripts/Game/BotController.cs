@@ -26,6 +26,8 @@ public class BotController : MonoBehaviour
     private bool _isHarvesting;
     
     private bool _movingToPlant;
+
+    private bool _isRaining;
     
     private Transform _pickCell;
     private Plant _targetPlant;
@@ -61,13 +63,21 @@ public class BotController : MonoBehaviour
     private void OnEnable()
     {
         ItemEffectManager.DestroyMap += StopHarvest;
+        ItemEffectManager.isRaining += Rain;
     }
 
     private void OnDestroy()
     {
         ItemEffectManager.DestroyMap -= StopHarvest;
+        ItemEffectManager.isRaining -= Rain;
     }
-    
+
+    private void Rain(int obj)
+    {
+        if (obj == 2)
+            _isRaining = !_isRaining;
+    }
+
     private void StopHarvest(List<Vector3> plantsDestroyed)
     {
         _isHarvesting = false;
@@ -114,6 +124,9 @@ public class BotController : MonoBehaviour
                 _movingToPlant = true;
             }
         }
+        
+        if (_isRaining)
+            MapManager.Instance.BuffGrowTime(tileMap);
     }
 
     private IEnumerator MoveToRePlant()
