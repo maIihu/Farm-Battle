@@ -89,6 +89,7 @@ public class BotController : MonoBehaviour
     {
         _isHarvesting = false;
         _replant = true;
+        _movingToPlant = false;
         _targetPlant = null;
         _destroyArea.AddRange(plantsDestroyed);
         
