@@ -71,14 +71,25 @@ public class BotController : MonoBehaviour
     {
         ItemEffectManager.DestroyMap += StopHarvest;
         ItemEffectManager.isRaining += Rain;
+        Mouse.plantDestroyed += MouseEatPlant;
     }
 
     private void OnDestroy()
     {
         ItemEffectManager.DestroyMap -= StopHarvest;
         ItemEffectManager.isRaining -= Rain;
+        Mouse.plantDestroyed -= MouseEatPlant;
     }
 
+    private void MouseEatPlant(Vector3 obj)
+    {
+        if (_targetPlant != null)
+        {
+            if (_targetPlant.transform.position == obj)
+                _targetPlant = null;
+        }
+    }
+    
     private void Rain(int obj)
     {
         if (obj == 2)

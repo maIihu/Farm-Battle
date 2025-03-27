@@ -53,13 +53,13 @@ public class ItemEffectManager : MonoBehaviour
             case "Shield":
                 ShieldStart(player);
                 break;
-            case "Nutty":
-                NuttyStart(player);
+            case "Mouse":
+                MouseStart(player);
                 break;
         }
     }
 
-    private void NuttyStart(int player)
+    private void MouseStart(int player)
     {
         Vector3 position;
         if (player == 1)
@@ -67,14 +67,14 @@ public class ItemEffectManager : MonoBehaviour
         else
             position = new Vector3(5.5f, -5.5f, 0f);
         
-        GameObject nutty = Instantiate(_effectPrefabs["Nutty"], position, Quaternion.identity, _effects["NuttyEffect"]);
-        nutty.GetComponent<Nutty>().ItemEffect(tileMap2);
-        Invoke(nameof(NuttyEnd), 5);
+        GameObject mouse = Instantiate(_effectPrefabs["Mouse"], position, Quaternion.identity, _effects["MouseEffect"]);
+        mouse.GetComponent<Mouse>().ItemEffect(tileMap2);
+        Invoke(nameof(MouseEnd), 5);
     }
 
-    private void NuttyEnd()
+    private void MouseEnd()
     {
-        Destroy(_effects["NuttyEffect"].GetChild(0).gameObject);
+        Destroy(_effects["MouseEffect"].GetChild(0).gameObject);
     }
     
     private void ShieldStart(int player)
