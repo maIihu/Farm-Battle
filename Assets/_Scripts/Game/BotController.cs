@@ -15,11 +15,8 @@ public class BotController : MonoBehaviour
     private bool move1;
     
     private bool _replant;
-    
     private bool _isHarvesting;
-    
     private bool _movingToPlant;
-
     private bool _isRaining;
     
     private Transform _pickCell;
@@ -114,7 +111,6 @@ public class BotController : MonoBehaviour
     
     private void Update()
     {
-
         if (_moveToStart)
         {
             if (!move1)
@@ -146,6 +142,8 @@ public class BotController : MonoBehaviour
         
         if (_isRaining)
             MapManager.Instance.BuffGrowTime(tileMap);
+        
+        _pickCell.position = new Vector3((int)(transform.position.x) + 0.5f, (int)(transform.position.y) - 0.5f, transform.position.z);
     }
 
     private IEnumerator MoveToPlant(List<Vector3> objectsToDig)
@@ -199,7 +197,7 @@ public class BotController : MonoBehaviour
     
     private IEnumerator MoveSmooth(Vector3 targetPosition)
     {
-        while (Vector3.Distance(transform.position, targetPosition) > 0.01)
+        while (Vector3.Distance(transform.position, targetPosition) > 0)
         {
             transform.position = Vector3.MoveTowards(transform.position, targetPosition, moveSpeed * Time.deltaTime);
             yield return null;
