@@ -11,22 +11,12 @@ public class BotController : MonoBehaviour
     [SerializeField] private Tilemap tileMap;
     [SerializeField] private float moveSpeed = 5f;
     
-    private int _stepCount;
-    private int _moveDir = 1;
-
-    private bool _hasDug;
-    private bool _hasSowed;
-    
-    private bool _startDig;
-    private bool _startSow;
     private bool _moveToStart;
-
+    private bool move1;
+    
     private bool _replant;
-    
     private bool _isHarvesting;
-    
     private bool _movingToPlant;
-
     private bool _isRaining;
     
     private Transform _pickCell;
@@ -36,6 +26,8 @@ public class BotController : MonoBehaviour
     
     private List<Vector3> _destroyArea;
     private List<Vector3> _plantArea;
+    
+    private List<Vector3> _plants;
     
     public static BotController Instance { get; private set; }
     public int score;
@@ -56,6 +48,18 @@ public class BotController : MonoBehaviour
         _plantsCanHarvest = new Dictionary<Vector3, Plant>();
         _plantArea = new List<Vector3>();
         _destroyArea = new List<Vector3>();
+        _plants = new List<Vector3>();
+
+        for (int i = 13; i <= 24; i++)
+        {
+            for (int j = -12; j <= -1; j++)
+            {
+                float xPos = i + 0.5f;
+                float yPos = j + 0.5f;
+                Vector3 pos = new Vector3(xPos, yPos, 0f);
+                _plants.Add(pos);
+            }
+        }
         
         StartCoroutine(MoveToStartPoint());
     }
@@ -64,14 +68,25 @@ public class BotController : MonoBehaviour
     {
         ItemEffectManager.DestroyMap += StopHarvest;
         ItemEffectManager.isRaining += Rain;
+        Mouse.plantDestroyed += MouseEatPlant;
     }
 
     private void OnDestroy()
     {
         ItemEffectManager.DestroyMap -= StopHarvest;
         ItemEffectManager.isRaining -= Rain;
+        Mouse.plantDestroyed -= MouseEatPlant;
     }
 
+    private void MouseEatPlant(Vector3 obj)
+    {
+        if (_targetPlant != null)
+        {
+            if (_targetPlant.transform.position == obj)
+                _targetPlant = null;
+        }
+    }
+    
     private void Rain(int obj)
     {
         if (obj == 2)
@@ -82,6 +97,7 @@ public class BotController : MonoBehaviour
     {
         _isHarvesting = false;
         _replant = true;
+        _movingToPlant = false;
         _targetPlant = null;
         _destroyArea.AddRange(plantsDestroyed);
         
@@ -95,18 +111,16 @@ public class BotController : MonoBehaviour
     
     private void Update()
     {
-        if (_moveToStart && !_hasDug && !_startDig)
+        if (_moveToStart)
         {
-            _startDig = true;
-            StartCoroutine(MoveToDig(1, new Vector3(13.5f, -11.5f, 0f))); 
+            if (!move1)
+            {
+                StartCoroutine(MoveToPlant(_plants));
+                move1 = true;
+                _moveToStart = false;
+            }
         }
-
-        if (_hasDug && !_hasSowed && !_startSow)
-        {
-            _startSow = true;
-            StartCoroutine(MoveToSow(-1, new Vector3(13.5f, -0.5f, 0f)));
-        }
-
+        
         if (_isHarvesting)
         {
             CanHarvestPlant();
@@ -120,106 +134,70 @@ public class BotController : MonoBehaviour
         {
             if (!_movingToPlant)
             {
-                StartCoroutine(MoveToRePlant());
+                StartCoroutine(MoveToPlant(_destroyArea));
                 _movingToPlant = true;
+                _replant = false;
             }
         }
         
         if (_isRaining)
             MapManager.Instance.BuffGrowTime(tileMap);
+        
+        _pickCell.position = new Vector3((int)(transform.position.x) + 0.5f, (int)(transform.position.y) - 0.5f, transform.position.z);
     }
 
-    private IEnumerator MoveToRePlant()
+    private IEnumerator MoveToPlant(List<Vector3> objectsToDig)
     {
-        List<Vector3> _plants = new List<Vector3>();
-        while (_destroyArea.Count > 0)
+        List<Vector3> objectsToSow = new List<Vector3>();
+        
+        while (objectsToDig.Count > 0)
         {
-            Vector3 targetPosition = _destroyArea.OrderBy(p => Vector3.Distance(transform.position, p)).FirstOrDefault();
-            _destroyArea.Remove(targetPosition);
-            _plants.Add(targetPosition);
+            Vector3 targetPosition = objectsToDig.OrderBy(p => Vector3.Distance(transform.position, p)).FirstOrDefault();
+            objectsToDig.Remove(targetPosition);
+            objectsToSow.Add(targetPosition);
             
             yield return MoveSmooth(targetPosition);
             MapManager.Instance.Dig(_pickCell.position, tileMap);
         }
 
-        while (_plants.Count > 0)
+        while (objectsToSow.Count > 0)
         {
-            Vector3 targetPosition = _plants.OrderBy(p => Vector3.Distance(transform.position, p)).FirstOrDefault();
-            _plants.Remove(targetPosition);
+            Vector3 targetPosition = objectsToSow.OrderBy(p => Vector3.Distance(transform.position, p)).FirstOrDefault();
+            objectsToSow.Remove(targetPosition);
             
             yield return MoveSmooth(targetPosition);
             MapManager.Instance.Sow(_pickCell.position);
         }
-        
-        _replant = false;
         _isHarvesting = true;
     }
     
+    
     private IEnumerator MoveToStartPoint()
     {
-        Vector3 targetPosition = new Vector3(13.5f, -0.5f, 0f);
-        yield return MoveSmooth(targetPosition);
+        Vector3 currentPosition = transform.position;
+        Vector3[] points = { new (13.5f, -0.5f, 0f), new (24.5f, -0.5f, 0f), new (13.5f, -11.5f, 0f), new (24.5f, -11.5f, 0f) };
+        Vector3 nearestPoint = points[0];
+        
+        float minDistance = Vector3.Distance(currentPosition, points[0]);
+        for (int i = 1; i < points.Length; i++)
+        {
+            float distance = Vector3.Distance(currentPosition, points[i]);
+            if (distance < minDistance)
+            {
+                minDistance = distance;
+                nearestPoint = points[i];
+            }
+        }
+
+        yield return MoveSmooth(nearestPoint);
         MapManager.Instance.Dig(_pickCell.position, tileMap);
         _plantArea.Add(_pickCell.position);
         _moveToStart = true;
     }
-
-    private IEnumerator MoveToDig(int direction, Vector3 endPosition)
-    {
-        while (!_hasDug)
-        {
-            if (transform.position == endPosition)
-            {
-                _hasDug = true;
-                _stepCount = 0;
-                _moveDir = 1;
-                MapManager.Instance.Sow(_pickCell.position);
-                yield break;
-            }
-            yield return Moving(direction);
-            MapManager.Instance.Dig(_pickCell.position, tileMap);
-            _plantArea.Add(_pickCell.position);
-        }
-    }
-
-    private IEnumerator MoveToSow(int direction, Vector3 endPosition)
-    {
-        while (!_hasSowed)
-        {
-            if (transform.position == endPosition)
-            {
-                _hasSowed = true;
-                _isHarvesting = true;
-                yield break;
-            }
-            yield return Moving(direction);
-            
-            MapManager.Instance.Sow(_pickCell.position);
-        }
-    }
     
-    private IEnumerator Moving(int direction)
-    {
-        Vector3 currentPosition = transform.position;
-        Vector3 targetPosition;
-        if (_stepCount < 11)
-        {
-            targetPosition = new Vector3(currentPosition.x + 1f * _moveDir, currentPosition.y, currentPosition.z);
-            _stepCount++;
-        }
-        else
-        {
-            targetPosition = new Vector3(currentPosition.x, currentPosition.y - 1f * direction, currentPosition.z);
-            _moveDir *= -1;
-            _stepCount = 0;
-        }
-
-        yield return MoveSmooth(targetPosition);
-    }
-
     private IEnumerator MoveSmooth(Vector3 targetPosition)
     {
-        while (Vector3.Distance(transform.position, targetPosition) > 0.01)
+        while (Vector3.Distance(transform.position, targetPosition) > 0)
         {
             transform.position = Vector3.MoveTowards(transform.position, targetPosition, moveSpeed * Time.deltaTime);
             yield return null;
@@ -264,4 +242,5 @@ public class BotController : MonoBehaviour
             _targetPlant = null;
         }
     }
+    
 }

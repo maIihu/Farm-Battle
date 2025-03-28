@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 4875869681733668617}
   - component: {fileID: 1203729735373698169}
   m_Layer: 0
-  m_Name: Nutty
+  m_Name: Mouse
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -75,7 +75,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 100
-  m_Sprite: {fileID: 78335529, guid: ecbc741c3acb7fa43b3f234e406ca9a5, type: 3}
+  m_Sprite: {fileID: -12281911, guid: e7d95aca4dff875419bf8a65e3b435d2, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -119,6 +119,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b27726663ae8e3249bde978e94620ebd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cost: 0
-  effectTime: 0
   moveSpeed: 5
