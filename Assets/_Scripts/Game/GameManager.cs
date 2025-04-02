@@ -27,11 +27,6 @@ public class GameManager : MonoBehaviour
         ActiveState(currentState);
     }
     
-    private void LoadGameScene()
-    {
-        
-    }
-
     private void ActiveState(GameState gameState)
     {
         switch (gameState)

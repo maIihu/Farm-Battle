@@ -19,10 +19,14 @@ public class UIButton : MonoBehaviour
     {
         SceneManager.LoadScene("GamePlayScene");
         GameManager.Instance.ChangeState(GameState.CutScene);
+
     }
 
     public void LoadMenuScene()
     {
+        GameObject cutscene = GameObject.FindGameObjectWithTag("Cutscene");
+        cutscene.SetActive(true);
+        
         SceneManager.LoadScene("MenuScene");
         GameManager.Instance.ChangeState(GameState.Menu);
     }

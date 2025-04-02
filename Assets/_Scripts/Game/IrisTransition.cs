@@ -1,43 +1,30 @@
+using System;
 using UnityEngine;
-using UnityEngine.UI;
 using System.Collections;
-using UnityEngine.SceneManagement;
 
 public class IrisTransition : MonoBehaviour
 {
-    public RectTransform irisMask;
-    public float duration = 0.5f;
-    public bool isClosing = true; // Bắt đầu với trạng thái đóng
-
-    void Start()
+    public Material irisMaterial;
+    public float duration = 1f;
+    private bool isClosing;
+    
+    void OnEnable()
     {
-        StartCoroutine(RunIrisSequence());
+        StartCoroutine(AnimateIris(isClosing ? 1f : 0f, isClosing ? 0f : 1f));
+        isClosing = true;
     }
 
-    IEnumerator RunIrisSequence()
-    {
-        yield return StartCoroutine(IrisEffect(isClosing ? 3f : 0f, isClosing ? 0f : 3f));
-
-        isClosing = !isClosing;
-
-        yield return new WaitForSeconds(0.5f);
-
-        yield return StartCoroutine(IrisEffect(isClosing ? 3f : 0f, isClosing ? 0f : 3f));
-
-        GameManager.Instance.ChangeState(GameState.Playing);
-        gameObject.SetActive(false);
-    }
-
-    IEnumerator IrisEffect(float startSize, float endSize)
+    IEnumerator AnimateIris(float start, float end)
     {
         float t = 0;
         while (t < duration)
         {
             t += Time.deltaTime;
-            float scale = Mathf.Lerp(startSize, endSize, t / duration);
-            irisMask.localScale = new Vector3(scale, scale, 1);
+            float value = Mathf.Lerp(start, end, t / duration);
+            irisMaterial.SetFloat("_Radius", value);
             yield return null;
         }
-        irisMask.localScale = new Vector3(endSize, endSize, 1);
+        irisMaterial.SetFloat("_Radius", end);
+        gameObject.SetActive(false);
     }
 }
