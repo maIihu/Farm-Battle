@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public enum GameState{ Menu, CutScene, Playing, Paused, GameOver }
+public enum GameState{ Menu, Cutscene, Playing, Paused, GameOver }
 
 public class GameManager : MonoBehaviour
 {
@@ -20,7 +20,12 @@ public class GameManager : MonoBehaviour
         }
         else Destroy(gameObject);
     }
-    
+
+    private void Start()
+    {
+        currentState = GameState.Menu;
+    }
+
     public void ChangeState(GameState newState)
     {
         currentState = newState;
@@ -43,7 +48,7 @@ public class GameManager : MonoBehaviour
             case GameState.GameOver:
                 Time.timeScale = 0f;
                 break;
-            case GameState.CutScene:
+            case GameState.Cutscene:
                 Time.timeScale = 1f;
                 break;
         }

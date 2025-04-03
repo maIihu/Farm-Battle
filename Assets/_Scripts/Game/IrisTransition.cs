@@ -6,15 +6,22 @@ public class IrisTransition : MonoBehaviour
 {
     public Material irisMaterial;
     public float duration = 1f;
-    private bool isClosing;
     
-    void OnEnable()
+    private void Start()
     {
-        StartCoroutine(AnimateIris(isClosing ? 1f : 0f, isClosing ? 0f : 1f));
-        isClosing = true;
+        StartCoroutine(SequenceIrisAnimations());
     }
 
-    IEnumerator AnimateIris(float start, float end)
+    public IEnumerator SequenceIrisAnimations()
+    {
+        yield return StartCoroutine(AnimateIris(1f, 0f));
+        yield return StartCoroutine(AnimateIris(0f, 1f));
+        gameObject.SetActive(false);
+        GameManager.Instance.ChangeState(GameState.Playing);
+
+    }
+    
+    private IEnumerator AnimateIris(float start, float end)
     {
         float t = 0;
         while (t < duration)
@@ -25,6 +32,5 @@ public class IrisTransition : MonoBehaviour
             yield return null;
         }
         irisMaterial.SetFloat("_Radius", end);
-        gameObject.SetActive(false);
     }
 }

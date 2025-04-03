@@ -70,27 +70,31 @@ public class PlayerController : MonoBehaviour
     private bool _moveOut;
     private void Update()
     {
-        MoveOutGarden();
-        
-        if (!_moveOut)
+        if (GameManager.Instance.currentState == GameState.Playing)
         {
-            _pickCell.position = new Vector3((int)(transform.position.x) + 0.5f, (int)(transform.position.y) - 0.5f, transform.position.z);
-            if (_isTouchingBomb && Input.GetKeyDown(KeyCode.Space))
-                ThrowBomb();
+            MoveOutGarden();
+        
+            if (!_moveOut)
+            {
+                _pickCell.position = new Vector3((int)(transform.position.x) + 0.5f, 
+                    (int)(transform.position.y) - 0.5f, transform.position.z);
+                if (_isTouchingBomb && Input.GetKeyDown(KeyCode.Space))
+                    ThrowBomb();
 
-            if (Input.GetKey(KeyCode.Space))
-                Plant();
+                if (Input.GetKey(KeyCode.Space))
+                    Plant();
+            }
+        
+            InputHandle();
+        
+            if(isShopping)
+                PauseAnimation();
+
+            SortPlantWithPosition();
+        
+            if (_isRaining)
+                MapManager.Instance.BuffGrowTime(tileMap);   
         }
-        
-        InputHandle();
-        
-        if(isShopping)
-            PauseAnimation();
-
-        SortPlantWithPosition();
-        
-        if (_isRaining)
-            MapManager.Instance.BuffGrowTime(tileMap);
     }
 
     private void MoveOutGarden()

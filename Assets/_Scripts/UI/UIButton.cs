@@ -18,19 +18,15 @@ public class UIButton : MonoBehaviour
     public void LoadGameScene()
     {
         SceneManager.LoadScene("GamePlayScene");
-        GameManager.Instance.ChangeState(GameState.CutScene);
-
+        GameManager.Instance.ChangeState(GameState.Cutscene);
     }
-
+    
     public void LoadMenuScene()
     {
-        GameObject cutscene = GameObject.FindGameObjectWithTag("Cutscene");
-        cutscene.SetActive(true);
-        
         SceneManager.LoadScene("MenuScene");
         GameManager.Instance.ChangeState(GameState.Menu);
     }
-
+    
     public void OpenPauseMenu()
     {
         PostProcessVolume ppVolume = Camera.main.gameObject.GetComponent<PostProcessVolume>();
