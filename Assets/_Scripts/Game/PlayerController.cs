@@ -78,6 +78,7 @@ public class PlayerController : MonoBehaviour
             {
                 _pickCell.position = new Vector3((int)(transform.position.x) + 0.5f, 
                     (int)(transform.position.y) - 0.5f, transform.position.z);
+                
                 if (_isTouchingBomb && Input.GetKeyDown(KeyCode.Space))
                     ThrowBomb();
 
@@ -157,7 +158,7 @@ public class PlayerController : MonoBehaviour
     
     private void ThrowBomb()
     {
-        float x = Random.Range(2, 10);
+        float x = Random.Range(14, 22);
         float y = Random.Range(-10, -2);
         _currentBomb.GetComponent<BombController>().ThrowingBomb(new Vector3(x, y, 0));
     }
@@ -204,6 +205,7 @@ public class PlayerController : MonoBehaviour
     {
         if (other.CompareTag("Bomb"))
         {
+            Debug.Log("va cham bomb");
             _isTouchingBomb = true;
             _currentBomb = other;
         }

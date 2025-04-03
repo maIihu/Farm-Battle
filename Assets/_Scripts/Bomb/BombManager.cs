@@ -13,14 +13,15 @@ public class BombManager : MonoBehaviour
     [SerializeField] private GameObject bombPrefab;
     [SerializeField] private Tilemap tileMap1;
     [SerializeField] private Tilemap tileMap2;
-    [SerializeField] private float timeToSpawn = 65f;
+    private float _timeToSpawn;
     
     private Transform _targetTileMap;
     private GameObject _bombClone;
     
     private void Start()
     {
-        Invoke(nameof(SpawnBomb), timeToSpawn); 
+        _timeToSpawn = 1f;//Random.Range(60f, 70f);
+        Invoke(nameof(SpawnBomb), _timeToSpawn); 
     }
     private void Update()
     {
@@ -37,7 +38,8 @@ public class BombManager : MonoBehaviour
     private void SpawnBomb()
     {
         int player1Score = PlayerController.Instance.score;
-        int player2Score = 0;
+        int player2Score = BotController.Instance.score;
+        
         if (BotController.Instance.gameObject.activeSelf)
         {
             player2Score = BotController.Instance.score;

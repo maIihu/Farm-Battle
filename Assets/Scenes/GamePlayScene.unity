@@ -1995,7 +1995,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1065073467
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2011,7 +2011,6 @@ MonoBehaviour:
   bombPrefab: {fileID: 8215018408279177236, guid: dbfc6a2d415115544b30d06f47586fa8, type: 3}
   tileMap1: {fileID: 1381698292}
   tileMap2: {fileID: 1979060384}
-  timeToSpawn: 1
 --- !u!4 &1065073468
 Transform:
   m_ObjectHideFlags: 0
@@ -19204,7 +19203,7 @@ Transform:
   m_GameObject: {fileID: 1360360578}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 4.63, y: -1.07, z: 0}
+  m_LocalPosition: {x: 2.01, y: -2.17, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
