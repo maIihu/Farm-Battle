@@ -5,7 +5,7 @@ using System.Linq;
 using TMPro;
 using UnityEngine;
 
-public class UIManager : MonoBehaviour
+public class UIBoard : MonoBehaviour
 {
     private TextMeshProUGUI _timerText;
     private TextMeshProUGUI _player1TextScore;
@@ -34,7 +34,9 @@ public class UIManager : MonoBehaviour
     
     private void Update()
     {
-        GameTimer();
+        if(GameManager.Instance.currentState == GameState.Playing)
+            GameTimer();
+        
         // Phan nay phai toi uu hon
         _player1Score = PlayerController.Instance.score;
         if (BotController.Instance.gameObject.activeSelf)
@@ -52,10 +54,12 @@ public class UIManager : MonoBehaviour
             Debug.Log("Hết thời gian");
             return;
         }
+        
         _remainingTime -= Time.deltaTime;
         int minutes = Mathf.FloorToInt(_remainingTime / 60);
         int seconds = Mathf.FloorToInt(_remainingTime % 60);
         if(_timerText != null)
             _timerText.text = string.Format("{0:0}:{1:00}", minutes, seconds);
+        
     }
 }

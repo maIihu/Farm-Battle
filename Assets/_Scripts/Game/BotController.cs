@@ -10,9 +10,11 @@ public class BotController : MonoBehaviour
 {
     [SerializeField] private Tilemap tileMap;
     [SerializeField] private float moveSpeed = 5f;
+
+    private bool _starting;
     
     private bool _moveToStart;
-    private bool move1;
+    private bool _moveToDig;
     
     private bool _replant;
     private bool _isHarvesting;
@@ -60,24 +62,8 @@ public class BotController : MonoBehaviour
                 _plants.Add(pos);
             }
         }
-        
-        StartCoroutine(MoveToStartPoint());
     }
-
-    private void OnEnable()
-    {
-        ItemEffectManager.DestroyMap += StopHarvest;
-        ItemEffectManager.isRaining += Rain;
-        Mouse.plantDestroyed += MouseEatPlant;
-    }
-
-    private void OnDestroy()
-    {
-        ItemEffectManager.DestroyMap -= StopHarvest;
-        ItemEffectManager.isRaining -= Rain;
-        Mouse.plantDestroyed -= MouseEatPlant;
-    }
-
+    
     private void MouseEatPlant(Vector3 obj)
     {
         if (_targetPlant != null)
@@ -111,39 +97,49 @@ public class BotController : MonoBehaviour
     
     private void Update()
     {
-        if (_moveToStart)
+        if (GameManager.Instance.currentState == GameState.Playing)
         {
-            if (!move1)
+            if (!_starting)
             {
-                StartCoroutine(MoveToPlant(_plants));
-                move1 = true;
-                _moveToStart = false;
+                StartCoroutine(MoveToStartPoint());
+                _starting = true;
             }
-        }
+            
+            if (_moveToStart)
+            {
+                if (!_moveToDig)
+                {
+                    StartCoroutine(MoveToPlant(_plants));
+                    _moveToDig = true;
+                    _moveToStart = false;
+                }
+            }
         
-        if (_isHarvesting)
-        {
-            CanHarvestPlant();
-            if (_plantsCanHarvest.Count > 0)
+            if (_isHarvesting)
             {
-                MoveToNearestPlant();
+                CanHarvestPlant();
+                if (_plantsCanHarvest.Count > 0)
+                {
+                    MoveToNearestPlant();
+                }
             }
-        }
 
-        if (_replant)
-        {
-            if (!_movingToPlant)
+            if (_replant)
             {
-                StartCoroutine(MoveToPlant(_destroyArea));
-                _movingToPlant = true;
-                _replant = false;
+                if (!_movingToPlant)
+                {
+                    StartCoroutine(MoveToPlant(_destroyArea));
+                    _movingToPlant = true;
+                    _replant = false;
+                }
             }
+        
+            if (_isRaining)
+                MapManager.Instance.BuffGrowTime(tileMap);
+        
+            _pickCell.position = new Vector3((int)(transform.position.x) + 0.5f, 
+                (int)(transform.position.y) - 0.5f, transform.position.z);
         }
-        
-        if (_isRaining)
-            MapManager.Instance.BuffGrowTime(tileMap);
-        
-        _pickCell.position = new Vector3((int)(transform.position.x) + 0.5f, (int)(transform.position.y) - 0.5f, transform.position.z);
     }
 
     private IEnumerator MoveToPlant(List<Vector3> objectsToDig)
@@ -243,4 +239,17 @@ public class BotController : MonoBehaviour
         }
     }
     
+    private void OnEnable()
+    {
+        ItemEffectManager.DestroyMap += StopHarvest;
+        ItemEffectManager.isRaining += Rain;
+        Mouse.plantDestroyed += MouseEatPlant;
+    }
+
+    private void OnDestroy()
+    {
+        ItemEffectManager.DestroyMap -= StopHarvest;
+        ItemEffectManager.isRaining -= Rain;
+        Mouse.plantDestroyed -= MouseEatPlant;
+    }
 }
