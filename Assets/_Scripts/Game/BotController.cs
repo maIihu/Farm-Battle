@@ -5,6 +5,7 @@ using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using Random = UnityEngine.Random;
 
 public class BotController : MonoBehaviour
 {
@@ -20,15 +21,16 @@ public class BotController : MonoBehaviour
     private bool _isHarvesting;
     private bool _movingToPlant;
     private bool _isRaining;
+
+    private bool _moveToBomb;
     
     private Transform _pickCell;
     private Plant _targetPlant;
+    private Vector3 _bombPosition;
     
     private Dictionary<Vector3, Plant> _plantsCanHarvest;
-    
     private List<Vector3> _destroyArea;
     private List<Vector3> _plantArea;
-    
     private List<Vector3> _plants;
     
     public static BotController Instance { get; private set; }
@@ -139,9 +141,29 @@ public class BotController : MonoBehaviour
         
             _pickCell.position = new Vector3((int)(transform.position.x) + 0.5f, 
                 (int)(transform.position.y) - 0.5f, transform.position.z);
+
+            if (_moveToBomb)
+            {
+                StartCoroutine(MoveSmooth(_bombPosition));
+                if (Vector3.Distance(transform.position, _bombPosition) < 0.1f)
+                    KickBomb();
+            }
         }
     }
-
+    
+    private void KickBomb()
+    {
+        GameObject bomb = GameObject.FindGameObjectWithTag("Bomb");
+        if (bomb)
+        {
+            float x = Random.Range(2, 10);
+            float y = Random.Range(-10, -2);
+            bomb.GetComponent<BombController>().ThrowingBomb(new Vector3(x, y, 0));
+        }
+        _moveToBomb = false;
+        _isHarvesting = true;
+    }
+    
     private IEnumerator MoveToPlant(List<Vector3> objectsToDig)
     {
         List<Vector3> objectsToSow = new List<Vector3>();
@@ -166,7 +188,6 @@ public class BotController : MonoBehaviour
         }
         _isHarvesting = true;
     }
-    
     
     private IEnumerator MoveToStartPoint()
     {
@@ -239,17 +260,34 @@ public class BotController : MonoBehaviour
         }
     }
     
+    private void MoveAndThrowingBomb()
+    {
+        GameObject bomb = GameObject.FindGameObjectWithTag("Bomb");
+        if (bomb)
+            _bombPosition = bomb.transform.position;
+
+        _isHarvesting = false;
+        _targetPlant = null;
+        _moveToBomb = true;
+    }
+    
     private void OnEnable()
     {
         ItemEffectManager.DestroyMap += StopHarvest;
-        ItemEffectManager.isRaining += Rain;
-        Mouse.plantDestroyed += MouseEatPlant;
+        ItemEffectManager.IsRaining += Rain;
+        Mouse.PlantDestroyed += MouseEatPlant;
+        BombController.BotHasBomb += MoveAndThrowingBomb;
+        BombManager.OnBombExploded += StopHarvest;
+        BombManager.SpawnBombOnTheRight += MoveAndThrowingBomb;
     }
 
     private void OnDestroy()
     {
         ItemEffectManager.DestroyMap -= StopHarvest;
-        ItemEffectManager.isRaining -= Rain;
-        Mouse.plantDestroyed -= MouseEatPlant;
+        ItemEffectManager.IsRaining -= Rain;
+        Mouse.PlantDestroyed -= MouseEatPlant;
+        BombController.BotHasBomb -= MoveAndThrowingBomb;
+        BombManager.OnBombExploded -= StopHarvest;
+        BombManager.SpawnBombOnTheRight -= MoveAndThrowingBomb;
     }
 }

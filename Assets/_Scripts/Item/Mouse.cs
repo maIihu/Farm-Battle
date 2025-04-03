@@ -13,7 +13,7 @@ public class Mouse : ItemBase
     private bool _moveToPlant;
     
     public float moveSpeed = 5f;
-    public static event Action<Vector3> plantDestroyed;
+    public static event Action<Vector3> PlantDestroyed;
     
     private void Start()
     {
@@ -65,7 +65,7 @@ public class Mouse : ItemBase
             }
             _moveToPlant = false;
         }
-        plantDestroyed.Invoke(position);
+        PlantDestroyed.Invoke(position);
     }
     
 

@@ -50,8 +50,8 @@ public class Test : MonoBehaviour
         StartCoroutine(MoveToDigRoutine());
         
         BombManager.OnBombExploded += HandleDestroyedAreas;
-        BombManager.SpawnBombOnTheRight += MoveToBomb;
-        BombController.BombOnTheRight += MoveToBomb;
+        BombManager.SpawnBombOnTheRight += MoveToBotHasBomb;
+        BombController.BotHasBomb += MoveToBotHasBomb;
     }
     
     private void MoveToStartPoint()
@@ -64,8 +64,8 @@ public class Test : MonoBehaviour
     private void OnDestroy()
     {
         BombManager.OnBombExploded -= HandleDestroyedAreas;
-        BombManager.SpawnBombOnTheRight -= MoveToBomb;
-        BombController.BombOnTheRight -= MoveToBomb;
+        BombManager.SpawnBombOnTheRight -= MoveToBotHasBomb;
+        BombController.BotHasBomb -= MoveToBotHasBomb;
     }
     
     private void HandleDestroyedAreas(List<Vector3> destroyedPositions)
@@ -103,7 +103,7 @@ public class Test : MonoBehaviour
         _isHarvesting = true;
     }
     
-    private void MoveToBomb()
+    private void MoveToBotHasBomb()
     {
         GameObject bomb = GameObject.FindGameObjectWithTag("Bomb");
         if (bomb)

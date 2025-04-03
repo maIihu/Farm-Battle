@@ -20,7 +20,7 @@ public class BombManager : MonoBehaviour
     
     private void Start()
     {
-        _timeToSpawn = 1f;//Random.Range(60f, 70f);
+        _timeToSpawn = Random.Range(60f, 70f);
         Invoke(nameof(SpawnBomb), _timeToSpawn); 
     }
     private void Update()
@@ -48,7 +48,7 @@ public class BombManager : MonoBehaviour
         float locationY = Random.Range(-10, -3);
         float locationX;
         _bombClone = Instantiate(bombPrefab);
-        if (player1Score >= player2Score)
+        if (player1Score > player2Score)
         {
             locationX = Random.Range(4, 9);
             _bombClone.GetComponent<BombController>().onTheLeft = true;

@@ -4,7 +4,7 @@ using UnityEngine;
 public class BombController : MonoBehaviour
 {
     public static event Action<Vector3> PositionBombExploded;
-    public static event Action BombOnTheRight;
+    public static event Action BotHasBomb;
     
     [SerializeField] private float timeToExplode = 6f;
     [SerializeField] private float moveSpeed = 10f;
@@ -41,11 +41,9 @@ public class BombController : MonoBehaviour
 
     private void StopMoving()
     {
-
         _isMoving = false;
-
         if(!onTheLeft)
-            BombOnTheRight?.Invoke();
+            BotHasBomb?.Invoke();
     }
 
     private void Explode()

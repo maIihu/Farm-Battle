@@ -23,9 +23,10 @@ public class PlayerController : MonoBehaviour
     
     private bool _isTouchingBomb;
     private bool _isRaining;
-    private bool _isSorted;
+    private bool _isSorted;    
+    private bool _moveOut;
     
-    private float _sowDelay = 0.24f;
+    private float _sowDelay;
     private float _lastDigTime = -1f;
 
     public bool isShopping;
@@ -45,17 +46,7 @@ public class PlayerController : MonoBehaviour
         _spriteRenderer = GetComponent<SpriteRenderer>();
         _rb = GetComponent<Rigidbody2D>();
     }
-
-    private void OnEnable()
-    {
-        ItemEffectManager.isRaining += Rain;
-    }
-
-    private void OnDestroy()
-    {
-        ItemEffectManager.isRaining -= Rain;
-    }
-
+    
     private void Rain(int obj)
     {
         if (obj == 1)
@@ -64,10 +55,10 @@ public class PlayerController : MonoBehaviour
     
     private void Start()
     {
+        _sowDelay = 0.25f;
         _pickCell = transform.GetChild(0);
     }
 
-    private bool _moveOut;
     private void Update()
     {
         if (GameManager.Instance.currentState == GameState.Playing)
@@ -220,4 +211,14 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    private void OnEnable()
+    {
+        ItemEffectManager.IsRaining += Rain;
+    }
+
+    private void OnDestroy()
+    {
+        ItemEffectManager.IsRaining -= Rain;
+    }
+    
 }
