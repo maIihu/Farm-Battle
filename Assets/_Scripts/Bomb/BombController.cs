@@ -49,8 +49,7 @@ public class BombController : MonoBehaviour
     private void Explode()
     {
         _lastPosition = transform.position;
-        if(!onTheLeft)
-            PositionBombExploded?.Invoke(_lastPosition);
+        PositionBombExploded?.Invoke(_lastPosition);
         Destroy(gameObject);
     }
 

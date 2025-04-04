@@ -25,7 +25,7 @@ public class BombManager : MonoBehaviour
     }
     private void Update()
     {
-        if (_bombClone != null)
+        if (_bombClone)
         {
             bool bombOnTheLeft = _bombClone.GetComponent<BombController>().onTheLeft;
             if (bombOnTheLeft)
@@ -62,7 +62,7 @@ public class BombManager : MonoBehaviour
             SpawnBombOnTheRight?.Invoke();
         }
 
-        _bombClone.transform.position = new Vector3(locationX, locationY, this.transform.position.z);
+        _bombClone.transform.position = new Vector3(locationX, locationY, transform.position.z);
     }
     
     private void OnEnable()
