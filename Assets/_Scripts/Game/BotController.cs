@@ -12,7 +12,7 @@ public class BotController : MonoBehaviour
     [SerializeField] private Tilemap tileMap;
     [SerializeField] private float moveSpeed = 5f;
 
-    private bool _starting;
+    private bool _started;
     
     private bool _moveToStart;
     private bool _moveToDig;
@@ -30,7 +30,6 @@ public class BotController : MonoBehaviour
     
     private Dictionary<Vector3, Plant> _plantsCanHarvest;
     private List<Vector3> _destroyArea;
-    private List<Vector3> _plantArea;
     private List<Vector3> _plants;
     
     public static BotController Instance { get; private set; }
@@ -50,10 +49,13 @@ public class BotController : MonoBehaviour
     {
         _pickCell = transform.GetChild(0);
         _plantsCanHarvest = new Dictionary<Vector3, Plant>();
-        _plantArea = new List<Vector3>();
         _destroyArea = new List<Vector3>();
         _plants = new List<Vector3>();
+        TileCanPlant();
+    }
 
+    private void TileCanPlant()
+    {
         for (int i = 13; i <= 24; i++)
         {
             for (int j = -12; j <= -1; j++)
@@ -63,7 +65,7 @@ public class BotController : MonoBehaviour
                 Vector3 pos = new Vector3(xPos, yPos, 0f);
                 _plants.Add(pos);
             }
-        }
+        }        
     }
     
     private void MouseEatPlant(Vector3 obj)
@@ -101,10 +103,10 @@ public class BotController : MonoBehaviour
     {
         if (GameManager.Instance.currentState == GameState.Playing)
         {
-            if (!_starting)
+            if (!_started)
             {
                 StartCoroutine(MoveToStartPoint());
-                _starting = true;
+                _started = true;
             }
             
             if (_moveToStart)
@@ -208,7 +210,6 @@ public class BotController : MonoBehaviour
 
         yield return MoveSmooth(nearestPoint);
         MapManager.Instance.Dig(_pickCell.position, tileMap);
-        _plantArea.Add(_pickCell.position);
         _moveToStart = true;
     }
     
@@ -274,20 +275,24 @@ public class BotController : MonoBehaviour
     private void OnEnable()
     {
         ItemEffectManager.DestroyMap += StopHarvest;
+        BombManager.OnBombExploded += StopHarvest;
+        
         ItemEffectManager.IsRaining += Rain;
         Mouse.PlantDestroyed += MouseEatPlant;
+        
         BombController.BotHasBomb += MoveAndThrowingBomb;
-        BombManager.OnBombExploded += StopHarvest;
         BombManager.SpawnBombOnTheRight += MoveAndThrowingBomb;
     }
 
     private void OnDestroy()
     {
         ItemEffectManager.DestroyMap -= StopHarvest;
+        BombManager.OnBombExploded -= StopHarvest;
+        
         ItemEffectManager.IsRaining -= Rain;
         Mouse.PlantDestroyed -= MouseEatPlant;
+        
         BombController.BotHasBomb -= MoveAndThrowingBomb;
-        BombManager.OnBombExploded -= StopHarvest;
         BombManager.SpawnBombOnTheRight -= MoveAndThrowingBomb;
     }
 }
