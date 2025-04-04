@@ -7,6 +7,8 @@ using UnityEngine;
 
 public class UIBoard : MonoBehaviour
 {
+    [SerializeField] private GameObject panelGameOver;
+
     private TextMeshProUGUI _timerText;
     private TextMeshProUGUI _player1TextScore;
     private TextMeshProUGUI _player2TextScore;
@@ -15,6 +17,8 @@ public class UIBoard : MonoBehaviour
 
     private int _player1Score;
     private int _player2Score;
+
+    private bool _isGameOver;
     
     private void Awake()
     {
@@ -52,6 +56,8 @@ public class UIBoard : MonoBehaviour
         if (_remainingTime <= 0)
         {
             Debug.Log("Hết thời gian");
+            panelGameOver.SetActive(true);
+            GameManager.Instance.ChangeState(GameState.GameOver);
             return;
         }
         
