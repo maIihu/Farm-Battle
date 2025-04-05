@@ -13,7 +13,7 @@ public class UIBoard : MonoBehaviour
     private TextMeshProUGUI _player1TextScore;
     private TextMeshProUGUI _player2TextScore;
     
-    private float _remainingTime = 10f;
+    private float _remainingTime = 180f;
 
     private int _player1Score;
     private int _player2Score;

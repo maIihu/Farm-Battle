@@ -23,17 +23,6 @@ public class BombManager : MonoBehaviour
         _timeToSpawn = Random.Range(60f, 70f);
         Invoke(nameof(SpawnBomb), _timeToSpawn); 
     }
-    private void Update()
-    {
-        if (_bombClone)
-        {
-            bool bombOnTheLeft = _bombClone.GetComponent<BombController>().onTheLeft;
-            if (bombOnTheLeft)
-                _targetTileMap = tileMap1.transform;
-            else 
-                _targetTileMap = tileMap2.transform;
-        }
-    }
 
     private void SpawnBomb()
     {
@@ -51,13 +40,11 @@ public class BombManager : MonoBehaviour
         if (player1Score > player2Score)
         {
             locationX = Random.Range(4, 9);
-            _bombClone.GetComponent<BombController>().onTheLeft = true;
             _targetTileMap = tileMap1.transform;
         }
         else
         {
             locationX = Random.Range(17, 22);
-            _bombClone.GetComponent<BombController>().onTheLeft = false;
             _targetTileMap = tileMap2.transform;
             SpawnBombOnTheRight?.Invoke();
         }
@@ -75,8 +62,13 @@ public class BombManager : MonoBehaviour
         BombController.PositionBombExploded -= HandleBombExplosion;
     }
 
-    private void HandleBombExplosion(Vector3 pos)
+    private void HandleBombExplosion(Vector3 pos, int target)
     {
+        if (target == 1)
+            _targetTileMap = tileMap1.transform;
+        else
+            _targetTileMap = tileMap2.transform;
+        
         DestroyMap(pos);
     }
 

@@ -19,7 +19,7 @@ public class BotController : MonoBehaviour
     
     private bool _replant;
     private bool _isHarvesting;
-    private bool _movingToPlant;
+    private bool _movingToReplant;
     private bool _isRaining;
 
     private bool _moveToBomb;
@@ -87,7 +87,8 @@ public class BotController : MonoBehaviour
     {
         _isHarvesting = false;
         _replant = true;
-        _movingToPlant = false;
+        _movingToReplant = false;
+        _moveToBomb = false;
         _targetPlant = null;
         _destroyArea.AddRange(plantsDestroyed);
         
@@ -130,10 +131,10 @@ public class BotController : MonoBehaviour
 
             if (_replant)
             {
-                if (!_movingToPlant)
+                if (!_movingToReplant)
                 {
                     StartCoroutine(MoveToPlant(_destroyArea));
-                    _movingToPlant = true;
+                    _movingToReplant = true;
                     _replant = false;
                 }
             }
@@ -270,6 +271,7 @@ public class BotController : MonoBehaviour
         _isHarvesting = false;
         _targetPlant = null;
         _moveToBomb = true;
+        
     }
     
     private void OnEnable()
