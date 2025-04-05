@@ -13,7 +13,7 @@ public class UIBoard : MonoBehaviour
     private TextMeshProUGUI _player1TextScore;
     private TextMeshProUGUI _player2TextScore;
     
-    private float _remainingTime = 180f;
+    private float _remainingTime = 10f;
 
     private int _player1Score;
     private int _player2Score;
@@ -56,8 +56,8 @@ public class UIBoard : MonoBehaviour
         if (_remainingTime <= 0)
         {
             Debug.Log("Hết thời gian");
-            panelGameOver.SetActive(true);
-            GameManager.Instance.ChangeState(GameState.GameOver);
+            _timerText.text = "0:00";
+            GameOver();
             return;
         }
         
@@ -66,6 +66,18 @@ public class UIBoard : MonoBehaviour
         int seconds = Mathf.FloorToInt(_remainingTime % 60);
         if(_timerText != null)
             _timerText.text = string.Format("{0:0}:{1:00}", minutes, seconds);
-        
     }
+
+    private void GameOver()
+    {
+        panelGameOver.SetActive(true);
+        
+        if(_player1Score >= _player2Score)
+            panelGameOver.transform.GetChild(0).GetComponent<RectTransform>().localPosition = new Vector3(200, -20, 0);
+        else
+            panelGameOver.transform.GetChild(0).GetComponent<RectTransform>().localPosition = new Vector3(-200, -20, 0);
+
+        GameManager.Instance.ChangeState(GameState.GameOver);
+    }
+    
 }

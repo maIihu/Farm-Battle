@@ -113,7 +113,6 @@ public class MapManager : MonoBehaviour
                 Plant plant = child.GetChild(0).gameObject.GetComponent<Plant>();
                 if (plant != null && plant.checkBuff)
                 {
-                    Debug.Log("Hello");
                     plant.checkBuff = false;
                     plant.growTimer *= 5;
                 }
