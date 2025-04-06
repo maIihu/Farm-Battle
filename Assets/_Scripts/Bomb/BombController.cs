@@ -35,16 +35,16 @@ public class BombController : MonoBehaviour
                 StopMoving();
             }
         }
-
-        if (transform.position.x is >= 13f and <= 25 && transform.position.y is >= -12 and <= 0)
-        {
-            BotHasBomb?.Invoke();
-        }
+        
     }
 
     private void StopMoving()
     {
         _isMoving = false;
+        if (transform.position.x is >= 13f and <= 25f && transform.position.y is >= -12 and <= 0)
+        {
+            BotHasBomb?.Invoke();
+        }
     }
 
     private void Explode()

@@ -20,10 +20,15 @@ public class BombManager : MonoBehaviour
     
     private void Start()
     {
+        ScheduleNextSpawn();
+    }
+
+    private void ScheduleNextSpawn()
+    {
         _timeToSpawn = Random.Range(60f, 70f);
         Invoke(nameof(SpawnBomb), _timeToSpawn); 
     }
-
+    
     private void SpawnBomb()
     {
         int player1Score = PlayerController.Instance.score;
@@ -50,6 +55,8 @@ public class BombManager : MonoBehaviour
         }
 
         _bombClone.transform.position = new Vector3(locationX, locationY, transform.position.z);
+        
+        ScheduleNextSpawn();
     }
     
     private void OnEnable()

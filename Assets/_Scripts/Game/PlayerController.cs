@@ -196,7 +196,6 @@ public class PlayerController : MonoBehaviour
     {
         if (other.CompareTag("Bomb"))
         {
-            Debug.Log("va cham bomb");
             _isTouchingBomb = true;
             _currentBomb = other;
         }
