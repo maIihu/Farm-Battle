@@ -89,14 +89,16 @@ public class BotController : MonoBehaviour
     private void StopHarvest(List<Vector3> plantList)
     {
         _replant = true;
-        
         _isHarvesting = false;
         _movingToReplant = false;
         _moveToBomb = false;
-        
         _targetPlant = null;
         
-        _plantsDestroyed.AddRange(plantList);
+        foreach (var plantPos in plantList)
+        {
+            if(IsInBotArea(plantPos)) 
+                _plantsDestroyed.Add(plantPos);
+        }
         
         foreach (var plantPos in plantList)
         {
@@ -153,22 +155,38 @@ public class BotController : MonoBehaviour
 
             if (_moveToBomb)
             {
-                StartCoroutine(MoveSmooth(_bombPosition));
-                if (Vector3.Distance(transform.position, _bombPosition) < 0.1f)
-                    KickBomb();
+                MoveToBomb();
             }
+
         }
     }
-    
+
+    private void MoveToBomb()
+    {
+        GameObject bomb = GameObject.FindGameObjectWithTag("Bomb");
+
+        if (!bomb || !IsInBotArea(bomb.transform.position))
+        {
+            _moveToBomb = false;
+            _isHarvesting = true;
+            return;
+        }
+
+        StartCoroutine(MoveSmooth(_bombPosition));
+
+        if (Vector3.Distance(transform.position, _bombPosition) < 0.1f)
+        {
+            KickBomb();
+        }
+    }
     private void KickBomb()
     {
-        StartCoroutine(KickBombRoutine());
+        StartRoutine(KickBombRoutine());
     }
 
     private IEnumerator KickBombRoutine()
     {
-        yield return new WaitForSeconds(0.2f); 
-
+        Debug.Log("Bat dau KickBomb");
         GameObject bomb = GameObject.FindGameObjectWithTag("Bomb");
         if (bomb)
         {
@@ -176,14 +194,16 @@ public class BotController : MonoBehaviour
             float y = Random.Range(-10, -2);
             bomb.GetComponent<BombController>().ThrowingBomb(new Vector3(x, y, 0));
         }
-        yield return new WaitForSeconds(0.1f); 
-
         _moveToBomb = false;
         _isHarvesting = true;
+        Debug.Log("Ket thuc KickBomb");
+        yield break;
     }
+
     
     private IEnumerator MoveToPlant(List<Vector3> objectsToDig)
     {
+        Debug.Log("Bat dau MoveToPlant");
         List<Vector3> objectsToSow = new List<Vector3>();
         
         while (objectsToDig.Count > 0)
@@ -205,6 +225,8 @@ public class BotController : MonoBehaviour
             MapManager.Instance.Sow(_pickCell.position);
         }
         _isHarvesting = true;
+        Debug.Log("Ket thuc MoveToPlant");
+
     }
     
     private IEnumerator MoveToStartPoint()
@@ -277,18 +299,18 @@ public class BotController : MonoBehaviour
         }
     }
     
-    private void MoveAndThrowingBomb()
+    private void HasBomb(Vector3 bombPos)
     {
-        GameObject bomb = GameObject.FindGameObjectWithTag("Bomb");
-        if (bomb)
-            _bombPosition = bomb.transform.position;
-
+        if (!IsInBotArea(bombPos))
+            return;
+        
+        _bombPosition = bombPos;
         _isHarvesting = false;
         _targetPlant = null;
         _moveToBomb = true;
         
     }
-
+    
     private void StartRoutine(IEnumerator routine)
     {
         if (_currentRoutine != null)
@@ -304,10 +326,13 @@ public class BotController : MonoBehaviour
         ItemEffectManager.IsRaining += Rain;
         Mouse.PlantDestroyed += MouseEatPlant;
         
-        BombController.BotHasBomb += MoveAndThrowingBomb;
-        BombManager.SpawnBombOnTheRight += MoveAndThrowingBomb;
+        BombController.BotHasBomb += HasBomb;
+        BombManager.PositionSpawnBomb += HasBomb;
     }
-
+    private bool IsInBotArea(Vector3 pos)
+    {
+        return pos.x >= 13f && pos.x <= 25f && pos.y >= -12f && pos.y <= 0f;
+    }
     private void OnDestroy()
     {
         ItemEffectManager.DestroyMap -= StopHarvest;
@@ -316,7 +341,7 @@ public class BotController : MonoBehaviour
         ItemEffectManager.IsRaining -= Rain;
         Mouse.PlantDestroyed -= MouseEatPlant;
         
-        BombController.BotHasBomb -= MoveAndThrowingBomb;
-        BombManager.SpawnBombOnTheRight -= MoveAndThrowingBomb;
+        BombController.BotHasBomb -= HasBomb;
+        BombManager.PositionSpawnBomb -= HasBomb;
     }
 }

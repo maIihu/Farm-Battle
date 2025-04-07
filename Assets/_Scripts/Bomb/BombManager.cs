@@ -8,7 +8,7 @@ using Random = UnityEngine.Random;
 public class BombManager : MonoBehaviour
 {
     public static event Action<List<Vector3>> OnBombExploded;
-    public static event Action SpawnBombOnTheRight;
+    public static event Action<Vector3> PositionSpawnBomb;
     
     [SerializeField] private GameObject bombPrefab;
     [SerializeField] private Tilemap tileMap1;
@@ -51,11 +51,12 @@ public class BombManager : MonoBehaviour
         {
             locationX = Random.Range(17, 22);
             _targetTileMap = tileMap2.transform;
-            SpawnBombOnTheRight?.Invoke();
         }
 
-        _bombClone.transform.position = new Vector3(locationX, locationY, transform.position.z);
-        
+        Vector3 pos = new Vector3(locationX, locationY, transform.position.z);
+        _bombClone.transform.position = pos;
+        PositionSpawnBomb?.Invoke(pos);
+
         ScheduleNextSpawn();
     }
     
