@@ -23150,6 +23150,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1818420744}
   - component: {fileID: 1818420748}
+  - component: {fileID: 1818420750}
   - component: {fileID: 1818420747}
   - component: {fileID: 1818420746}
   - component: {fileID: 1818420749}
@@ -23305,6 +23306,27 @@ MonoBehaviour:
   tileMap: {fileID: 1979060384}
   moveSpeed: 5
   score: 0
+--- !u!95 &1818420750
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1818420743}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 0}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &1845684622
 GameObject:
   m_ObjectHideFlags: 0

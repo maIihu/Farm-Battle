@@ -49,7 +49,7 @@ public class Mouse : ItemBase
 
     private void MoveTowardsTarget()
     {
-        Vector3 position = new Vector3();
+        
         if (_targetPlant == null) return;
 
         transform.position = Vector3.MoveTowards(transform.position, _targetPlant.transform.position, moveSpeed * Time.deltaTime);
@@ -58,14 +58,15 @@ public class Mouse : ItemBase
         {
             if (_targetPlant != null)
             {
-                position = _targetPlant.transform.position;
+                Vector3 position = _targetPlant.transform.position;
                 _plants.Remove(_targetPlant.transform.position);
                 Destroy(_targetPlant.gameObject);
                 _targetPlant = null;
+                PlantDestroyed?.Invoke(position);
             }
             _moveToPlant = false;
         }
-        PlantDestroyed.Invoke(position);
+        
     }
     
 
