@@ -45,7 +45,7 @@ public class MapManager : MonoBehaviour
 
         if (currentTile != null)
         {
-            if (currentTile.name is "Tile2" or "Cliff_Tile_4" && !map.ContainsKey(location))
+            if (!map.ContainsKey(location))
             {
                 GameObject dirtClone = Instantiate(dirtPrefab, location, Quaternion.identity, tileMap.transform);
                 dirtClone.name = $"{location.x}_{location.y}_{location.z}";
@@ -113,7 +113,6 @@ public class MapManager : MonoBehaviour
                 Plant plant = child.GetChild(0).gameObject.GetComponent<Plant>();
                 if (plant != null && plant.checkBuff)
                 {
-                    Debug.Log("Hello");
                     plant.checkBuff = false;
                     plant.growTimer *= 5;
                 }

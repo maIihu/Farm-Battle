@@ -8,7 +8,7 @@ using Random = UnityEngine.Random;
 public class BombManager : MonoBehaviour
 {
     public static event Action<List<Vector3>> OnBombExploded;
-    public static event Action SpawnBombOnTheRight;
+    public static event Action<Vector3> PositionSpawnBomb;
     
     [SerializeField] private GameObject bombPrefab;
     [SerializeField] private Tilemap tileMap1;
@@ -20,21 +20,15 @@ public class BombManager : MonoBehaviour
     
     private void Start()
     {
-        _timeToSpawn = 1f;//Random.Range(60f, 70f);
-        Invoke(nameof(SpawnBomb), _timeToSpawn); 
-    }
-    private void Update()
-    {
-        if (_bombClone != null)
-        {
-            bool bombOnTheLeft = _bombClone.GetComponent<BombController>().onTheLeft;
-            if (bombOnTheLeft)
-                _targetTileMap = tileMap1.transform;
-            else 
-                _targetTileMap = tileMap2.transform;
-        }
+        ScheduleNextSpawn();
     }
 
+    private void ScheduleNextSpawn()
+    {
+        _timeToSpawn = Random.Range(60f, 70f);
+        Invoke(nameof(SpawnBomb), _timeToSpawn); 
+    }
+    
     private void SpawnBomb()
     {
         int player1Score = PlayerController.Instance.score;
@@ -48,21 +42,22 @@ public class BombManager : MonoBehaviour
         float locationY = Random.Range(-10, -3);
         float locationX;
         _bombClone = Instantiate(bombPrefab);
-        if (player1Score >= player2Score)
+        if (player1Score > player2Score)
         {
             locationX = Random.Range(4, 9);
-            _bombClone.GetComponent<BombController>().onTheLeft = true;
             _targetTileMap = tileMap1.transform;
         }
         else
         {
             locationX = Random.Range(17, 22);
-            _bombClone.GetComponent<BombController>().onTheLeft = false;
             _targetTileMap = tileMap2.transform;
-            SpawnBombOnTheRight?.Invoke();
         }
 
-        _bombClone.transform.position = new Vector3(locationX, locationY, this.transform.position.z);
+        Vector3 pos = new Vector3(locationX, locationY, transform.position.z);
+        _bombClone.transform.position = pos;
+        PositionSpawnBomb?.Invoke(pos);
+
+        ScheduleNextSpawn();
     }
     
     private void OnEnable()
@@ -75,8 +70,13 @@ public class BombManager : MonoBehaviour
         BombController.PositionBombExploded -= HandleBombExplosion;
     }
 
-    private void HandleBombExplosion(Vector3 pos)
+    private void HandleBombExplosion(Vector3 pos, int target)
     {
+        if (target == 1)
+            _targetTileMap = tileMap1.transform;
+        else
+            _targetTileMap = tileMap2.transform;
+        
         DestroyMap(pos);
     }
 

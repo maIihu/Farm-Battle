@@ -3,8 +3,8 @@ using UnityEngine;
 
 public class BombController : MonoBehaviour
 {
-    public static event Action<Vector3> PositionBombExploded;
-    public static event Action BombOnTheRight;
+    public static event Action<Vector3, int> PositionBombExploded;
+    public static event Action<Vector3> BotHasBomb;
     
     [SerializeField] private float timeToExplode = 6f;
     [SerializeField] private float moveSpeed = 10f;
@@ -13,7 +13,6 @@ public class BombController : MonoBehaviour
     private Vector3 _targetPosition;
     private bool _isMoving;
     
-    public bool onTheLeft;
     
     private void Start()
     {
@@ -22,7 +21,6 @@ public class BombController : MonoBehaviour
 
     public void ThrowingBomb(Vector3 destination)
     { 
-        onTheLeft = !onTheLeft;
         _targetPosition = destination;
         _isMoving = true;
     }
@@ -37,21 +35,30 @@ public class BombController : MonoBehaviour
                 StopMoving();
             }
         }
+        
     }
 
     private void StopMoving()
     {
-
         _isMoving = false;
-
-        if(!onTheLeft)
-            BombOnTheRight?.Invoke();
+        if (transform.position.x is >= 13f and <= 25f && transform.position.y is >= -12 and <= 0)
+        {
+            _lastPosition = transform.position;
+            BotHasBomb?.Invoke(_lastPosition);
+        }
     }
 
     private void Explode()
     {
         _lastPosition = transform.position;
-        PositionBombExploded?.Invoke(_lastPosition);
+        int tileMap = 0;
+        
+        if (transform.position.x is >= 13f and <= 25 && transform.position.y is >= -12 and <= 0)
+            tileMap = 2;
+        if (transform.position.x is >= 1f and <= 12 && transform.position.y is >= -12 and <= 0)
+            tileMap = 1;
+            
+        PositionBombExploded?.Invoke(_lastPosition, tileMap);
         Destroy(gameObject);
     }
 

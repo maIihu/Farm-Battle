@@ -5,31 +5,35 @@ using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using Random = UnityEngine.Random;
 
 public class BotController : MonoBehaviour
 {
     [SerializeField] private Tilemap tileMap;
     [SerializeField] private float moveSpeed = 5f;
 
-    private bool _starting;
-    
+    private bool _started;
     private bool _moveToStart;
-    private bool _moveToDig;
+    private bool _planted;
     
     private bool _replant;
     private bool _isHarvesting;
-    private bool _movingToPlant;
+    private bool _movingToReplant;
     private bool _isRaining;
+
+    private bool _moveToBomb;
+
+    private bool _isPlanting;
     
     private Transform _pickCell;
     private Plant _targetPlant;
+    private Vector3 _bombPosition;
     
     private Dictionary<Vector3, Plant> _plantsCanHarvest;
-    
-    private List<Vector3> _destroyArea;
-    private List<Vector3> _plantArea;
-    
     private List<Vector3> _plants;
+    private List<Vector3> _plantsDestroyed;
+
+    private Coroutine _currentRoutine;
     
     public static BotController Instance { get; private set; }
     public int score;
@@ -48,10 +52,13 @@ public class BotController : MonoBehaviour
     {
         _pickCell = transform.GetChild(0);
         _plantsCanHarvest = new Dictionary<Vector3, Plant>();
-        _plantArea = new List<Vector3>();
-        _destroyArea = new List<Vector3>();
+        _plantsDestroyed = new List<Vector3>();
         _plants = new List<Vector3>();
+        TileCanPlant();
+    }
 
+    private void TileCanPlant()
+    {
         for (int i = 13; i <= 24; i++)
         {
             for (int j = -12; j <= -1; j++)
@@ -61,7 +68,7 @@ public class BotController : MonoBehaviour
                 Vector3 pos = new Vector3(xPos, yPos, 0f);
                 _plants.Add(pos);
             }
-        }
+        }        
     }
     
     private void MouseEatPlant(Vector3 obj)
@@ -79,15 +86,21 @@ public class BotController : MonoBehaviour
             _isRaining = !_isRaining;
     }
 
-    private void StopHarvest(List<Vector3> plantsDestroyed)
+    private void StopHarvest(List<Vector3> plantList)
     {
-        _isHarvesting = false;
         _replant = true;
-        _movingToPlant = false;
+        _isHarvesting = false;
+        _movingToReplant = false;
+        _moveToBomb = false;
         _targetPlant = null;
-        _destroyArea.AddRange(plantsDestroyed);
         
-        foreach (var plantPos in plantsDestroyed)
+        foreach (var plantPos in plantList)
+        {
+            if(IsInBotArea(plantPos)) 
+                _plantsDestroyed.Add(plantPos);
+        }
+        
+        foreach (var plantPos in plantList)
         {
             MapManager.Instance.map.Remove(plantPos);
             MapManager.Instance.hasCrop.Remove(plantPos);
@@ -99,18 +112,18 @@ public class BotController : MonoBehaviour
     {
         if (GameManager.Instance.currentState == GameState.Playing)
         {
-            if (!_starting)
+            if (!_started)
             {
                 StartCoroutine(MoveToStartPoint());
-                _starting = true;
+                _started = true;
             }
             
             if (_moveToStart)
             {
-                if (!_moveToDig)
+                if (!_planted)
                 {
                     StartCoroutine(MoveToPlant(_plants));
-                    _moveToDig = true;
+                    _planted = true;
                     _moveToStart = false;
                 }
             }
@@ -126,10 +139,10 @@ public class BotController : MonoBehaviour
 
             if (_replant)
             {
-                if (!_movingToPlant)
+                if (!_movingToReplant)
                 {
-                    StartCoroutine(MoveToPlant(_destroyArea));
-                    _movingToPlant = true;
+                    StartRoutine(MoveToPlant(_plantsDestroyed));
+                    _movingToReplant = true;
                     _replant = false;
                 }
             }
@@ -139,11 +152,58 @@ public class BotController : MonoBehaviour
         
             _pickCell.position = new Vector3((int)(transform.position.x) + 0.5f, 
                 (int)(transform.position.y) - 0.5f, transform.position.z);
+
+            if (_moveToBomb)
+            {
+                MoveToBomb();
+            }
+
         }
     }
 
+    private void MoveToBomb()
+    {
+        GameObject bomb = GameObject.FindGameObjectWithTag("Bomb");
+
+        if (!bomb || !IsInBotArea(bomb.transform.position))
+        {
+            _moveToBomb = false;
+            _isHarvesting = true;
+            return;
+        }
+
+        StartCoroutine(MoveSmooth(_bombPosition));
+
+        if (Vector3.Distance(transform.position, _bombPosition) < 0.1f)
+        {
+            KickBomb();
+        }
+    }
+    private void KickBomb()
+    {
+        StartRoutine(KickBombRoutine());
+    }
+
+    private IEnumerator KickBombRoutine()
+    {
+        Debug.Log("Bat dau KickBomb");
+        GameObject bomb = GameObject.FindGameObjectWithTag("Bomb");
+        if (bomb)
+        {
+            float x = Random.Range(2, 10);
+            float y = Random.Range(-10, -2);
+            bomb.GetComponent<BombController>().ThrowingBomb(new Vector3(x, y, 0));
+        }
+        _moveToBomb = false;
+        _isHarvesting = true;
+        Debug.Log("Ket thuc KickBomb");
+        yield break;
+    }
+
+    
     private IEnumerator MoveToPlant(List<Vector3> objectsToDig)
     {
+        Debug.Log("Bat dau MoveToPlant");
         List<Vector3> objectsToSow = new List<Vector3>();
         
         while (objectsToDig.Count > 0)
@@ -165,8 +225,9 @@ public class BotController : MonoBehaviour
             MapManager.Instance.Sow(_pickCell.position);
         }
         _isHarvesting = true;
+        Debug.Log("Ket thuc MoveToPlant");
+
     }
-    
     
     private IEnumerator MoveToStartPoint()
     {
@@ -187,7 +248,6 @@ public class BotController : MonoBehaviour
 
         yield return MoveSmooth(nearestPoint);
         MapManager.Instance.Dig(_pickCell.position, tileMap);
-        _plantArea.Add(_pickCell.position);
         _moveToStart = true;
     }
     
@@ -239,17 +299,49 @@ public class BotController : MonoBehaviour
         }
     }
     
+    private void HasBomb(Vector3 bombPos)
+    {
+        if (!IsInBotArea(bombPos))
+            return;
+        
+        _bombPosition = bombPos;
+        _isHarvesting = false;
+        _targetPlant = null;
+        _moveToBomb = true;
+        
+    }
+    
+    private void StartRoutine(IEnumerator routine)
+    {
+        if (_currentRoutine != null)
+            StopCoroutine(_currentRoutine);
+        _currentRoutine = StartCoroutine(routine);
+    }
+    
     private void OnEnable()
     {
         ItemEffectManager.DestroyMap += StopHarvest;
-        ItemEffectManager.isRaining += Rain;
-        Mouse.plantDestroyed += MouseEatPlant;
+        BombManager.OnBombExploded += StopHarvest;
+        
+        ItemEffectManager.IsRaining += Rain;
+        Mouse.PlantDestroyed += MouseEatPlant;
+        
+        BombController.BotHasBomb += HasBomb;
+        BombManager.PositionSpawnBomb += HasBomb;
     }
-
+    private bool IsInBotArea(Vector3 pos)
+    {
+        return pos.x >= 13f && pos.x <= 25f && pos.y >= -12f && pos.y <= 0f;
+    }
     private void OnDestroy()
     {
         ItemEffectManager.DestroyMap -= StopHarvest;
-        ItemEffectManager.isRaining -= Rain;
-        Mouse.plantDestroyed -= MouseEatPlant;
+        BombManager.OnBombExploded -= StopHarvest;
+        
+        ItemEffectManager.IsRaining -= Rain;
+        Mouse.PlantDestroyed -= MouseEatPlant;
+        
+        BombController.BotHasBomb -= HasBomb;
+        BombManager.PositionSpawnBomb -= HasBomb;
     }
 }
