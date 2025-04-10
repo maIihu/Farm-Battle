@@ -212,12 +212,12 @@ public class PlayerController : MonoBehaviour
 
     private void OnEnable()
     {
-        ItemEffectManager.IsRaining += Rain;
+        ItemEffectManager.IsItRaining += Rain;
     }
 
     private void OnDestroy()
     {
-        ItemEffectManager.IsRaining -= Rain;
+        ItemEffectManager.IsItRaining -= Rain;
     }
     
 }

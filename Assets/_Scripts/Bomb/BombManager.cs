@@ -42,7 +42,7 @@ public class BombManager : MonoBehaviour
         float locationY = Random.Range(-10, -3);
         float locationX;
         _bombClone = Instantiate(bombPrefab);
-        if (player1Score > player2Score)
+        if (true)
         {
             locationX = Random.Range(4, 9);
             _targetTileMap = tileMap1.transform;

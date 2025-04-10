@@ -19844,7 +19844,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dad924238657f97498781f4589e38443, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 5
+  moveSpeed: 10
   tileMap: {fileID: 1381698292}
   isShopping: 0
   score: 0
@@ -23153,10 +23153,10 @@ GameObject:
   - component: {fileID: 1818420750}
   - component: {fileID: 1818420747}
   - component: {fileID: 1818420746}
-  - component: {fileID: 1818420749}
+  - component: {fileID: 1818420751}
   m_Layer: 11
   m_Name: Bot
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -23170,7 +23170,7 @@ Transform:
   m_GameObject: {fileID: 1818420743}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 21.67, y: -4.18, z: 0}
+  m_LocalPosition: {x: 13.42, y: -0.49, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -23280,7 +23280,7 @@ SpriteRenderer:
   m_SortingLayerID: -756735961
   m_SortingLayer: 1
   m_SortingOrder: 2
-  m_Sprite: {fileID: -578279838, guid: a962b58af78829a4db7c80ca17581cf4, type: 3}
+  m_Sprite: {fileID: 141325583, guid: 181c9f2ca23b01d48941b7782c5120be, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -23291,21 +23291,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &1818420749
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1818420743}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2790e0e8d35dedc4c8eae3437469bce0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  tileMap: {fileID: 1979060384}
-  moveSpeed: 5
-  score: 0
 --- !u!95 &1818420750
 Animator:
   serializedVersion: 5
@@ -23327,6 +23312,21 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &1818420751
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1818420743}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c812742c72ef489a9ecb8a47693c305d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tileMap: {fileID: 1979060384}
+  moveSpeed: 5
+  score: 0
 --- !u!1 &1845684622
 GameObject:
   m_ObjectHideFlags: 0

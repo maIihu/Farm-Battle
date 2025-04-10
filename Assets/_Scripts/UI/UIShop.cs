@@ -61,7 +61,7 @@ public class UIShop : MonoBehaviour
 
     private void Update()
     {
-        if (shop1.activeSelf) // Player 1
+        if (shop1.activeSelf) // PLAYER 1
         {
             if (Input.GetKeyDown(KeyCode.W)) MoveSelection(-1);
             if (Input.GetKeyDown(KeyCode.S)) MoveSelection(1);
@@ -71,7 +71,7 @@ public class UIShop : MonoBehaviour
             HighlightItem(_index1, _shopItem1);
             
             int itemCost = Item.GetCost((Item.ItemType)Enum.Parse(typeof(Item.ItemType), _shopItem1[_index1].name));
-            if (Input.GetKeyDown(KeyCode.Space) ) //&& PlayerController.Instance.score >= itemCost)
+            if (Input.GetKeyDown(KeyCode.Space) && PlayerController.Instance.score >= itemCost)
             {
                 PlayerController.Instance.score -= itemCost;
                 
@@ -79,7 +79,7 @@ public class UIShop : MonoBehaviour
             }
         }
 
-        if (Input.GetKeyDown(KeyCode.I))
+        if (Input.GetKeyDown(KeyCode.I)) // BOT
         {
             int item = Random.Range(0, 5);
             ApplyItem(2, 1);

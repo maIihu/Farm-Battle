@@ -2,12 +2,11 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using Random = UnityEngine.Random;
 
-public class BotController : MonoBehaviour
+public class BotTest1 : MonoBehaviour
 {
     [SerializeField] private Tilemap tileMap;
     [SerializeField] private float moveSpeed = 5f;
@@ -27,6 +26,7 @@ public class BotController : MonoBehaviour
     
     private Transform _pickCell;
     private Plant _targetPlant;
+    private Vector3 _targetPlantPos;
     private Vector3 _bombPosition;
     
     private Dictionary<Vector3, Plant> _plantsCanHarvest;
@@ -35,7 +35,7 @@ public class BotController : MonoBehaviour
 
     private Coroutine _currentRoutine;
     
-    public static BotController Instance { get; private set; }
+    public static BotTest1 Instance { get; private set; }
     public int score;
     
     private void Awake()
@@ -73,13 +73,9 @@ public class BotController : MonoBehaviour
     
     private void MouseEatPlant(Vector3 obj)
     {
-        if (_targetPlant != null)
-        {
-            if (_targetPlant.transform.position == obj)
-            {
-                _targetPlant = null;
-            }
-        }
+        Debug.Log("Nhan su kien");
+        _targetPlant = null;
+        Debug.Log(_targetPlant);
     }
     
     private void Rain(int obj)
@@ -96,7 +92,11 @@ public class BotController : MonoBehaviour
         _moveToBomb = false;
         _bombPosition = new Vector3(0, 0, 0);
         _targetPlant = null;
-        
+        StopCoroutine(MoveToBomb());
+        // while (true)
+        // {
+        //     yield return null;
+        // }
         foreach (var plantPos in plantList)
         {
             if(IsInBotArea(plantPos)) 
@@ -189,12 +189,6 @@ public class BotController : MonoBehaviour
     }
     private void KickBomb()
     {
-        StartRoutine(KickBombRoutine());
-    }
-
-    private IEnumerator KickBombRoutine()
-    {
-        Debug.Log("Bat dau KickBomb");
         GameObject bomb = GameObject.FindGameObjectWithTag("Bomb");
         if (bomb)
         {
@@ -204,13 +198,10 @@ public class BotController : MonoBehaviour
         }
         _moveToBomb = false;
         _isHarvesting = true;
-        Debug.Log("Ket thuc KickBomb");
-        yield break;
     }
     
     private IEnumerator MoveToPlant(List<Vector3> objectsToDig)
     {
-        Debug.Log("Bat dau MoveToPlant");
         List<Vector3> objectsToSow = new List<Vector3>();
         
         while (objectsToDig.Count > 0)
@@ -232,8 +223,6 @@ public class BotController : MonoBehaviour
             MapManager.Instance.Sow(_pickCell.position);
         }
         _isHarvesting = true;
-        Debug.Log("Ket thuc MoveToPlant");
-
     }
     
     private IEnumerator MoveToStartPoint()
@@ -291,14 +280,18 @@ public class BotController : MonoBehaviour
     private void MoveToNearestPlant()
     {
         _targetPlant = _plantsCanHarvest.OrderBy(p => Vector3.Distance(transform.position, p.Key)).FirstOrDefault().Value;
-
+        
         if (_targetPlant == null)
             return;
         
-        transform.position = Vector3.MoveTowards(transform.position, _targetPlant.transform.position, moveSpeed * Time.deltaTime);
+        _targetPlantPos = _targetPlant.transform.position;
+        transform.position = Vector3.MoveTowards(transform.position, _targetPlantPos, moveSpeed * Time.deltaTime);
         
-        if (Vector3.Distance(transform.position, _targetPlant.transform.position) < 0.01f) 
+        if (Vector3.Distance(transform.position, _targetPlant.transform.position) < 0.01f)
         {
+            if (_targetPlant == null)
+                return;
+            
             if (_targetPlant.isReadyToHarvest) 
             {
                 _targetPlant.Harvest();
@@ -334,7 +327,7 @@ public class BotController : MonoBehaviour
         ItemEffectManager.DestroyMap += StopHarvest;
         BombManager.OnBombExploded += StopHarvest;
         
-        ItemEffectManager.IsRaining += Rain;
+        ItemEffectManager.IsItRaining += Rain;
         Mouse.PlantDestroyed += MouseEatPlant;
         
         BombController.BotHasBomb += HasBomb;
@@ -349,7 +342,7 @@ public class BotController : MonoBehaviour
         ItemEffectManager.DestroyMap -= StopHarvest;
         BombManager.OnBombExploded -= StopHarvest;
         
-        ItemEffectManager.IsRaining -= Rain;
+        ItemEffectManager.IsItRaining -= Rain;
         Mouse.PlantDestroyed -= MouseEatPlant;
         
         BombController.BotHasBomb -= HasBomb;

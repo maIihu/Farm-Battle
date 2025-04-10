@@ -18,7 +18,7 @@ public class ItemEffectManager : MonoBehaviour
     private bool _shieldEffectActive2;
 
     public static event Action<List<Vector3>> DestroyMap;
-    public static event Action<int> IsRaining;
+    public static event Action<int> IsItRaining;
     
     
     private void Start()
@@ -174,7 +174,7 @@ public class ItemEffectManager : MonoBehaviour
 
         rain.gameObject.GetComponent<ParticleSystem>().Play();
         //rain.gameObject.GetComponent<Rain>().ItemEffect(tileMapTarget);
-        IsRaining?.Invoke(player);
+        IsItRaining?.Invoke(player);
         StartCoroutine(RainEnd(tileMapTarget, player, 10f));
     }
     
@@ -183,7 +183,7 @@ public class ItemEffectManager : MonoBehaviour
         yield return new WaitForSeconds(time);
         _effects["RainEffect"].GetChild(0).gameObject.GetComponent<ParticleSystem>().Stop();
         
-        IsRaining?.Invoke(player);
+        IsItRaining?.Invoke(player);
         
         MapManager.Instance.DeBuffGrowTime(tileMapTarget.transform);
         
