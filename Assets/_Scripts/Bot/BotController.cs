@@ -285,9 +285,19 @@ public class BotController : MonoBehaviour
 
         ItemEffectManager.IsItRaining += EffectRain;
         Mouse.PlantDestroyed += MouseEatPlant;
-
+        BombManager.PositionSpawnBomb += HasBomb;
     }
+    private void OnDestroy()
+    {
+        BombController.BotHasBomb -= HasBomb;
 
+        BombManager.OnBombExploded -= MapDestroyed;
+        ItemEffectManager.DestroyMap -= MapDestroyed;
+
+        ItemEffectManager.IsItRaining -= EffectRain;
+        Mouse.PlantDestroyed -= MouseEatPlant;
+        BombManager.PositionSpawnBomb -= HasBomb;
+    }
     private void MouseEatPlant(Vector3 objPos)
     {
         if (_plantsToHarvest.ContainsKey(objPos))
@@ -299,18 +309,7 @@ public class BotController : MonoBehaviour
     {
         if (targetMap == 2) _isRaining = !_isRaining;
     }
-
-    private void OnDestroy()
-    {
-        BombController.BotHasBomb -= HasBomb;
-
-        BombManager.OnBombExploded -= MapDestroyed;
-        ItemEffectManager.DestroyMap -= MapDestroyed;
-
-        ItemEffectManager.IsItRaining -= EffectRain;
-        Mouse.PlantDestroyed += MouseEatPlant;
-
-    }
+    
     private static bool IsInBotArea(Vector3 pos)
     {
         return pos.x >= 13f && pos.x <= 25f && pos.y >= -12f && pos.y <= 0f;
