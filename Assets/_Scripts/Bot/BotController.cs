@@ -284,6 +284,15 @@ public class BotController : MonoBehaviour
         ItemEffectManager.DestroyMap += MapDestroyed;
 
         ItemEffectManager.IsItRaining += EffectRain;
+        Mouse.PlantDestroyed += MouseEatPlant;
+
+    }
+
+    private void MouseEatPlant(Vector3 objPos)
+    {
+        if (_plantsToHarvest.ContainsKey(objPos))
+            _plantsToHarvest.Remove(objPos);
+        _targetPlant = null;
     }
 
     private void EffectRain(int targetMap)
@@ -299,6 +308,7 @@ public class BotController : MonoBehaviour
         ItemEffectManager.DestroyMap -= MapDestroyed;
 
         ItemEffectManager.IsItRaining -= EffectRain;
+        Mouse.PlantDestroyed += MouseEatPlant;
 
     }
     private static bool IsInBotArea(Vector3 pos)
