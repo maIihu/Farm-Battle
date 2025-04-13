@@ -324,11 +324,11 @@ public class BotTest1 : MonoBehaviour
     
     private void OnEnable()
     {
-        ItemEffectManager.DestroyMap += StopHarvest;
+        ItemEffectManager.DestroyMap2 += StopHarvest;
         BombManager.OnBombExploded += StopHarvest;
         
         ItemEffectManager.IsItRaining += Rain;
-        Mouse.PlantDestroyed += MouseEatPlant;
+        Mouse.Plant2Destroyed += MouseEatPlant;
         
         BombController.BotHasBomb += HasBomb;
         BombManager.PositionSpawnBomb += HasBomb;
@@ -339,11 +339,11 @@ public class BotTest1 : MonoBehaviour
     }
     private void OnDestroy()
     {
-        ItemEffectManager.DestroyMap -= StopHarvest;
+        ItemEffectManager.DestroyMap2 -= StopHarvest;
         BombManager.OnBombExploded -= StopHarvest;
         
         ItemEffectManager.IsItRaining -= Rain;
-        Mouse.PlantDestroyed -= MouseEatPlant;
+        Mouse.Plant2Destroyed -= MouseEatPlant;
         
         BombController.BotHasBomb -= HasBomb;
         BombManager.PositionSpawnBomb -= HasBomb;

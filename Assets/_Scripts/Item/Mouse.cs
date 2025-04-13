@@ -13,7 +13,8 @@ public class Mouse : ItemBase
     private bool _moveToPlant;
     
     public float moveSpeed = 5f;
-    public static event Action<Vector3> PlantDestroyed;
+    public static event Action<Vector3> Plant1Destroyed;
+    public static event Action<Vector3> Plant2Destroyed;
     
     private void Start()
     {
@@ -61,15 +62,18 @@ public class Mouse : ItemBase
                 _plants.Remove(_targetPlant.transform.position);
                 Destroy(_targetPlant.gameObject);
                 _targetPlant = null;
+                
+                if(_tileMap.name == "Garden1")
+                    Plant1Destroyed?.Invoke(position);
+                
                 if(_tileMap.name == "Garden2")
-                    PlantDestroyed?.Invoke(position);
+                    Plant2Destroyed?.Invoke(position);
             }
             _moveToPlant = false;
         }
         
     }
     
-
     private void FindPlant()
     {
         foreach (Transform child in _tileMap.transform)

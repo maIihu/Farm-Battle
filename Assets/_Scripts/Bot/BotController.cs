@@ -314,6 +314,7 @@ public class BotController : MonoBehaviour
             if(_plantsToHarvest.ContainsKey(plantPos))
                 _plantsToHarvest.Remove(plantPos);
         }
+        
     }
 
     private void OnEnable()
@@ -321,23 +322,25 @@ public class BotController : MonoBehaviour
         BombController.BotHasBomb += HasBomb;
 
         BombManager.OnBombExploded += MapDestroyed;
-        ItemEffectManager.DestroyMap += MapDestroyed;
+        ItemEffectManager.DestroyMap2 += MapDestroyed;
 
         ItemEffectManager.IsItRaining += EffectRain;
-        Mouse.PlantDestroyed += MouseEatPlant;
+        Mouse.Plant2Destroyed += MouseEatPlant;
         BombManager.PositionSpawnBomb += HasBomb;
     }
+    
     private void OnDestroy()
     {
         BombController.BotHasBomb -= HasBomb;
 
         BombManager.OnBombExploded -= MapDestroyed;
-        ItemEffectManager.DestroyMap -= MapDestroyed;
+        ItemEffectManager.DestroyMap2 -= MapDestroyed;
 
         ItemEffectManager.IsItRaining -= EffectRain;
-        Mouse.PlantDestroyed -= MouseEatPlant;
+        Mouse.Plant2Destroyed -= MouseEatPlant;
         BombManager.PositionSpawnBomb -= HasBomb;
     }
+    
     private void MouseEatPlant(Vector3 objPos)
     {
         if (_plantsToHarvest.ContainsKey(objPos))
