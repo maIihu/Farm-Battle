@@ -12,13 +12,12 @@ public class IrisTransition : MonoBehaviour
         StartCoroutine(SequenceIrisAnimations());
     }
 
-    public IEnumerator SequenceIrisAnimations()
+    private IEnumerator SequenceIrisAnimations()
     {
         yield return StartCoroutine(AnimateIris(1f, 0f));
         yield return StartCoroutine(AnimateIris(0f, 1f));
         gameObject.SetActive(false);
-        GameManager.Instance.ChangeState(GameState.Playing);
-
+        //GameManager.Instance.ChangeState(GameState.Playing);
     }
     
     private IEnumerator AnimateIris(float start, float end)

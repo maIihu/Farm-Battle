@@ -19,6 +19,7 @@ public class UIButton : MonoBehaviour
     {
         SceneManager.LoadScene("GamePlayScene");
         GameManager.Instance.ChangeState(GameState.Cutscene);
+        GameManager.Instance.turnOffTutorial = false;
     }
     
     public void LoadMenuScene()

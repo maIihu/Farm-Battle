@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.Serialization;
 
 public enum GameState{ Menu, Cutscene, Playing, Paused, GameOver }
 
@@ -10,7 +11,8 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
     public GameState currentState;
-
+    public bool turnOffTutorial;
+    
     private void Awake()
     {
         if (Instance == null)
@@ -24,6 +26,25 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         currentState = GameState.Menu;
+    }
+
+    private void Update()
+    {
+        if (!turnOffTutorial)
+        {
+            if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.S)
+                                            || Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.W)
+                                            || Input.GetKeyDown(KeyCode.Space))
+            {
+                GameObject tutorial = GameObject.FindGameObjectWithTag("Tutorial");
+                if (tutorial != null)
+                {
+                    tutorial.SetActive(false);
+                    turnOffTutorial = true;
+                    ChangeState(GameState.Playing);
+                }
+            }
+        }
     }
 
     public void ChangeState(GameState newState)

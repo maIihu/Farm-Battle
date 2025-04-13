@@ -9,6 +9,7 @@ TagManager:
   - Fence
   - House
   - Cutscene
+  - Tutorial
   layers:
   - Default
   - TransparentFX
