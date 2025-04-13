@@ -62,13 +62,20 @@ public class ItemEffectManager : MonoBehaviour
     private void MouseStart(int player)
     {
         Vector3 position;
+        GameObject targetTileMap;
         if (player == 1)
+        {
             position = new Vector3(18.5f, -5.5f, 0f);
+            targetTileMap = tileMap2;
+        }
         else
+        {
             position = new Vector3(5.5f, -5.5f, 0f);
+            targetTileMap = tileMap1;
+        }
         
         GameObject mouse = Instantiate(_effectPrefabs["Mouse"], position, Quaternion.identity, _effects["MouseEffect"]);
-        mouse.GetComponent<Mouse>().ItemEffect(tileMap2);
+        mouse.GetComponent<Mouse>().ItemEffect(targetTileMap);
         Invoke(nameof(MouseEnd), 5);
     }
 

@@ -49,7 +49,6 @@ public class Mouse : ItemBase
 
     private void MoveTowardsTarget()
     {
-        
         if (_targetPlant == null) return;
 
         transform.position = Vector3.MoveTowards(transform.position, _targetPlant.transform.position, moveSpeed * Time.deltaTime);
@@ -62,7 +61,8 @@ public class Mouse : ItemBase
                 _plants.Remove(_targetPlant.transform.position);
                 Destroy(_targetPlant.gameObject);
                 _targetPlant = null;
-                PlantDestroyed?.Invoke(position);
+                if(_tileMap.name == "Garden2")
+                    PlantDestroyed?.Invoke(position);
             }
             _moveToPlant = false;
         }
@@ -82,8 +82,6 @@ public class Mouse : ItemBase
         }
     }
     
-
-
     public override void ItemEffect(GameObject objectToEffect)
     {
         _tileMap = objectToEffect;

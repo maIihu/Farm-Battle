@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.Tilemaps;
 using Random = UnityEngine.Random;
 
@@ -23,13 +24,18 @@ public class BotController : MonoBehaviour
     private bool _harvest;
     private bool _hasBomb, _throwBomb;
     private bool _isRaining;
+    private bool _shop, _shopping;
+    public bool buying;
     
     private Coroutine _harvestCoroutine;
     private Coroutine _digCoroutine;
     private Coroutine _sowCoroutine;
     private Coroutine _throwBombCoroutine;
+    private Coroutine _shoppingCoroutine;
     
+    private int _lastCheckedScore;
     public int score;
+    
     public static BotController Instance { get; private set; }
     
     private void Awake()
@@ -55,6 +61,11 @@ public class BotController : MonoBehaviour
     {
         if (GameManager.Instance.currentState == GameState.Playing)
         {
+            if (score >= 50 && score % 50 == 0 && score != _lastCheckedScore)
+            {
+                _shop = true;
+                _lastCheckedScore = score;
+            }
             StateHandle();
             if (_isRaining)
                 MapManager.Instance.BuffGrowTime(tileMap);
@@ -88,6 +99,13 @@ public class BotController : MonoBehaviour
                 _sowCoroutine = StartCoroutine(Sow());
             }
         }
+        else if (_shop) // mua vat pham
+        {
+            if (!_shopping)
+            {
+                _shoppingCoroutine = StartCoroutine(Shopping());
+            }
+        }
         else // thu hoach
         {
             if(_targetPlant == null)
@@ -99,6 +117,7 @@ public class BotController : MonoBehaviour
             }
         }
     }
+    
     private void ResetState()
     {
         if (_digCoroutine != null)
@@ -120,6 +139,12 @@ public class BotController : MonoBehaviour
         {
             StopCoroutine(_throwBombCoroutine);
             _throwBomb = false;
+        }
+
+        if (_shoppingCoroutine != null)
+        {
+            StopCoroutine(_shoppingCoroutine);
+            _shopping = false;
         }
     }
     
@@ -204,6 +229,19 @@ public class BotController : MonoBehaviour
         _throwBomb = false;
     }
     
+    private IEnumerator Shopping()
+    {
+        _shopping = true;
+        Vector3 shopPos = new Vector3(18.5f, 1f, 0f);
+        yield return MoveToTarget(shopPos);
+        yield return new WaitForSeconds(2f);
+        buying = true;
+        yield return null;
+        buying = false;
+        _shop = false;
+        _shopping = false;
+    }
+    
     private void CanHarvestPlant()
     {
         for (int i = 0; i < tileMap.transform.childCount; i++)
@@ -245,6 +283,8 @@ public class BotController : MonoBehaviour
     
     private void HasBomb(Vector3 pos)
     {
+        if (!IsInBotArea(pos))
+            return;
         _hasBomb = true;
         _bombPosition = pos;
         _harvest = false;

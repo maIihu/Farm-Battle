@@ -19844,7 +19844,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dad924238657f97498781f4589e38443, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 10
+  moveSpeed: 5
   tileMap: {fileID: 1381698292}
   isShopping: 0
   score: 0

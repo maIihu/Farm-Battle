@@ -34,15 +34,10 @@ public class BombManager : MonoBehaviour
         int player1Score = PlayerController.Instance.score;
         int player2Score = BotController.Instance.score;
         
-        if (BotController.Instance.gameObject.activeSelf)
-        {
-            player2Score = BotController.Instance.score;
-        }
-        
         float locationY = Random.Range(-10, -3);
         float locationX;
         _bombClone = Instantiate(bombPrefab);
-        if (true)
+        if (player1Score > player2Score)
         {
             locationX = Random.Range(4, 9);
             _targetTileMap = tileMap1.transform;
@@ -56,7 +51,6 @@ public class BombManager : MonoBehaviour
         Vector3 pos = new Vector3(locationX, locationY, transform.position.z);
         _bombClone.transform.position = pos;
         PositionSpawnBomb?.Invoke(pos);
-
         ScheduleNextSpawn();
     }
     
