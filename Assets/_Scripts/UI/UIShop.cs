@@ -59,9 +59,11 @@ public class UIShop : MonoBehaviour
             costTransform.gameObject.SetActive(false);
     }
 
+    private bool _botHasBoughtItem = false;
+
     private void Update()
     {
-        if (shop1.activeSelf) // Player 1
+        if (shop1.activeSelf) // PLAYER 1
         {
             if (Input.GetKeyDown(KeyCode.W)) MoveSelection(-1);
             if (Input.GetKeyDown(KeyCode.S)) MoveSelection(1);
@@ -69,22 +71,34 @@ public class UIShop : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.D)) MoveSelection(3);
 
             HighlightItem(_index1, _shopItem1);
-            
+
             int itemCost = Item.GetCost((Item.ItemType)Enum.Parse(typeof(Item.ItemType), _shopItem1[_index1].name));
-            if (Input.GetKeyDown(KeyCode.Space) && PlayerController.Instance.score >= itemCost)
+            if (Input.GetKeyDown(KeyCode.Space) )//&& PlayerController.Instance.score >= itemCost)
             {
                 PlayerController.Instance.score -= itemCost;
-                
                 ApplyItem(1, _index1);
             }
         }
 
-        if (Input.GetKeyDown(KeyCode.I))
+        // BOT 
+        if (BotController.Instance.buying && !_botHasBoughtItem)
         {
-            int item = Random.Range(0, 5);
-            ApplyItem(2, 1);
+            int item = Random.Range(3, 5);
+            item = Random.Range(0, 2) == 0 ? 1 : item;
+            int itemCost = Item.GetCost((Item.ItemType)Enum.Parse(typeof(Item.ItemType), _shopItem1[item].name));
+
+            ApplyItem(2, item);
+            BotController.Instance.score -= itemCost;
+
+            _botHasBoughtItem = true; 
+        }
+
+        if (!BotController.Instance.buying)
+        {
+            _botHasBoughtItem = false;
         }
     }
+
 
 
     private void ApplyItem(int player, int indexItem)

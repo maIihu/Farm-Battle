@@ -60,10 +60,10 @@ public class MapManager : MonoBehaviour
     {
         if (map.ContainsKey(location) && !hasCrop.ContainsKey(location))
         {
+            if (map[location] == null)
+                return;
             GameObject plantClone = Instantiate(plantPrefab, location, Quaternion.identity);
-            
             plantClone.GetComponent<Plant>().growTimer = Random.Range(40, 60) / 5;
-            
             plantClone.transform.SetParent(map[location].transform);
             hasCrop[location] = true;
         }

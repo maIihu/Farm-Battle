@@ -16,10 +16,10 @@ public class ItemEffectManager : MonoBehaviour
 
     private bool _shieldEffectActive1;
     private bool _shieldEffectActive2;
-
-    public static event Action<List<Vector3>> DestroyMap;
-    public static event Action<int> IsRaining;
     
+    public static event Action<List<Vector3>> DestroyMap1;
+    public static event Action<List<Vector3>> DestroyMap2;
+    public static event Action<int> IsItRaining;
     
     private void Start()
     {
@@ -62,13 +62,20 @@ public class ItemEffectManager : MonoBehaviour
     private void MouseStart(int player)
     {
         Vector3 position;
+        GameObject targetTileMap;
         if (player == 1)
+        {
             position = new Vector3(18.5f, -5.5f, 0f);
+            targetTileMap = tileMap2;
+        }
         else
+        {
             position = new Vector3(5.5f, -5.5f, 0f);
+            targetTileMap = tileMap1;
+        }
         
         GameObject mouse = Instantiate(_effectPrefabs["Mouse"], position, Quaternion.identity, _effects["MouseEffect"]);
-        mouse.GetComponent<Mouse>().ItemEffect(tileMap2);
+        mouse.GetComponent<Mouse>().ItemEffect(targetTileMap);
         Invoke(nameof(MouseEnd), 5);
     }
 
@@ -131,27 +138,34 @@ public class ItemEffectManager : MonoBehaviour
     private IEnumerator ThunderEnd(int player, float time, Transform container)
     {
         yield return new WaitForSeconds(time);
-
-        List<Vector3> plantsDestroyed = new List<Vector3>();
+    
+        List<Vector3> plants1Destroyed = new List<Vector3>();
+        List<Vector3> plants2Destroyed = new List<Vector3>();
         
         for (int i = container.childCount - 1; i >= 0; i--)
         {
             if (!_shieldEffectActive1 && player == 2)
                 if(container.GetChild(i).GetComponent<Thunder>() != null)
+                {
                     container.GetChild(i).GetComponent<Thunder>().ItemEffect(tileMap1);
+                    plants1Destroyed.Add(container.GetChild(i).position);
+                }
             
             if(!_shieldEffectActive2 && player == 1)
                 if(container.GetChild(i).GetComponent<Thunder>() != null)
                 {
                     container.GetChild(i).GetComponent<Thunder>().ItemEffect(tileMap2);
-                    plantsDestroyed.Add(container.GetChild(i).position);
+                    plants2Destroyed.Add(container.GetChild(i).position);
                 }
             
             Destroy(container.GetChild(i).gameObject);
         }
         
-        if(plantsDestroyed.Count > 0)
-            DestroyMap?.Invoke(plantsDestroyed);
+        if(plants1Destroyed.Count > 0)
+            DestroyMap1?.Invoke(plants1Destroyed);
+        
+        if(plants2Destroyed.Count > 0)
+            DestroyMap2?.Invoke(plants2Destroyed);
     }
     
     private void RainStart(int player)
@@ -174,7 +188,7 @@ public class ItemEffectManager : MonoBehaviour
 
         rain.gameObject.GetComponent<ParticleSystem>().Play();
         //rain.gameObject.GetComponent<Rain>().ItemEffect(tileMapTarget);
-        IsRaining?.Invoke(player);
+        IsItRaining?.Invoke(player);
         StartCoroutine(RainEnd(tileMapTarget, player, 10f));
     }
     
@@ -183,7 +197,7 @@ public class ItemEffectManager : MonoBehaviour
         yield return new WaitForSeconds(time);
         _effects["RainEffect"].GetChild(0).gameObject.GetComponent<ParticleSystem>().Stop();
         
-        IsRaining?.Invoke(player);
+        IsItRaining?.Invoke(player);
         
         MapManager.Instance.DeBuffGrowTime(tileMapTarget.transform);
         
@@ -213,11 +227,17 @@ public class ItemEffectManager : MonoBehaviour
     private IEnumerator MoveTsunami(GameObject tsunami, Vector3 targetPosition, int player)
     {
         float speed = 18f;
+        List<Vector3> plantsDestroyed1 = new List<Vector3>();
+        List<Vector3> plantsDestroyed2 = new List<Vector3>();
+
+        foreach (Transform child in tileMap1.transform)
+        {
+            plantsDestroyed1.Add(child.position);
+        }
         
-        List<Vector3> plantsDestroyed = new List<Vector3>();
         foreach (Transform child in tileMap2.transform)
         {
-            plantsDestroyed.Add(child.position);
+            plantsDestroyed2.Add(child.position);
         }
         
         while (Vector3.Distance(tsunami.transform.position, targetPosition) > 0.1)
@@ -239,9 +259,13 @@ public class ItemEffectManager : MonoBehaviour
         
         if (player == 1 && !_shieldEffectActive2)
         {
-            DestroyMap?.Invoke(plantsDestroyed);
+            DestroyMap2?.Invoke(plantsDestroyed2);
         }
 
+        if (player == 2 && !_shieldEffectActive1)
+        {
+            DestroyMap1?.Invoke(plantsDestroyed1);
+        }
     }
     
 }

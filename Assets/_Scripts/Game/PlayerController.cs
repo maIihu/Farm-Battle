@@ -209,15 +209,40 @@ public class PlayerController : MonoBehaviour
             _currentBomb = null;
         }
     }
+    private void MouseEatPlant(Vector3 obj)
+    {
+        if (MapManager.Instance.map.ContainsKey(obj))
+            MapManager.Instance.map.Remove(obj);
+    }
+
+    private void MapDestroyed(List<Vector3> obj)
+    {
+        foreach (var plantPos in obj)
+        {
+            MapManager mapM = MapManager.Instance;
+            if(mapM.map.ContainsKey(plantPos))
+            {
+                mapM.map.Remove(plantPos);
+                mapM.hasCrop.Remove(plantPos);
+            }
+        }
+    }
 
     private void OnEnable()
     {
-        ItemEffectManager.IsRaining += Rain;
-    }
+        ItemEffectManager.IsItRaining += Rain;
+        BombManager.OnBombExploded += MapDestroyed;
+        ItemEffectManager.DestroyMap1 += MapDestroyed;
+        Mouse.Plant1Destroyed += MouseEatPlant;
 
+    }
+    
     private void OnDestroy()
     {
-        ItemEffectManager.IsRaining -= Rain;
+        ItemEffectManager.IsItRaining -= Rain;
+        BombManager.OnBombExploded += MapDestroyed;
+        ItemEffectManager.DestroyMap1 += MapDestroyed;
+        Mouse.Plant1Destroyed += MouseEatPlant;
     }
     
 }
