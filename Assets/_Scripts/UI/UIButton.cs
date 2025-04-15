@@ -14,18 +14,32 @@ public class UIButton : MonoBehaviour
     {
         _ani = GetComponentInChildren<Animator>();
     }
-
+    
     public void LoadGameScene()
     {
         SceneManager.LoadScene("GamePlayScene");
+        
+        AudioManager.Instance.UpdateMusic(AudioManager.Instance.gameMusic);
+        AudioManager.Instance.PlayMusic();
+        if(AudioManager.Instance.muteMusic)
+            AudioManager.Instance.CheckMute(false);
+
         GameManager.Instance.ChangeState(GameState.Cutscene);
         GameManager.Instance.turnOffTutorial = false;
+        
     }
     
     public void LoadMenuScene()
     {
         SceneManager.LoadScene("MenuScene");
+        
+        AudioManager.Instance.UpdateMusic(AudioManager.Instance.introMusic);
+        AudioManager.Instance.PlayMusic();
+        if(AudioManager.Instance.muteMusic)
+            AudioManager.Instance.CheckMute(false);
+
         GameManager.Instance.ChangeState(GameState.Menu);
+        
     }
     
     public void OpenPauseMenu()

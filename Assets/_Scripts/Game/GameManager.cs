@@ -12,6 +12,7 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance;
     public GameState currentState;
     public bool turnOffTutorial;
+    public GameObject audio;
     
     private void Awake()
     {
@@ -59,18 +60,23 @@ public class GameManager : MonoBehaviour
         {
             case GameState.Menu:
                 Time.timeScale = 0f;
+                audio.SetActive(true);
                 break;
             case GameState.Paused:
                 Time.timeScale = 0f;
+                audio.SetActive(true);
                 break;
             case GameState.Playing:
                 Time.timeScale = 1f;
+                audio.SetActive(false);
                 break;
             case GameState.GameOver:
                 Time.timeScale = 0f;
+                audio.SetActive(false);
                 break;
             case GameState.Cutscene:
                 Time.timeScale = 1f;
+                audio.SetActive(false);
                 break;
         }
     }
