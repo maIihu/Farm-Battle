@@ -34,6 +34,10 @@ public class BotController : MonoBehaviour
     private Coroutine _shoppingCoroutine;
     
     private int _lastCheckedScore;
+
+    private Animator _anim;
+    private float _lastXDirection = 1f; // sẽ tùy thuộc vào vị trí di chuyển mà xét 
+    
     public int score;
     
     public static BotController Instance { get; private set; }
@@ -46,6 +50,7 @@ public class BotController : MonoBehaviour
             return;
         }
         Instance = this;
+        _anim = GetComponent<Animator>();
     }
 
     private void Start()
@@ -152,11 +157,23 @@ public class BotController : MonoBehaviour
     {
         while (Vector3.Distance(transform.position, targetPosition) > 0.1f)
         {
+            Vector3 dir = targetPosition - transform.position;
+            
+            _anim.SetBool("isMoving", true);
+            
+            if (Mathf.Abs(dir.x) > 0.01f)
+                _lastXDirection = dir.x;
+            
+            _anim.SetFloat("XDirection", _lastXDirection);
+            
             transform.position = Vector3.MoveTowards(transform.position, targetPosition, moveSpeed * Time.deltaTime);
             _pickCell.position = new Vector3((int)(transform.position.x) + 0.5f, 
                 (int)(transform.position.y) - 0.5f, transform.position.z);
             yield return null;
         }
+        
+        _anim.SetBool("isMoving", false);
+        _anim.SetFloat("XDirection", _lastXDirection);
         
         transform.position = targetPosition;
         _pickCell.position = new Vector3((int)(transform.position.x) + 0.5f, 
@@ -269,16 +286,14 @@ public class BotController : MonoBehaviour
                 TileMap de xem nhung cai nao 
                 khong co thi nhet vao mang de 
                 tai su dung cho viec khac*/
-        for (int i = 13; i <= 24; i++)
-        {
-            for (int j = -12; j <= -1; j++)
+        for (int j = -12; j <= -1; j++)
+            for (int i = 13; i <= 24; i++)
             {
                 float xPos = i + 0.5f;
                 float yPos = j + 0.5f;
                 Vector3 pos = new Vector3(xPos, yPos, 0f);
                 _plantsToDig.Add(pos);
             }
-        }
     }
     
     private void HasBomb(Vector3 pos)

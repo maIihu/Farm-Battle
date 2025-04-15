@@ -9,72 +9,94 @@ public class Mouse : ItemBase
 {
     private Dictionary<Vector3, Plant> _plants;
     private Plant _targetPlant;
+    private Vector3 _plantPos;
     private GameObject _tileMap;
-    private bool _moveToPlant;
+    private Animator _anim;
     
-    public float moveSpeed = 5f;
+    private float _moveSpeed;
+    private bool _moveToPlant;
+
     public static event Action<Vector3> Plant1Destroyed;
     public static event Action<Vector3> Plant2Destroyed;
-    
+
+    private void Awake()
+    {
+        _anim = GetComponent<Animator>();
+    }
+
     private void Start()
     {
+        _moveSpeed = 6f;
         _plants = new Dictionary<Vector3, Plant>();
-        FindPlant();
+        FindAllPlantsCanEat();
     }
 
     private void Update()
     {
         if (_plants.Count > 0 && !_moveToPlant)
         {
-            MoveToPlant();
+            FindRandomPlant();
         }
 
-        if (_moveToPlant && _targetPlant != null)
+        if (_moveToPlant && _targetPlant)
         {
-            MoveTowardsTarget();
+            StartCoroutine(MoveAndEat());
         }
     }
 
-    private void MoveToPlant()
+    private void FindRandomPlant()
     {
-        if (_plants.Count == 0) return;
-
         int randomIndex = Random.Range(0, _plants.Count);
         _targetPlant = _plants.ElementAt(randomIndex).Value;
-
-        if (_targetPlant != null)
+        
+        if (_targetPlant)
         {
             _moveToPlant = true;
+            _plantPos = _targetPlant.transform.position;
         }
     }
 
-    private void MoveTowardsTarget()
+    private IEnumerator MoveAndEat()
     {
-        if (_targetPlant == null) return;
+        transform.position = Vector3.MoveTowards(transform.position, _plantPos, _moveSpeed * Time.deltaTime);
+        Flip();
 
-        transform.position = Vector3.MoveTowards(transform.position, _targetPlant.transform.position, moveSpeed * Time.deltaTime);
-
-        if (Vector3.Distance(transform.position, _targetPlant.transform.position) < 0.1f)
+        if (Vector3.Distance(transform.position, _plantPos) < 0.1f)
         {
-            if (_targetPlant != null)
+            if (_targetPlant)
             {
-                Vector3 position = _targetPlant.transform.position;
-                _plants.Remove(_targetPlant.transform.position);
+                _anim.SetTrigger("Eating");
+                _plants.Remove(_plantPos);
                 Destroy(_targetPlant.gameObject);
-                _targetPlant = null;
+                yield return new WaitForSeconds(1f);
                 
                 if(_tileMap.name == "Garden1")
-                    Plant1Destroyed?.Invoke(position);
+                    Plant1Destroyed?.Invoke(_plantPos);
                 
                 if(_tileMap.name == "Garden2")
-                    Plant2Destroyed?.Invoke(position);
+                    Plant2Destroyed?.Invoke(_plantPos);
             }
+            _targetPlant = null;
             _moveToPlant = false;
+            _plantPos = new Vector3();
         }
-        
+    }
+
+    private void Flip()
+    {
+        Vector3 direction = _plantPos - transform.position;
+
+        if (direction.x > 0.01f)
+        {
+            transform.localScale = new Vector3(1, 1, 1); 
+        }
+        else if (direction.x < -0.01f)
+        {
+            transform.localScale = new Vector3(-1, 1, 1); 
+        }
     }
     
-    private void FindPlant()
+    private void FindAllPlantsCanEat()
     {
         foreach (Transform child in _tileMap.transform)
         {
