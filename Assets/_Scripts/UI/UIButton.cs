@@ -44,8 +44,8 @@ public class UIButton : MonoBehaviour
     
     public void OpenPauseMenu()
     {
-        PostProcessVolume ppVolume = Camera.main.gameObject.GetComponent<PostProcessVolume>();
-        ppVolume.enabled = !ppVolume.enabled;
+        // PostProcessVolume ppVolume = Camera.main.gameObject.GetComponent<PostProcessVolume>();
+        // ppVolume.enabled = !ppVolume.enabled;
         pausePanel.SetActive(true);
         
         GameManager.Instance.ChangeState(GameState.Paused);

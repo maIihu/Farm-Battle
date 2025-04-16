@@ -65,6 +65,7 @@ public class MapManager : MonoBehaviour
             GameObject plantClone = Instantiate(plantPrefab, location, Quaternion.identity);
             plantClone.GetComponent<Plant>().growTimer = Random.Range(40, 60) / 5;
             plantClone.transform.SetParent(map[location].transform);
+            plantClone.transform.localScale = Vector3.one; 
             hasCrop[location] = true;
         }
     }

@@ -12,6 +12,8 @@ public class UIShop : MonoBehaviour
     [SerializeField] private GameObject shop2;
     [SerializeField] private GameObject shopItemTemplate;
     [SerializeField] private ItemEffectManager itemEffectManager;
+
+    [SerializeField] private Sprite[] itemSprite;
     
     private List<GameObject> _shopItem1;
     private int _index1;
@@ -27,22 +29,23 @@ public class UIShop : MonoBehaviour
 
     private void CreateShop()
     {
-        CreateItemShop(Item.GetName(Item.ItemType.Shield), Item.GetDescription(Item.ItemType.Shield), Item.GetCost(Item.ItemType.Shield),0, 0);
-        CreateItemShop(Item.GetName(Item.ItemType.Rain), Item.GetDescription(Item.ItemType.Rain), Item.GetCost(Item.ItemType.Rain),0, 1);
-        CreateItemShop(Item.GetName(Item.ItemType.Exit), Item.GetDescription(Item.ItemType.Exit), Item.GetCost(Item.ItemType.Exit),0, 2);
+        CreateItemShop(Item.GetName(Item.ItemType.Shield), Item.GetDescription(Item.ItemType.Shield), Item.GetCost(Item.ItemType.Shield),0, 0, itemSprite[0]);
+        CreateItemShop(Item.GetName(Item.ItemType.Rain), Item.GetDescription(Item.ItemType.Rain), Item.GetCost(Item.ItemType.Rain),0, 1, itemSprite[1]);
+        CreateItemShop(Item.GetName(Item.ItemType.Exit), Item.GetDescription(Item.ItemType.Exit), Item.GetCost(Item.ItemType.Exit),0, 2, itemSprite[2]);
         
-        CreateItemShop(Item.GetName(Item.ItemType.Tsunami), Item.GetDescription(Item.ItemType.Tsunami), Item.GetCost(Item.ItemType.Tsunami),1, 0);
-        CreateItemShop(Item.GetName(Item.ItemType.Mouse), Item.GetDescription(Item.ItemType.Mouse), Item.GetCost(Item.ItemType.Mouse),1, 1);
-        CreateItemShop(Item.GetName(Item.ItemType.Thunder), Item.GetDescription(Item.ItemType.Thunder), Item.GetCost(Item.ItemType.Thunder),1, 2);
+        CreateItemShop(Item.GetName(Item.ItemType.Tsunami), Item.GetDescription(Item.ItemType.Tsunami), Item.GetCost(Item.ItemType.Tsunami),1, 0, itemSprite[3]);
+        CreateItemShop(Item.GetName(Item.ItemType.Mouse), Item.GetDescription(Item.ItemType.Mouse), Item.GetCost(Item.ItemType.Mouse),1, 1, itemSprite[4]);
+        CreateItemShop(Item.GetName(Item.ItemType.Thunder), Item.GetDescription(Item.ItemType.Thunder), Item.GetCost(Item.ItemType.Thunder),1, 2, itemSprite[5]);
     }
     
-    private void CreateItemShop(string itemName, string description, int cost, int x, int y)
+    private void CreateItemShop(string itemName, string description, int cost, int x, int y, Sprite sprite)
     {
         GameObject itemClone = Instantiate(shopItemTemplate, shop1.transform);
         itemClone.name = itemName;
         RectTransform rectTransform = itemClone.GetComponent<RectTransform>();
-        rectTransform.anchoredPosition = new Vector2(-40 + 75 * x, 100 - 75 * y);
-        
+        rectTransform.anchoredPosition = new Vector2(-30 + 60 * x, 70 - 60 * y);
+
+        itemClone.transform.GetChild(0).GetChild(0).GetComponent<Image>().sprite = sprite;
 
         Transform costTransform = itemClone.transform.GetChild(1).GetChild(0).transform;
         Transform descriptionTransform = itemClone.transform.GetChild(1).GetChild(1).transform;
@@ -142,15 +145,16 @@ public class UIShop : MonoBehaviour
 
     private void HighlightItem(int index, List<GameObject> shopItem)
     {
-        foreach (var item in shopItem)
+        for (int i = 0; i < shopItem.Count; i++)
         {
-            item.GetComponentInChildren<Image>().color = Color.white;
-            item.transform.GetChild(1).gameObject.SetActive(false);
+            shopItem[i].transform.localScale = Vector3.one;
+            shopItem[i].transform.GetChild(1).gameObject.SetActive(false);
         }
-        
-        shopItem[index].GetComponentInChildren<Image>().color = Color.yellow;
+
+        shopItem[index].transform.localScale = new Vector3(1.2f, 1.2f, 1.2f);
         shopItem[index].transform.GetChild(1).gameObject.SetActive(true);
     }
+
     
     private void OnCollisionEnter2D(Collision2D other)
     {
