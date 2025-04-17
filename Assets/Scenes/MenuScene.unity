@@ -486,6 +486,9 @@ MonoBehaviour:
   sfxSource: {fileID: 683209220}
   introMusic: {fileID: 8300000, guid: 5bb9bf9fddff8754abf9600c0c681e23, type: 3}
   gameMusic: {fileID: 8300000, guid: 79a177a7e46aef94a9891ee37f680ad5, type: 3}
+  digSE: {fileID: 8300000, guid: 9a1a48e715a00e741be49043c37de65a, type: 3}
+  thunderSE: {fileID: 8300000, guid: 97b3f608712ecef48b2613b5a832e4db, type: 3}
+  tsunamiSE: {fileID: 8300000, guid: 427e99307a3c522429b73e89027cf8a1, type: 3}
   muteMusic: 0
 --- !u!1 &898346238
 GameObject:

@@ -131,6 +131,8 @@ public class ItemEffectManager : MonoBehaviour
             Instantiate(_effectPrefabs["Lightning"], new Vector3(19, 0, 0), Quaternion.identity, container);
         else
             Instantiate(_effectPrefabs["Lightning"], new Vector3(6, 0, 0), Quaternion.identity, container);
+        
+        AudioManager.Instance.PlaySfx(AudioManager.Instance.thunderSE);
 
         StartCoroutine(ThunderEnd(player, 1, container));
     }
@@ -220,6 +222,7 @@ public class ItemEffectManager : MonoBehaviour
         }
             
         GameObject tsunami = Instantiate(_effectPrefabs["Tsunami"], position, Quaternion.identity, _effects["TsunamiEffect"]);
+        AudioManager.Instance.PlaySfx(AudioManager.Instance.tsunamiSE);
         
         StartCoroutine(MoveTsunami(tsunami, targetPosition, player));
     }

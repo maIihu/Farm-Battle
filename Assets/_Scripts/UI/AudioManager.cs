@@ -12,8 +12,11 @@ public class AudioManager : MonoBehaviour
     
     public AudioClip introMusic;
     public AudioClip gameMusic;
-
-     public bool muteMusic;
+    public AudioClip digSE;
+    public AudioClip thunderSE;
+    public AudioClip tsunamiSE;
+    
+    public bool muteMusic;
     
     private void Awake()
     {

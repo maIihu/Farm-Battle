@@ -48,6 +48,7 @@ public class MapManager : MonoBehaviour
             if (!map.ContainsKey(location))
             {
                 GameObject dirtClone = Instantiate(dirtPrefab, location, Quaternion.identity, tileMap.transform);
+                AudioManager.Instance.PlaySfx(AudioManager.Instance.digSE);
                 dirtClone.name = $"{location.x}_{location.y}_{location.z}";
                 map[location] = dirtClone;
                 return true;
